@@ -17,7 +17,11 @@ easy_install nltk
 
 # Set up PySpark
 cd $SPARK
-$SPARK/dev/change-scala-version.sh 2.11
-build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.11 -Dhadoop.version=2.4.0 -DskipTests clean package
+$SPARK/dev/change-scala-version.sh 2.10
+build/mvn -Pyarn -Phadoop-2.4 -Dscala-2.10 -Dhadoop.version=2.4.0 -DskipTests clean package
 export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
 
+# Submit test script
+REDDIT=$HOME'/Desktop/reddit_classification'
+cd $REDDIT
+$SPARK/bin/spark-submit $REDDIT'/spark_word2vec.py'
