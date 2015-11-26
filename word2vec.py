@@ -35,7 +35,7 @@ def ParseData(path):
     return tempD
 
 # Create a file of just sentences for NN, break at '.'
-def Sentences(data=data, filename='sentences'):
+def Sentences(data, filename='sentences'):
     '''
     arguement: data = array of data, filename = file name
     returns: string of the path to sentences
@@ -52,7 +52,7 @@ def Sentences(data=data, filename='sentences'):
     return filename+'.txt'
 
 # Word2Vec model
-def w2v(sentencepath = sentencePath, length=300, context=5, 
+def w2v(sentencepath, length=300, context=5, 
         samples=10, alpha_limit=0.0001, epochs=1, output='word2vec_model.txt'):
     sentences = word2vec.LineSentence(sentencePath)
     model = word2vec.Word2Vec(sentences, size=length, window=context, 
@@ -64,8 +64,8 @@ def w2v(sentencepath = sentencePath, length=300, context=5,
 
 
 if __name__ == '__main__':
-    script, data = sys.argv
-    data = ParseData(data)
+    script, incoming = sys.argv
+    data = ParseData(incoming)
     sentencePath = Sentences(data=data, filename='sentences')
     model = w2v(sentencepath=sentencePath, length=300, context=5, 
                 samples=10, alpha_limit=0.001, epochs = 1, output='w2v_output01.txt')
