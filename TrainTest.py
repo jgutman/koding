@@ -71,6 +71,6 @@ def Split(path):
             trainlist.append(train_df)
             testlist.append(test_df)
     
-    return pd.concat(trainlist), pd.concat(testlist)  
+    return pd.concat(trainlist).reset_index().drop('index', 1), pd.concat(testlist).reset_index().drop('index', 1)  
  
 
