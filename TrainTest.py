@@ -24,7 +24,7 @@ def ParseData(path):
                     rows_dropped+=1
         except:
             skip_count +=1
-    sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d' % (skip_count, rows_dropped, len(tempD)))
+    sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d\n' % (skip_count, rows_dropped, len(tempD)))
     return tempD
 
 
