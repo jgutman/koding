@@ -1,5 +1,5 @@
 '''
-Trigram model with logistic Logistic
+Bigram model with logistic Logistic
 '''
 
 import pandas as pd
