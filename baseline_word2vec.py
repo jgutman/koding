@@ -38,7 +38,7 @@ def tokenize(textdf):
 # Code below based on Kaggle competition: Bag of Words Meets Bags of Popcorn
 # Credited to Angela Chapman https://github.com/wendykan/DeepLearningMovies/
 
-def makeFeatureVec(words, weights = None, model, num_features):
+def makeFeatureVec(words, model, num_features, weights = None, word_index = None):
     # Function to average all of the word vectors in a given paragraph
     # Pre-initialize an empty numpy array (for speed)
     featureVec = np.zeros((num_features,) , dtype="float32")
@@ -56,36 +56,37 @@ def makeFeatureVec(words, weights = None, model, num_features):
             if (weights == None):
             	featureVec = np.add(featureVec,model[word])
             else:
-            		
+            	# calculate weights and multiply model[word] by weight before adding
+            	idx = word_index.get(word)
+            	weight = weights[idx] # get weight from weights, using index from word_index dict
+            	featureVec = np.add(featureVec, np.multiply(model[word], weight))	
 	
     # Divide the result by the number of words to get the average
     featureVec = np.divide(featureVec,nwords)
     return featureVec
 
-def getAvgFeatureVecs(documents, weights = None, model, num_features):
-    # Given a collection of documents (each one a list of words), calculate 
-    # the average feature vector for each one and return a 2D numpy array 
-    
-    counter = 0.
-    feature_names = None
-    if (weights != None):
-    	feature_names = weights.get_feature_names() 
-    
-    # Preallocate a 2D numpy array, for speed
-    docFeatureVecs = np.zeros((len(documents),num_features),dtype="float32")
-
+def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index = None):
+	# Given a collection of documents (each one a list of words), calculate 
+	# the average feature vector for each one and return a 2D numpy array 
+	
+	counter = 0.
+	
+	# Preallocate a 2D numpy array, for speed
+	docFeatureVecs = np.zeros((len(documents),num_features),dtype="float32")
+	
 	for post in documents:
-       # Print a status message every 1000th review
-    	if counter%1000. == 0.:
-        	print "Reddit post %d of %d" % (counter, len(documents))
-        	if (weights == None):
-    			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features)
-    		else:
-    			weightPost = weights[counter]
-    			docFeatureVecs[counter] = makeFeatureVec(post, weightPost, model, 
-    				num_features, feature_names)  		
-       counter = counter + 1.
-    return docFeatureVecs
+	# Print a status message every 1000th review
+		if counter%1000. == 0.:
+			print "Reddit post %d of %d" % (counter, len(documents))
+		if (weights == None):
+			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features)
+		else:
+			weightPost = weights.getrow(counter) # sparse row vector
+			docFeatureVecs[counter] = makeFeatureVec(post, weightPost, model, 
+				num_features, word_index)  		
+    	counter = counter + 1.
+    	
+	return docFeatureVecs
 
 def baselineWord2Vec(train, test, trainDataVecs, testDataVecs):
 	# Extend Richard's baseline() function in baseline.py to use trainDataVecs / testDataVecs
@@ -166,21 +167,21 @@ def main():
 		test_words.append(docWordList(post, remove_stopwords = args.removeStopWords))
 	
 	if args.weightedw2v:
+		# Build tf-idf matrix on training documents
 		tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
-		tfidf_matrix_test =  tf.fit_transform(test['text'].astype(str))
+		vocabulary = tf.vocabulary_
+		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
+			weights = tfidf_matrix_train, word_index = vocabulary)
 		
-		trainDataVecs = getAvgFeatureVecs(train_words, weights = tfidf_matrix_train, 
-			model = model, num_features = num_features)
-		testDataVecs = getAvgFeatureVecs(test_words, weights = tfidf_matrix_test, 
-			model = model, num_features = num_features)
-		
-		
+		# Apply tf-idf matrix from training to test documents to get weights
+		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
+			weights = tfidf_matrix_train, word_index = vocabulary)
 		
 	else: 
-		trainDataVecs = getAvgFeatureVecs(train_words, model = model, num_features = num_features)
-		testDataVecs = getAvgFeatureVecs(test_words, model = model, num_features = num_features)
+		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
+		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
 	
 	baselineWord2Vec(train, test, trainDataVecs, testDataVecs)
 
