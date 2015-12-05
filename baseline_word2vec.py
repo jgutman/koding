@@ -145,7 +145,9 @@ def main():
 		splitdata = False, weightedw2v = False, removeStopWords = False)
 	args = parser.parse_args()
 	
+	print "loading word2vec..."
 	model = models.Word2Vec.load(args.w2vpath)
+	print "loading train and test data..."
 	if args.splitdata:
 		train, test = write_training(args.datapath, args.trainpath, args.testpath)
 	else:
@@ -157,10 +159,12 @@ def main():
 	word_vectors = model.syn0
 	vocabulary_size = word_vectors.shape[0]
 	num_features = word_vectors.shape[1]
+	print vocabulary_size, num_features
 	
 	# Should we remove stopwords here or just implement the tf-idf weighting scheme?
 	train_words = []
 	test_words = []
+	print "processing stop words, building train and test vocabularies..."
 	for post in train['text'].astype(str):
 		train_words.append(docWordList(post, remove_stopwords = args.removeStopWords))
 	for post in test['text'].astype(str):
@@ -168,21 +172,27 @@ def main():
 	
 	if args.weightedw2v:
 		# Build tf-idf matrix on training documents
+		print "fitting tf-idf matrix..."
 		tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
+		print "averaging word embeddings in training data..."
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
 		
 		# Apply tf-idf matrix from training to test documents to get weights
+		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
 		
-	else: 
+	else:
+		print "averaging word embeddings in training data..." 
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
+		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
 	
+	print "fitting baseline model on averaged word embeddings..."
 	baselineWord2Vec(train, test, trainDataVecs, testDataVecs)
 
 if __name__ == '__main__':
