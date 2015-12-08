@@ -41,7 +41,7 @@ def tokenize(textdf):
 def makeFeatureVec(words, model, num_features, weights = None, word_index = None):
     # Function to average all of the word vectors in a given paragraph
     # Pre-initialize an empty numpy array (for speed)
-    featureVec = np.zeros((num_features,) , dtype="float32")
+    featureVec = np.zeros((num_features,) , dtype=np.float32)
     nwords = 0.
     
     # Index2word is a list that contains the names of the words in 
@@ -58,8 +58,11 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
             else:
             	# calculate weights and multiply model[word] by weight before adding
             	idx = word_index.get(word)
-            	weight = weights[idx] # get weight from weights, using index from word_index dict
-            	featureVec = np.add(featureVec, np.multiply(model[word], weight))	
+            	# get weight from weights, using index from word_index dict
+            	sparse_weight = weights.getcol(idx)
+            	if (sparse_weight.nnz != 0):
+            		weight = sparse_weight.data[0]
+            		featureVec = np.add(featureVec, np.multiply(model[word], weight))	
 	
     # Divide the result by the number of words to get the average
     featureVec = np.divide(featureVec,nwords)
@@ -72,20 +75,22 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 	counter = 0.
 	
 	# Preallocate a 2D numpy array, for speed
-	docFeatureVecs = np.zeros((len(documents),num_features),dtype="float32")
+	docFeatureVecs = np.zeros((len(documents), num_features), dtype=np.float32)
 	
 	for post in documents:
 	# Print a status message every 1000th review
-		if counter%1000. == 0.:
+		counter = counter + 1
+		if (counter%1000 == 0):
 			print "Reddit post %d of %d" % (counter, len(documents))
 		if (weights == None):
-			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features)
+			docFeatureVecs[counter] = makeFeatureVec(words = post, 
+				model = model, num_features = num_features)
 		else:
-			weightPost = weights.getrow(counter) # sparse row vector
-			docFeatureVecs[counter] = makeFeatureVec(post, weightPost, model, 
-				num_features, word_index)  		
-    	counter = counter + 1.
-    	
+			weightPost = weights.getrow(counter) # sparse row vector (1, size of vocabulary)
+			docFeatureVecs[counter] = makeFeatureVec(words = post, 
+				model = model, num_features = num_features, 
+				weights = weightPost, word_index = word_index)  		
+     	
 	return docFeatureVecs
 
 def baselineWord2Vec(train, test, trainDataVecs, testDataVecs):
@@ -159,10 +164,10 @@ def main():
 			names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
-	vocabulary_size = word_vectors.shape[0]
-	num_features = word_vectors.shape[1]
+	vocabulary_size = int(word_vectors.shape[0])
+	num_features = int(word_vectors.shape[1])
 	print vocabulary_size, num_features
-	
+
 	# Should we remove stopwords here or just implement the tf-idf weighting scheme?
 	train_words = []
 	test_words = []
