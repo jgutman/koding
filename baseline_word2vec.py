@@ -131,6 +131,7 @@ def main():
 	parser.add_argument('-train', dest = 'trainpath', help = 'location of pre-split training data')
 	parser.add_argument('-test', dest = 'testpath', help = 'location of pre-split test data')
 	parser.add_argument('-data', dest = 'datapath', help = 'location of unsplit data file')
+	parser.add_argument('-size', dest = 'numSamples', help 'how many samples to use in the training')
 	parser.add_argument('-split', dest = 'splitdata', help = 'split data into train and test?',
 		action = 'store_true')
 	parser.add_argument('-weighted', dest = 'weightedw2v', help = 'use tf-idf weighting for words',
