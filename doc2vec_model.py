@@ -6,6 +6,7 @@ from TrainTest import Split
 from TrainTest import ParseData
 import pandas as pd
 import numpy as np
+from baseline_word2vec import write_training
 
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
@@ -33,6 +34,21 @@ def main():
 	testpath = os.path.join(args.google_drive, args.testpath)
 	datapath = os.path.join(args.google_drive, args.datapath)
 	doc2vpath = os.path.join(args.google_drive, args.doc2vpath)
+	
+	print "loading doc2vec..."
+	model = models.Doc2Vec.load(doc2vpath)
+	print "loading train and test data..."
+	if args.splitdata:
+		train, test = write_training(datapath, trainpath, testpath)
+	else:
+		train = pd.read_csv(trainpath, sep = '\t', header=None, 
+			names = ['label', 'score', 'text'])
+		test = pd.read_csv(testpath, sep = '\t', header=None, 
+			names = ['label', 'score', 'text'])
+	
+	doc_vectors = model.docvecs
+	print len(doc_vectors), len(doc_vectors[0])
+	
 	
 if __name__ == '__main__':
 	print 'start'

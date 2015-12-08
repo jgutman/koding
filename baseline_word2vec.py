@@ -160,7 +160,7 @@ def main():
 	else:
 		train = pd.read_csv(args.trainpath, sep = '\t', header=None, 
 			names = ['label', 'score', 'text'])
-		test = pd.read_csv(args.trainpath, sep = '\t', header=None, 
+		test = pd.read_csv(args.testpath, sep = '\t', header=None, 
 			names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
