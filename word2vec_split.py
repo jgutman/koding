@@ -8,8 +8,9 @@ to the current directory.
 '''
 import pandas as pd
 import numpy as np
+from gensim import models
 from gensim.models import word2vec
-import sys
+import sys, time, os
 
 
 # Parse cleaned data into a vector
@@ -46,27 +47,46 @@ def Sentences(data, filename='sentences'):
         sentences = text.split('.')
         for line in sentences:
             if str(line).strip():
-                output.write(str(line).strip()+"\n")
+                output.write(str(line).strip()+'\n')
     output.close()
-    sys.stdout.write('\rreturns path to file: ' + filename +'.txt')
+    sys.stdout.write('\rreturns path to file: ' + filename +'.txt'+'\n')
     return filename+'.txt'
 
 # Word2Vec model
 def w2v(sentencepath, length=300, context=5, 
-        samples=10, alpha_limit=0.0001, epochs=1, output='word2vec_model.txt'):
-    sentences = word2vec.LineSentence(sentencePath)
-    model = word2vec.Word2Vec(sentences, size=length, window=context, 
-                              min_alpha=alpha_limit, negative=samples,
-                              iter=epochs, min_count=100, workers=4)
+        samples=10, alpha_limit=0.0001, epochs=1, 
+        output='word2vec_model.txt'):
+    print sentencepath
+    sentences = word2vec.LineSentence(sentencepath)
+    model = models.Word2Vec(sentences, size=length, window=context, 
+    	min_alpha=alpha_limit, negative=samples,
+    	iter=epochs, min_count=100, workers=4)
     model.save(output)
     sys.stdout.write("\rAll done. Model saved to " + output)
     return model
 
-
+def main(datapath, trainpath):
+	print 'read training data...'
+	path = os.path.join(datapath, trainpath)
+	train = ParseData(path)
+	#train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
+	print(train.shape)
+	print 'write sentences to file...'
+	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready'))
+	print 'build word embeddings...'
+	model = w2v(sentencepath = sentencePath, length = 300, 
+		context = 5, samples = 10, alpha_limit = 0.001, 
+		epochs = 1, output = os.path.join(datapath, 'w2v_train_only.txt'))
+	
 if __name__ == '__main__':
-    script, trainpath = sys.argv
-    train = pd.read_csv(trainpath, sep = '\t', header=None, 
-			names = ['label', 'score', 'text'])
-    sentencePath = Sentences(data=trin, filename='train_w2v_ready')
-    model = w2v(sentencepath=sentencePath, length=300, context=5, 
-                samples=10, alpha_limit=0.001, epochs = 1, output='w2v_train_only.txt')
+    script, datapath, trainpath = sys.argv
+    start_time = time.time()
+    main(datapath, trainpath) 
+    lapse = time.time() - start_time 
+    print lapse / 60	 
+			 
+	
+    
+    
+    
+    

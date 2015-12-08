@@ -9,7 +9,7 @@ to the current directory.
 import pandas as pd
 import numpy as np
 from gensim.models import doc2vec
-import sys, time
+import sys, time, os
 
 
 # Parse cleaned data into a vector
@@ -61,11 +61,13 @@ def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, outp
 
 
 if __name__ == '__main__':
-    script, trainpath = sys.argv
-    print 'start'
-    train = pd.read_csv(trainpath, sep = '\t', header=None, 
-			names = ['label', 'score', 'text'])
+	script, trainpath = sys.argv
+	print 'read training data...'
+	train = ParseData(path)
+	#train = pd.read_csv(trainpath, sep = '\t', header = None, names = ['label', 'score', 'text'])
+	print 'write sentences to file...'
     sentencePath = Sentences(data=train, filename='train_d2v_ready')
+    print 'build document embeddings...'
     start_time = time.time()
     model = d2v(sentencepath=sentencePath, length=300, 
                 samples=10, alpha_limit=0.001, epochs=5, output='d2v_train_only_labels.txt')
