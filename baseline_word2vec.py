@@ -131,19 +131,20 @@ def main():
 	parser.add_argument('-train', dest = 'trainpath', help = 'location of pre-split training data')
 	parser.add_argument('-test', dest = 'testpath', help = 'location of pre-split test data')
 	parser.add_argument('-data', dest = 'datapath', help = 'location of unsplit data file')
-	parser.add_argument('-size', dest = 'numSamples', help 'how many samples to use in the training')
-	parser.add_argument('-split', dest = 'splitdata', help = 'split data into train and test?',
-		action = 'store_true')
-	parser.add_argument('-weighted', dest = 'weightedw2v', help = 'use tf-idf weighting for words',
-		action = 'store_true')
-	parser.add_argument('-stopwords', dest = 'removeStopWords', help = 'remove English stop words',
-		action = 'store_true')
+	parser.add_argument('-size', dest = 'numSamples', 
+		help = 'how many samples to use in the training', type = int)
+	parser.add_argument('-split', dest = 'splitdata', 
+		help = 'split data into train and test?', action = 'store_true')
+	parser.add_argument('-weighted', dest = 'weightedw2v', 
+		help = 'use tf-idf weighting for words', action = 'store_true')
+	parser.add_argument('-stopwords', dest = 'removeStopWords', 
+		help = 'remove English stop words', action = 'store_true')
 	
 	parser.set_defaults(w2vpath = os.path.join(google_drive, 'w2v_output1/w2v_output01.txt'), 
 		trainpath = os.path.join(google_drive, 'data/train.txt'), 
 		testpath = os.path.join(google_drive, 'data/test.txt'),
-		datapath = os.path.join(google_drive, 'data.txt'), 
-		splitdata = False, weightedw2v = False, removeStopWords = False)
+		datapath = os.path.join(google_drive, 'data2.txt'), 
+		splitdata = False, weightedw2v = False, removeStopWords = False, size = 0)
 	args = parser.parse_args()
 	
 	print "loading word2vec..."
@@ -203,4 +204,4 @@ if __name__ == '__main__':
 	print 'done!'
 	etime = time.time()
 	ttime = etime - stime
-	print ttime % 60
+	print ttime / 60

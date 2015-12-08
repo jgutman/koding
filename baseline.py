@@ -44,5 +44,5 @@ if __name__ == '__main__':
 	print 'done!'
 	etime = time.time()
 	ttime = etime - stime
-	print ttime % 60
+	print ttime / 60
 
