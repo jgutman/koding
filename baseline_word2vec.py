@@ -72,7 +72,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 	# Given a collection of documents (each one a list of words), calculate 
 	# the average feature vector for each one and return a 2D numpy array 
 	
-	counter = 0.
+	counter = -1
 	
 	# Preallocate a 2D numpy array, for speed
 	docFeatureVecs = np.zeros((len(documents), num_features), dtype=np.float32)
@@ -83,12 +83,10 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 		if (counter%10000 == 0):
 			print "Reddit post %d of %d" % (counter, len(documents))
 		if (weights == None):
-			docFeatureVecs[counter] = makeFeatureVec(words = post, 
-				model = model, num_features = num_features)
+			docFeatureVecs[counter] = makeFeatureVec(post, model, snum_features)
 		else:
 			weightPost = weights.getrow(counter) # sparse row vector (1, size of vocabulary)
-			docFeatureVecs[counter] = makeFeatureVec(words = post, 
-				model = model, num_features = num_features, 
+			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features, 
 				weights = weightPost, word_index = word_index)  		
      	
 	return docFeatureVecs
@@ -182,6 +180,7 @@ def main():
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
+		print tfidf_matrix_train.shape
 		print "averaging word embeddings in training data..."
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
