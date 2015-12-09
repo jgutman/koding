@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from sklearn.linear_model import LogisticRegression
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 
