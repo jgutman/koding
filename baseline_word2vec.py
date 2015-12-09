@@ -80,7 +80,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 	for post in documents:
 	# Print a status message every 1000th review
 		counter = counter + 1
-		if (counter%1000 == 0):
+		if (counter%10000 == 0):
 			print "Reddit post %d of %d" % (counter, len(documents))
 		if (weights == None):
 			docFeatureVecs[counter] = makeFeatureVec(words = post, 
@@ -158,10 +158,8 @@ def main():
 	if args.splitdata:
 		train, test = write_training(args.datapath, args.trainpath, args.testpath)
 	else:
-		train = pd.read_csv(args.trainpath, sep = '\t', header=None, 
-			names = ['label', 'score', 'text'])
-		test = pd.read_csv(args.testpath, sep = '\t', header=None, 
-			names = ['label', 'score', 'text'])
+		train = pd.read_csv(args.trainpath, sep = '\t', header=None, names = ['label', 'score', 'text'])
+		test = pd.read_csv(args.testpath, sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
 	vocabulary_size = int(word_vectors.shape[0])
