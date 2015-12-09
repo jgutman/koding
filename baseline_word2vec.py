@@ -12,6 +12,7 @@ from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 
 from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LogisticRegression
 import random, sys, time
 
 def write_training(datapath, trainpath, testpath):
