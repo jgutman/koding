@@ -22,16 +22,19 @@ def traintest(path):
     sample = train.iloc[random.sample(np.arange(0, train.shape[0]), 10000)]
     return train, test, sample, le.classes_
     sys.stdout.write( 'traintest\n')
+    sys.stdout.flush()
 
 
 def DimReduce(train, test, sample):
     # convert to dense matrix
     sys.stdout.write('vectorizing...\n')
+    sys.stdout.flush()
     count_vect = CountVectorizer(min_df=10, ngram_range=(1, 3))
     train_vect = count_vect.fit(train.text.values)
     train_count = train_vect.transform(train.text.values)
     test_count = train_vect.transform(test.text.values)
     sys.stdout.write('train_count dims: ' +  str(train_count.shape) + '\n')
+    sys.stdout.flush()
     # find the best number of components base on when it hits 0.8 total variance
     trigger = True
     cnt = 0
@@ -40,6 +43,7 @@ def DimReduce(train, test, sample):
     batch_loop = np.linspace(0, train_count.shape[0], nbatch).astype(int)
     test_loop = np.linspace(0, test_count.shape[0], nbatch).astype(int)
     sys.stdout.write('searching for the best pca dims...\n')
+    sys.stdout.flush()
     while trigger:
         columns = dim[cnt].astype(int)
         pca = IncrementalPCA(n_components=columns)
@@ -49,8 +53,10 @@ def DimReduce(train, test, sample):
             subset = train_count[batch_loop[i-1]:batch_loop[i]].toarray()
             pca.partial_fit(subset)
         sys.stdout.write('trying pca at dim: ' + str(columns) + ' score: ' + str(pca.explained_variance_ratio_.sum()) + '\n')
+        sys.stdout.flush()
         if pca.explained_variance_ratio_.sum() >= 0.81:
             sys.stdout.write('transforming to dim ' + str(columns) + '\n')
+            sys.stdout.flush()
             pca_train = None
             pca_test = None
             for i, v in enumerate(batch_loop):
@@ -70,6 +76,7 @@ def DimReduce(train, test, sample):
             pca = None
     # move the data out
     sys.stdout.write('moving the data out\n')
+    sys.stdout.flush()
     dftrain = pd.DataFrame(pca_train, dtype=np.float32)
     dftest = pd.DataFrame(pca_test, dtype=np.float32)
     dftrain['y'] = train.y
@@ -78,6 +85,7 @@ def DimReduce(train, test, sample):
     dftest.to_csv('pca_float32_test.csv', index=False)
     return train_count, test_count, pca_train, pca_test
     sys.stdout.write('PCA\n')
+    sys.stdout.flush()
 
 
 def LogitModel(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_):
@@ -119,12 +127,14 @@ def LogitModel(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_):
 
 if __name__ == '__main__':
     sys.stdout.write('start\n')
+    sys.stdout.flush()
     stime = time.time()
     script, path = sys.argv
     train, test, sample, cats = traintest(path = path)
     sys.stdout.write('train test Split is done\n')
     train_count, test_count, pca_train, pca_test = DimReduce(train, test, sample)
-    print 'done!'
+    sys.stdout.write('done!\n')
+    sys.stdout.flush()
     etime = time.time()
     ttime = etime - stime
     print ttime % 60
