@@ -19,13 +19,23 @@ def Sentences(data, filename='sentences.txt'):
     returns: string of the path to sentences
     '''
     output = open(filename, 'w')
+    print data.shape
     for row in data.itertuples():
-        text = row[3]
-        output.write(str(text).strip()+'\n')
+        text = str(row[3])
+        text = text.replace('\n', ' ')
+        text = text.replace('\t', ' ')
+        output.write(text+'\n')
     output.close()
     sys.stdout.write('\rreturns path to file: ' + filename + '\n')
     return filename
-
+    
+# Count number of lines in a file
+def file_len(fname):
+     with open(fname) as f:
+             for i, l in enumerate(f):
+                     pass
+     return (i+1)
+ 
 # Word2Vec model
 def w2v(sentencepath, length=300, context=5, 
         samples=10, alpha_limit=0.0001, epochs=1, 
@@ -54,7 +64,7 @@ def main(datapath, trainpath, w2vpath):
 if __name__ == '__main__':
     script, datapath, trainpath, w2vpath = sys.argv
     start_time = time.time()
-    main(datapath, trainpath) 
+    main(datapath, trainpath, w2vpath) 
     lapse = time.time() - start_time 
     print lapse / 60	 
 			 

@@ -196,6 +196,7 @@ def main():
 	else:
 		print "averaging word embeddings in training data..." 
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
+		
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
 	
