@@ -12,45 +12,19 @@ from gensim import models
 from gensim.models import word2vec
 import sys, time, os
 
-
-# Parse cleaned data into a vector
-def ParseData(path):
+# Create a file of just sentences for NN
+def Sentences(data, filename='sentences.txt'):
     '''
-    arguments: path = path to data.txt
-    returns: an array of data
-    '''
-    tempD = []
-    skip_count = 0
-    with open(path) as f:
-        try:
-            for line in f:
-                row = line.split('\t')
-                label = row[0]
-                score = row[1]
-                text = ' '.join(row[2:]).replace("\t", " ").strip()
-                if label != 'nan':
-                    tempD.append([label, score, text])
-        except:
-            skip_count +=1
-    sys.stdout.write('\rerrors catched: %d' % skip_count)
-    return tempD
-
-# Create a file of just sentences for NN, break at '.'
-def Sentences(data, filename='sentences'):
-    '''
-    arguement: data = array of data, filename = file name
+    argument: data = Pandas dataframe, filename = file name
     returns: string of the path to sentences
     '''
-    output = open(filename+'.txt', 'w')
-    for row in data:
-        text = row[2]
-        sentences = text.split('.')
-        for line in sentences:
-            if str(line).strip():
-                output.write(str(line).strip()+'\n')
+    output = open(filename, 'w')
+    for row in data.itertuples():
+        text = row[3]
+        output.write(str(text).strip()+'\n')
     output.close()
-    sys.stdout.write('\rreturns path to file: ' + filename +'.txt'+'\n')
-    return filename+'.txt'
+    sys.stdout.write('\rreturns path to file: ' + filename + '\n')
+    return filename
 
 # Word2Vec model
 def w2v(sentencepath, length=300, context=5, 
@@ -65,21 +39,20 @@ def w2v(sentencepath, length=300, context=5,
     sys.stdout.write("\rAll done. Model saved to " + output)
     return model
 
-def main(datapath, trainpath):
+def main(datapath, trainpath, w2vpath):
 	print 'read training data...'
 	path = os.path.join(datapath, trainpath)
-	train = ParseData(path)
-	#train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
+	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
 	print(train.shape)
 	print 'write sentences to file...'
-	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready'))
+	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
 	print 'build word embeddings...'
 	model = w2v(sentencepath = sentencePath, length = 300, 
 		context = 5, samples = 10, alpha_limit = 0.001, 
-		epochs = 1, output = os.path.join(datapath, 'w2v_train_only.txt'))
+		epochs = 1, output = os.path.join(w2vpath, 'w2v_train_only.txt'))
 	
 if __name__ == '__main__':
-    script, datapath, trainpath = sys.argv
+    script, datapath, trainpath, w2vpath = sys.argv
     start_time = time.time()
     main(datapath, trainpath) 
     lapse = time.time() - start_time 
