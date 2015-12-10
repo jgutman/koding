@@ -27,13 +27,15 @@ def ParseData(path):
     sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d\n' % (skip_count, rows_dropped, len(tempD)))
     return tempD
 
-
-def Split(path):
+def Split(path, data = None, parse = True):
     '''
     arguments: path= path to data.txt
     returns: train and test split in panda DataFrame
     '''
-    D = ParseData(path)
+    if parse:
+    	D = ParseData(path)
+    else:
+    	D = data.values.tolist()
     
     # count of reddit types
     Counter = {}

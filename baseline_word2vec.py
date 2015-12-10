@@ -16,7 +16,9 @@ from sklearn.preprocessing import LabelEncoder
 import random, sys, time
 
 def write_training(datapath, trainpath, testpath):
-	train, test = Split(datapath)
+	#train, test = Split(datapath)
+	data = pd.read_csv(datapath, sep = '\t', header=None, names = ['label', 'score', 'text'])
+	train, test = Split(datapath, data = data, parse = False)
 	train.to_csv(trainpath, sep = '\t', header = False, index = False)
 	test.to_csv(testpath, sep = '\t', header = False, index = False)
 	return train, test
