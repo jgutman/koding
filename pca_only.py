@@ -118,10 +118,11 @@ def LogitModel(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_):
 
 
 if __name__ == '__main__':
-    print 'start'
+    sys.stdout.write('start\n')
     stime = time.time()
     script, path = sys.argv
     train, test, sample, cats = traintest(path = path)
+    sys.stdout.write('train test Split is done\n')
     train_count, test_count, pca_train, pca_test = DimReduce(train, test, sample)
     print 'done!'
     etime = time.time()
