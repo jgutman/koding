@@ -24,4 +24,4 @@ python word2vec_split.py "$DATA" "$TRAIN" "$W2V"
 python doc2vec_split.py "$TRAINPATH" "$SENTENCEPATH" "$D2V"
 python check_models.py "$W2VMODEL" "$D2VMODEL"
 python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$TESTPATH" -weighted -stopwords
-python doc2vec_model.py -google "$GDRIVE" -doc2v "$D2VMODEL" -data "$CLEAN" -train "$TRAINPATH" -test "$TESTPATH" -stopwords
+python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TRAIN}" -stopwords

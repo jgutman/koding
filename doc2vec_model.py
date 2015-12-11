@@ -61,13 +61,12 @@ def getTestVectors(test, model, remove_stopwords = False):
 	num_features = int(model.syn0.shape[1])
 	docFeatureVecs = np.zeros((len(test.index), num_features), dtype=np.float32)
 	
-	for post in test.itertuples():
+	for post in test.itertuples(): 
 		text = str(post[3])
-        wordList = docWordList(text, remove_stopwords)
-        docVector = model.infer_vector(wordList)
-        docFeatureVecs[post[0]] = docVector
-    
-    return docFeatureVecs
+		wordList = docWordList(text, remove_stopwords)
+		docVector = model.infer_vector(wordList)
+		docFeatureVecs[post[0]] = docVector 
+	return docFeatureVecs
 
 def main():
 	parser = argparse.ArgumentParser(description = 'Get doc2vec model path')
