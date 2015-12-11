@@ -33,7 +33,7 @@ def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	
 	print 'CLASSES', le.classes_ 
 
-def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# encode labels
 	le = LabelEncoder()
 	le.fit(train.label)
@@ -116,8 +116,8 @@ def main():
 	
 	print "fitting logit and svm model on document embeddings..."
 	outputDirectory = os.path.dirname(doc2vpath)
-	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
-	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	
 if __name__ == '__main__':
 	print 'start'

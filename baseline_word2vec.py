@@ -95,7 +95,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
      	
 	return docFeatureVecs
 
-def baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# Extend Richard's baseline() function in baseline.py to use trainDataVecs / testDataVecs
 	# instead of count vectorizer
 	
@@ -241,7 +241,7 @@ def main():
 	
 	print "fitting baseline model on averaged word embeddings..."
 	outputDirectory = os.path.dirname(w2vpath)
-	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 
 if __name__ == '__main__':
