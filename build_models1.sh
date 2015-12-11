@@ -23,5 +23,5 @@ python split_updated.py "$CLEAN" "$TRAINPATH" "TESTPATH"
 python word2vec_split.py "$DATA" "$TRAIN" "$W2V"
 python doc2vec_split.py "$TRAINPATH" "$SENTENCEPATH" "$D2V"
 python check_models.py "$W2VMODEL" "$D2VMODEL"
-python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$TESTPATH" -weighted -stopwords
-python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TRAIN}" -stopwords
+nohup python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$TESTPATH" -weighted -stopwords > w2v_fit.out
+nohup python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TEST}" -stopwords > d2v_fit.out
