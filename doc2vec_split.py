@@ -15,7 +15,7 @@ import sys, time, os
 def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, output='doc2vec_model.txt'):
     sentences = doc2vec.TaggedLineDocument(sentencepath)
     model = doc2vec.Doc2Vec(sentences, size=length, min_alpha=alpha_limit, negative=samples,
-                            iter=epochs, min_count=100, workers=4)
+                            iter=epochs, min_count=5, workers=4)
     model.save(output)
     sys.stdout.write("\rAll done. Model saved to " + output+'\n')
     return model

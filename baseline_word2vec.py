@@ -9,6 +9,7 @@ import numpy as np
 
 from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
+from sklearn import svm
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
 
@@ -94,7 +95,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
      	
 	return docFeatureVecs
 
-def baselineWord2Vec(train, test, trainDataVecs, testDataVecs):
+def baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# Extend Richard's baseline() function in baseline.py to use trainDataVecs / testDataVecs
 	# instead of count vectorizer
 	
@@ -111,8 +112,32 @@ def baselineWord2Vec(train, test, trainDataVecs, testDataVecs):
 	print 'Test sample score: %s' % str(model.score(testDataVecs, test.y.values))
 	print 'In sample scores: %s' % str(model.score(trainDataVecs, train.y.values))
 
-	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv('word2vec_predict_proba.csv', 
-		index=False)
+	outfile = os.path.join(outputPath, 'word2vec_logit_predict_proba.csv')
+	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
+		sep = '\t', header = list(le.classes_), index = False)
+	
+	print 'CLASSES', le.classes_ 
+
+def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+	# Extend Richard's baseline() function in baseline.py to use trainDataVecs / testDataVecs
+	# instead of count vectorizer
+	
+	# encode labels
+	le = LabelEncoder()
+	le.fit(train.label)
+	train['y'] = le.transform(train.label)
+	test['y'] = le.transform(test.label)
+	
+	# train model
+	C = 1.0  # SVM regularization parameter
+	model = svm.SVC(kernel='linear', C=C).fit(trainDataVecs, train.y.values)
+	
+	print 'Test sample score: %s' % str(model.score(testDataVecs, test.y.values))
+	print 'In sample scores: %s' % str(model.score(trainDataVecs, train.y.values))
+
+	outfile = os.path.join(outputPath, 'word2vec_svm_predict_proba.csv')
+	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
+		sep = '\t', header = list(le.classes_), index = False)
 	
 	print 'CLASSES', le.classes_ 
 
@@ -196,12 +221,17 @@ def main():
 	else:
 		print "averaging word embeddings in training data..." 
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
+		# write the word embeddings to file so we can read in quickly
+		np.savetxt(args.trainpath+'.embeddings.txt', delimiter='\t')
 		
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
+		np.savetxt(args.testpath+'.embeddings.txt', delimiter='\t')
 	
 	print "fitting baseline model on averaged word embeddings..."
-	baselineWord2Vec(train, test, trainDataVecs, testDataVecs)
+	outputDirectory = os.path.pardir(args.w2vpath)
+	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 
 if __name__ == '__main__':
 	print 'start'

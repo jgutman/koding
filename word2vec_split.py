@@ -44,14 +44,14 @@ def w2v(sentencepath, length=300, context=5,
     sentences = word2vec.LineSentence(sentencepath)
     model = models.Word2Vec(sentences, size=length, window=context, 
     	min_alpha=alpha_limit, negative=samples,
-    	iter=epochs, min_count=100, workers=4)
+    	iter=epochs, min_count=5, workers=4)
     model.save(output)
-    sys.stdout.write("\rAll done. Model saved to " + output)
+    sys.stdout.write("\rAll done. Model saved to " + output+'\n')
     return model
 
-def main(datapath, trainpath, w2vpath):
+def main(datapath, trainfile, w2vpath):
 	print 'read training data...'
-	path = os.path.join(datapath, trainpath)
+	path = os.path.join(datapath, trainfile)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
 	print(train.shape)
 	print 'write sentences to file...'
