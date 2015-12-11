@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 def cleanData(filepath, output):
     data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
