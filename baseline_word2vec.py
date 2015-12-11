@@ -217,11 +217,15 @@ def main():
 		print "averaging word embeddings in training data..."
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
+		file_train_out = os.path.join(os.path.dirname(trainpath), 'train_word_embeddings.txt')
+		np.savetxt(file_train_out, trainDataVecs, delimiter='\t')
 		
 		# Apply tf-idf matrix from training to test documents to get weights
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
+		file_test_out = os.path.join(os.path.dirname(testpath), 'train_word_embeddings.txt')
+		np.savetxt(file_test_out, testDataVecs, delimiter='\t')
 		
 	else:
 		print "averaging word embeddings in training data..." 
