@@ -27,8 +27,8 @@ def SparseMatrix(train, test, sample):
     # convert to dense matrix
     sys.stdout.write('vectorizing...\n')
     sys.stdout.flush()
-    count_vect = CountVectorizer(min_df=10, ngram_range=(1, 3))
-    train_vect = count_vect.fit(sample.text.values)
+    count_vect = CountVectorizer(min_df=100, ngram_range=(1, 3))
+    train_vect = count_vect.fit(train.text.values)
     train_count = train_vect.transform(train.text.values)
     test_count = train_vect.transform(test.text.values)
     sample_count = train_vect.transform(sample.text.values)
