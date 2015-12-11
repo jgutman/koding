@@ -6,7 +6,7 @@ def cleanData(filepath, output):
 	
 	weirdRows = []
 	for partialPost in screwups.index:
-    	rowIndexer = data[data.label == partialPost].index
+        rowIndexer = data[data.label == partialPost].index
     	for row in rowIndexer:
         	weirdRows.append(row)
     
