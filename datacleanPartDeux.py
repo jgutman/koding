@@ -2,7 +2,16 @@ import pandas as pd
 import sys
 
 def cleanData(filepath, output):
-    data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
+    # data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
+    df = pd.read_csv(filepath, sep='\t', header = None)
+    gg = []
+    for i in df.values:
+        l = i[0]
+        s = i[1]
+        t = i[2:]
+        gg.append([l, s, ' '.join(t)])
+    data = pd.DataFrame(gg, columns=['label', 'score', 'text'])
+    
     screwups = data.label.value_counts()[data.label.value_counts() < 100000] 
     weirdRows = []
     for partialPost in screwups.index:
