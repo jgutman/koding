@@ -27,7 +27,7 @@ def SparseMatrix(train, test, sample):
     # convert to dense matrix
     sys.stdout.write('vectorizing...\n')
     sys.stdout.flush()
-    count_vect = CountVectorizer(min_df=100, ngram_range=(1, 2))
+    count_vect = CountVectorizer(min_df=10, ngram_range=(1, 3))
     train_vect = count_vect.fit(sample.text.values)
     train_count = train_vect.transform(train.text.values)
     test_count = train_vect.transform(test.text.values)
@@ -47,7 +47,15 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
     train_X, val_X, train_Y, val_Y = train_test_split(pca_train, train_y, test_size=.025, random_state=83)
     lower = 1e-6
     upper = 10
-    weights = {i:'balanced' for i, v in enumerate(le_classes_)}
+    # weights
+    Counter = {}
+    for i in train_Y:
+        if i in Counter:
+            Counter[i] =+ 1.0
+        else:
+            Counter[i] = 1.0
+    topCount = max(Counter.values())
+    weights = {i: Counter[i] / topCount for i, v in enumerate(le_classes_)}
     print weights
     for level in xrange(zoom):
         lambda_range = np.linspace(lower, upper, lamb)
