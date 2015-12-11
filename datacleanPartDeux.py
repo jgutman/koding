@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 
 def cleanData(filepath, output):
-    data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
+    data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'], error_bad_lines=False)
     screwups = data.label.value_counts()[data.label.value_counts() < 100000] 
     weirdRows = []
     for partialPost in screwups.index:
