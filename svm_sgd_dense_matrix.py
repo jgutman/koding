@@ -54,8 +54,8 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
         nested_scores = []
         for i, v in enumerate(lambda_range):
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                                l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  learning_rate='optimal')
-            model = clf.fit(train_X, train_Y, class_weight=weights)
+                                l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  learning_rate='optimal', class_weight=weights)
+            model = clf.fit(train_X, train_Y)
             nested_scores.append(model.score(val_X, val_Y))
             sys.stdout.write('level: ' + str(level) + ' lambda: ' + str(v) + ' score: ' + str(model.score(val_X, val_Y)) + '\n')
             sys.stdout.flush()
@@ -73,7 +73,7 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
         sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-                        l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  learning_rate='optimal')
+                        l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  learning_rate='optimal', class_weight=weights)
     model = clf.fit(train_X, train_Y, class_weight=weights)
     df = pd.DataFrame(model.decision_function(pca_test), columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
