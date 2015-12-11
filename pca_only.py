@@ -48,6 +48,8 @@ def DimReduce(train, test, sample):
         columns = dim[cnt].astype(int)
         pca = IncrementalPCA(n_components=columns)
         for i, v in enumerate(batch_loop):
+            sys.stdout.write(str(i) + '\n')
+            sys.stdout.flush()
             if i==0:
                 continue
             subset = train_count[batch_loop[i-1]:batch_loop[i]].toarray()
