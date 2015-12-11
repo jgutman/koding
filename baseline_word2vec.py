@@ -150,8 +150,7 @@ def docWordList(text, remove_stopwords = False, to_lower = False):
     	words = text.split()
     if remove_stopwords:
     	stops = set(stopwords.words("english"))
-    	words = [w for w in words if not w in stops]
-    	
+    	words = [w for w in words if not w in stops]  	
     return words
     
 def main():
@@ -171,10 +170,10 @@ def main():
 	parser.add_argument('-stopwords', dest = 'removeStopWords', 
 		help = 'remove English stop words', action = 'store_true')
 	
-	parser.set_defaults(w2vpath = os.path.join(google_drive, 'w2v_output1/w2v_output01.txt'), 
-		trainpath = os.path.join(google_drive, 'data/train.txt'), 
-		testpath = os.path.join(google_drive, 'data/test.txt'),
-		datapath = os.path.join(google_drive, 'data2.txt'), 
+	parser.set_defaults(w2vpath = os.path.join(google_drive, 'w2v_output1/w2v_train_only.txt'), 
+		trainpath = os.path.join(google_drive, 'data/train2.txt'), 
+		testpath = os.path.join(google_drive, 'data/test2.txt'),
+		datapath = os.path.join(google_drive, 'data3.txt'), 
 		splitdata = False, weightedw2v = False, removeStopWords = False, size = 0)
 	args = parser.parse_args()
 	
