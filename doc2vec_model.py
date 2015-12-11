@@ -111,7 +111,7 @@ def main():
 	
 	print "inferring test document embeddings..."
 	testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
-	np.savetxt(testpath+'.d2v.embeddings.txt', delimiter='\t')
+	np.savetxt((testpath+'.d2v.embeddings.txt'), testDatatVecs, delimiter='\t')
 	print len(testDataVecs), len(testDataVecs[0])
 	
 	print "fitting logit and svm model on document embeddings..."

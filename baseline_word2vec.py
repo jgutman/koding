@@ -221,11 +221,11 @@ def main():
 		print "averaging word embeddings in training data..." 
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
 		# write the word embeddings to file so we can read in quickly
-		np.savetxt(args.trainpath+'.embeddings.txt', delimiter='\t')
+		np.savetxt((args.trainpath+'.embeddings.txt'), trainDataVecs, delimiter='\t')
 		
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
-		np.savetxt(args.testpath+'.embeddings.txt', delimiter='\t')
+		np.savetxt((args.testpath+'.embeddings.txt'), testDataVecs, delimiter='\t')
 	
 	print "fitting baseline model on averaged word embeddings..."
 	outputDirectory = os.path.pardir(args.w2vpath)
