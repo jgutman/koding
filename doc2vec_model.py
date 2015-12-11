@@ -120,7 +120,6 @@ def main():
 	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	
-	
 if __name__ == '__main__':
 	print 'start'
 	stime = time.time()
