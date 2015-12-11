@@ -1,14 +1,13 @@
 import pandas as pd
 
 def cleanData(filepath, output):
-	data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
-	screwups = data.label.value_counts()[data.label.value_counts() < 100000] 
-	
-	weirdRows = []
-	for partialPost in screwups.index:
+    data = pd.read_csv(filepath, sep='\t', header = None, names = ['label', 'score', 'text'])
+    screwups = data.label.value_counts()[data.label.value_counts() < 100000] 
+    weirdRows = []
+    for partialPost in screwups.index:
         rowIndexer = data[data.label == partialPost].index
     	for row in rowIndexer:
-        	weirdRows.append(row)
+    	    weirdRows.append(row)
     
     weirdRows.sort()
     dataCleaned = data.copy()
@@ -30,7 +29,7 @@ def cleanData(filepath, output):
     duplicateRowsToDrop = []
 	for post in list(doubles.index):
     	if len(str(post)) < 20:
-        	continue
+    	    continue
     	doubleIndex =  list((dataCleaned[dataCleaned.text == post]).index)
     	duplicateRowsToDrop.append(doubleIndex[1])
     
@@ -38,6 +37,6 @@ def cleanData(filepath, output):
     dataTrimmed.to_csv(outputPath, sep = '\t', header = False, index = False)
 
 if __name__ == '__main__':
-	script, inputPath, outputPath = sys.argv
-	cleanData(inputPath, outputPath)
+    script, inputPath, outputPath = sys.argv
+    cleanData(inputPath, outputPath)
 
