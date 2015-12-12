@@ -1,0 +1,28 @@
+start
+loading doc2vec...
+loading train and test data...
+fetching training document embeddings...
+904570 300
+inferring test document embeddings...
+Traceback (most recent call last):
+  File "doc2vec_model.py", line 125, in <module>
+    main()
+  File "doc2vec_model.py", line 113, in main
+    testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
+  File "doc2vec_model.py", line 67, in getTestVectors
+    docVector = model.infer_vector(wordList)
+  File "//anaconda/lib/python2.7/site-packages/gensim-0.12.3-py2.7-macosx-10.5-x86_64.egg/gensim/models/doc2vec.py", line 688, in infer_vector
+    doctag_vectors[0] = self.seeded_vector(' '.join(doc_words))
+KeyboardInterrupt
+start
+loading doc2vec...
+loading train and test data...
+fetching training document embeddings...
+904570 300
+inferring test document embeddings...
+Traceback (most recent call last):
+  File "doc2vec_model.py", line 125, in <module>
+    main()
+  File "doc2vec_model.py", line 114, in main
+    np.savetxt((testpath+'.d2v.embeddings.txt'), testDatatVecs, delimiter='\t')
+NameError: global name 'testDatatVecs' is not defined

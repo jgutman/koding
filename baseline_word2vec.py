@@ -95,7 +95,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
      	
 	return docFeatureVecs
 
-def baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# Extend Richard's baseline() function in baseline.py to use trainDataVecs / testDataVecs
 	# instead of count vectorizer
 	
@@ -176,15 +176,21 @@ def main():
 		datapath = os.path.join(google_drive, 'data3.txt'), 
 		splitdata = False, weightedw2v = False, removeStopWords = False, size = 0)
 	args = parser.parse_args()
+	datapath = os.path.abspath(args.datapath)
+	trainpath = os.path.abspath(args.trainpath)
+	testpath = os.path.abspath(args.trainpath)
+	w2vpath = os.path.abspath(args.w2vpath)
 	
 	print "loading word2vec..."
-	model = models.Word2Vec.load(args.w2vpath)
+	model = models.Word2Vec.load(w2vpath)
 	print "loading train and test data..."
 	if args.splitdata:
-		train, test = write_training(args.datapath, args.trainpath, args.testpath)
+		train, test = write_training(datapath, trainpath, testpath)
 	else:
-		train = pd.read_csv(args.trainpath, sep = '\t', header=None, names = ['label', 'score', 'text'])
-		test = pd.read_csv(args.testpath, sep = '\t', header=None, names = ['label', 'score', 'text'])
+		train = pd.read_csv(trainpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
+		test = pd.read_csv(testpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
 	vocabulary_size = int(word_vectors.shape[0])
@@ -211,25 +217,31 @@ def main():
 		print "averaging word embeddings in training data..."
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
+		file_train_out = os.path.join(os.path.dirname(trainpath), 'train_word_embeddings.txt')
+		np.savetxt(file_train_out, trainDataVecs, delimiter='\t')
 		
 		# Apply tf-idf matrix from training to test documents to get weights
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
+		file_test_out = os.path.join(os.path.dirname(testpath), 'train_word_embeddings.txt')
+		np.savetxt(file_test_out, testDataVecs, delimiter='\t')
 		
 	else:
 		print "averaging word embeddings in training data..." 
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
 		# write the word embeddings to file so we can read in quickly
-		np.savetxt(args.trainpath+'.embeddings.txt', delimiter='\t')
+		file_train_out = os.path.join(os.path.dirname(trainpath), 'train_word_embeddings.txt')
+		np.savetxt(file_train_out, trainDataVecs, delimiter='\t')
 		
 		print "averaging word embeddings in test data..."
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
-		np.savetxt(args.testpath+'.embeddings.txt', delimiter='\t')
+		file_test_out = os.path.join(os.path.dirname(testpath), 'train_word_embeddings.txt')
+		np.savetxt(file_test_out, testDataVecs, delimiter='\t')
 	
 	print "fitting baseline model on averaged word embeddings..."
-	outputDirectory = os.path.pardir(args.w2vpath)
-	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	outputDirectory = os.path.dirname(w2vpath)
+	logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 
 if __name__ == '__main__':

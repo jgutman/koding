@@ -33,7 +33,7 @@ def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	
 	print 'CLASSES', le.classes_ 
 
-def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# encode labels
 	le = LabelEncoder()
 	le.fit(train.label)
@@ -89,10 +89,10 @@ def main():
 		datapath = 'data3.txt', 
 		splitdata = False, removeStopWords = False, size = 0)
 	args = parser.parse_args()
-	trainpath = os.path.join(args.google_drive, args.trainpath)
-	testpath = os.path.join(args.google_drive, args.testpath)
-	datapath = os.path.join(args.google_drive, args.datapath)
-	doc2vpath = os.path.join(args.google_drive, args.doc2vpath)
+	trainpath = os.path.join(os.path.abspath(args.google_drive), args.trainpath)
+	testpath = os.path.join(os.path.abspath(args.google_drive), args.testpath)
+	datapath = os.path.join(os.path.abspath(args.google_drive), args.datapath)
+	doc2vpath = os.path.join(os.path.abspath(args.google_drive), args.doc2vpath)
 	
 	print "loading doc2vec..."
 	model = models.Doc2Vec.load(doc2vpath)
@@ -111,13 +111,13 @@ def main():
 	
 	print "inferring test document embeddings..."
 	testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
-	np.savetxt(testpath+'.d2v.embeddings.txt', delimiter='\t')
+	np.savetxt((testpath+'.d2v.embeddings.txt'), testDataVecs, delimiter='\t')
 	print len(testDataVecs), len(testDataVecs[0])
 	
 	print "fitting logit and svm model on document embeddings..."
-	outputDirectory = os.path.pardir(args.doc2vpath)
-	baselineWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
-	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	outputDirectory = os.path.dirname(doc2vpath)
+	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	
 if __name__ == '__main__':
 	print 'start'
