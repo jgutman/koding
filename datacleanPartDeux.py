@@ -20,7 +20,8 @@ def cleanData(filepath, output):
     	part1 = str(dataCleaned.text.loc[baseRow])
     	part2 = str(dataCleaned.label.loc[row])
     	dataCleaned.text.loc[baseRow] = part1 + ' ' + part2
-    	
+    
+    dataCleaned.drop(weirdRows, inplace = True)
     emptyRows = dataCleaned[pd.isnull(dataCleaned.label)].index
     dataCleaned.drop(emptyRows, inplace = True)
     
