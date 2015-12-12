@@ -13,6 +13,9 @@ import random, sys, time
 from baseline_word2vec import docWordList
 from nltk.corpus import stopwords
 
+from sklearn.linear_model import LogisticRegression
+from sklearn import svm
+
 def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# encode labels
 	le = LabelEncoder()
@@ -75,6 +78,9 @@ def main():
 	parser.add_argument('-train', dest = 'trainpath', help = 'location of pre-split training data')
 	parser.add_argument('-test', dest = 'testpath', help = 'location of pre-split test data')
 	parser.add_argument('-data', dest = 'datapath', help = 'location of unsplit data file')
+	parser.add_argument('-loadtest', dest = 'loadTestVecs', help = 'load test document embeddings',
+		action = 'store_true')
+	parser.add_argument('-testvecpath', dest = 'testVecPath', help = 'location of stored test embeddings')
 	parser.add_argument('-size', dest = 'numSamples', 
 		help = 'how many samples to use in the training', type = int)
 	parser.add_argument('-split', dest = 'splitdata', 
@@ -87,7 +93,8 @@ def main():
 		trainpath = 'data/train2.txt', 
 		testpath = 'data/test2.txt',
 		datapath = 'data3.txt', 
-		splitdata = False, removeStopWords = False, size = 0)
+		testVecPath = 'doc2vec/test2.txt.d2v.embeddings.txt',
+		splitdata = False, removeStopWords = False, loadTestVecs = False, size = 0)
 	args = parser.parse_args()
 	trainpath = os.path.join(os.path.abspath(args.google_drive), args.trainpath)
 	testpath = os.path.join(os.path.abspath(args.google_drive), args.testpath)
