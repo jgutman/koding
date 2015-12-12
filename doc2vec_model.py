@@ -93,13 +93,14 @@ def main():
 		trainpath = 'data/train2.txt', 
 		testpath = 'data/test2.txt',
 		datapath = 'data3.txt', 
-		testVecPath = 'doc2vec/test2.txt.d2v.embeddings.txt',
+		testVecPath = 'doc2vec/test2.d2v.embeddings.pickle',
 		splitdata = False, removeStopWords = False, loadTestVecs = False, size = 0)
 	args = parser.parse_args()
 	trainpath = os.path.join(os.path.abspath(args.google_drive), args.trainpath)
 	testpath = os.path.join(os.path.abspath(args.google_drive), args.testpath)
 	datapath = os.path.join(os.path.abspath(args.google_drive), args.datapath)
 	doc2vpath = os.path.join(os.path.abspath(args.google_drive), args.doc2vpath)
+	testVecPath = os.path.join(os.path.abspath(args.google_drive), args.testVecPath)
 	
 	print "loading doc2vec..."
 	model = models.Doc2Vec.load(doc2vpath)
@@ -118,7 +119,7 @@ def main():
 	
 	print "inferring test document embeddings..."
 	testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
-	np.savetxt((testpath+'.d2v.embeddings.txt'), testDataVecs, delimiter='\t')
+	testDataVecs.dump(testVecPath)
 	print len(testDataVecs), len(testDataVecs[0])
 	
 	print "fitting logit and svm model on document embeddings..."
