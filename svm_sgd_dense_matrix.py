@@ -25,7 +25,7 @@ def traintest(path):
 
 def SparseMatrix(train, test, sample):
     # convert to dense matrix
-    sys.stdout.write('vectorizing...\n')
+    sys.stdout.write('\nvectorizing...\n')
     sys.stdout.flush()
     count_vect = CountVectorizer(min_df=10, ngram_range=(1, 4))
     train_vect = count_vect.fit(train.text.values)
@@ -51,11 +51,11 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
     Counter = {}
     for i in train_Y:
         if i in Counter:
-            Counter[i] =+ 1.0
+            Counter[i] += 1.0
         else:
             Counter[i] = 1.0
     topCount = max(Counter.values())
-    weights = {i: Counter[i] / topCount for i, v in enumerate(le_classes_)}
+    weights = {i: topCount/ Counter[i] for i, v in enumerate(le_classes_)}
     print weights
     for level in xrange(zoom):
         lambda_range = np.linspace(lower, upper, lamb)
@@ -82,7 +82,7 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
                         l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  learning_rate='optimal', class_weight=weights)
-    model = clf.fit(train_X, train_Y, class_weight=weights)
+    model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.decision_function(pca_test), columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
     df.to_csv('decision_function_svm_dense_matrix.csv', index=False)
