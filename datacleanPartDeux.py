@@ -13,7 +13,14 @@ def cleanData(filepath, outputPath):
 			weirdRows.append(row)
 			
 	weirdRows.sort()
+	print 'Removing strange characters...'
 	dataCleaned = data.copy()
+	for row in dataCleaned.itertuples():
+		text = str(row[1])
+		text = text.replace('\r', ' ')
+		text = text.replace('\n', ' ')
+		text = text.replace('\t', ' ')
+		text = text.replace('&gt;', ' ')
 	
 	for row in weirdRows:
 		baseRow = row
@@ -41,11 +48,11 @@ def cleanData(filepath, outputPath):
 	
 	print 'Removing whitespace characters...'
 	dataTrimmed = dataCleaned.drop(duplicateRowsToDrop)
-	for row in dataTrimmed.itertuples():
-		text = str(row[3])
-		text = text.replace('\n', ' ')
-		text = text.replace('\t', ' ')
-		dataTrimmed.text.loc[row[0]] = text
+	#for row in dataTrimmed.itertuples():
+	#	text = str(row[3])
+	#	text = text.replace('\n', ' ')
+	#	text = text.replace('\t', ' ')
+	#	dataTrimmed.text.loc[row[0]] = text
 	
 	print 'Copying and writing to file...'
 	dataTrimmed.to_csv(outputPath, sep = '\t', header = False, index = False)
