@@ -17,8 +17,10 @@ def cleanData(filepath, outputPath):
 	
 	for row in weirdRows:
 		baseRow = row
-		while (str(dataCleaned.text.loc[baseRow]) == 'nan'):
+		compare_string = str(dataCleaned.text.loc[baseRow]).lower()
+		while (compare_string.strip() == 'nan' or compare_string.strip() == ''):
 			baseRow = baseRow - 1
+			compare_string = str(dataCleaned.text.loc[baseRow]).lower()
 		part1 = str(dataCleaned.text.loc[baseRow])
 		part2 = str(dataCleaned.label.loc[row])
 		dataCleaned.text.loc[baseRow] = part1 + ' ' + part2

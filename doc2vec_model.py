@@ -118,9 +118,13 @@ def main():
 	print len(trainDataVecs), len(trainDataVecs[0])
 	
 	print "inferring test document embeddings..."
-	testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
-	testDataVecs.dump(testVecPath)
-	print len(testDataVecs), len(testDataVecs[0])
+	if args.loadTestVecs:
+		testDataVecs = np.load(testVecPath)
+		print len(testDataVecs), len(testDataVecs[0])
+	else:	
+		testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
+		testDataVecs.dump(testVecPath)
+		print len(testDataVecs), len(testDataVecs[0])
 	
 	print "fitting logit and svm model on document embeddings..."
 	outputDirectory = os.path.dirname(doc2vpath)
