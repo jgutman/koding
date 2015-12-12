@@ -17,10 +17,8 @@ def cleanData(filepath, outputPath):
 	
 	for row in weirdRows:
 		baseRow = row
-		compare_string = str(dataCleaned.text.loc[baseRow]).lower()
-		while (compare_string.strip() == 'nan' or compare_string.strip() == ''):
+		while (str(dataCleaned.text.loc[baseRow]) == 'nan'):
 			baseRow = baseRow - 1
-			compare_string = str(dataCleaned.text.loc[baseRow]).lower()
 		part1 = str(dataCleaned.text.loc[baseRow])
 		part2 = str(dataCleaned.label.loc[row])
 		dataCleaned.text.loc[baseRow] = part1 + ' ' + part2
@@ -41,8 +39,15 @@ def cleanData(filepath, outputPath):
 		doubleIndex =  list((dataCleaned[dataCleaned.text == post]).index)
 		duplicateRowsToDrop.append(doubleIndex[1])
 	
-	print 'Copying and writing to file...'
+	print 'Removing whitespace characters...'
 	dataTrimmed = dataCleaned.drop(duplicateRowsToDrop)
+	for row in dataTrimmed.itertuples():
+		text = str(row[3])
+		text = text.replace('\n', ' ')
+		text = text.replace('\t', ' ')
+		dataTrimmed.text.loc[row[0]] = text
+	
+	print 'Copying and writing to file...'
 	dataTrimmed.to_csv(outputPath, sep = '\t', header = False, index = False)
 
 if __name__ == '__main__':
