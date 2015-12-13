@@ -59,7 +59,7 @@ def Split(path, data = None, parse = True, random_seed = 83):
     
     train = train.loc[order_train]
     test = test.loc[order_test]
-    train.reset_index(inplace=True, drop=True)
+    train.reset_index(inplace=True, drop=True)	
     test.reset_index(inplace=True, drop=True)
 
     return train, test  
