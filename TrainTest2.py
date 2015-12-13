@@ -35,7 +35,7 @@ def Split(path, data = None, parse = True):
     
     if parse:
     	D = ParseData(path)
-    	data = pd.DataFrame(D, columns = ['label', 'score', 'text']
+    	data = pd.DataFrame(D, columns = ['label', 'score', 'text'])
     
     groups = data.label.unique()
     group_size = data.label.value_counts()
