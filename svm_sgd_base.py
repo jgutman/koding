@@ -46,7 +46,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
                       plus and minus the max score the
                       previous iteration.
     '''
-    val_X, pca_test, val_Y, test_y = train_test_split(pca_test, test_y, test_size=len(test_y)/2, random_state=83, stratify=test_y.tolist())
+    val_X, pca_test, val_Y, test_y = train_test_split(pca_test, test_y, test_size=20000 random_state=83, stratify=test_y.tolist())
     sys.stdout.write('train_count dims: ' +  str(train_X.shape) + '\n')
     sys.stdout.write('validation_count dims: ' +  str(val_X.shape) + '\n')
     sys.stdout.write('test_count dims: ' +  str(pca_test.shape) + '\n')
