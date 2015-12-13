@@ -65,7 +65,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
         print 'tx', train_X.shape, 'vx', val_X.shape
         print 'kernel true:', comp
-    clf = SGDClassifier(alpha=1.0 loss='log', penalty='l2', 
+    clf = SGDClassifier(alpha=10.0, loss='log', penalty='l2', 
                         l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
                         learning_rate='optimal', class_weight=weights)
     model = clf.fit(train_X, train_Y)
