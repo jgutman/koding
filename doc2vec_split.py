@@ -25,7 +25,7 @@ def main(trainpath, sentencepath, d2vpath):
 	train = pd.read_csv(trainpath, sep = '\t', header = None, names = ['label', 'score', 'text'])
 	print train.shape
 	print 'build document embeddings...'
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level)
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = d2v(sentencepath=sentencepath, length=300, samples=10, alpha_limit=0.001, 
 		epochs=5, output=os.path.join(d2vpath, 'd2v_train_only_labels.txt'))
 	

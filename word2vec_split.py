@@ -58,7 +58,7 @@ def main(datapath, trainfile, w2vpath):
 	print 'write sentences to file...'
 	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
 	print 'build word embeddings...'
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level)
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = w2v(sentencepath = sentencePath, length = 300, 
 		context = 5, samples = 10, alpha_limit = 0.001, 
 		epochs = 1, output = os.path.join(w2vpath, 'w2v_train_only.txt'))
