@@ -2,8 +2,8 @@ from gensim import models
 import argparse, os
 import nltk
 
-from TrainTest import Split
-from TrainTest import ParseData
+from TrainTest2 import Split
+from TrainTest2 import ParseData
 import pandas as pd
 import numpy as np
 
