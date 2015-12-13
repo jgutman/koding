@@ -216,35 +216,8 @@ def docWordList(text, remove_stopwords = False, to_lower = False):
     	stops = set(stopwords.words("english"))
     	words = [w for w in words if not w in stops]  	
     return words
-    
-def main():
-	google_drive = os.path.abspath('../../Google Drive/gdrive/')
-	
-	parser = argparse.ArgumentParser(description = 'Get word2vec model path')
-	parser.add_argument('-w2v', dest = 'w2vpath', help = 'location of pre-built word2vec model')
-	parser.add_argument('-train', dest = 'trainpath', help = 'location of pre-split training data')
-	parser.add_argument('-test', dest = 'testpath', help = 'location of pre-split test data')
-	parser.add_argument('-data', dest = 'datapath', help = 'location of unsplit data file')
-	parser.add_argument('-size', dest = 'numSamples', 
-		help = 'how many samples to use in the training', type = int)
-	parser.add_argument('-split', dest = 'splitdata', 
-		help = 'split data into train and test?', action = 'store_true')
-	parser.add_argument('-weighted', dest = 'weightedw2v', 
-		help = 'use tf-idf weighting for words', action = 'store_true')
-	parser.add_argument('-stopwords', dest = 'removeStopWords', 
-		help = 'remove English stop words', action = 'store_true')
-	
-	parser.set_defaults(w2vpath = os.path.join(google_drive, 'w2v_output1/w2v_train_only.txt'), 
-		trainpath = os.path.join(google_drive, 'data/train2.txt'), 
-		testpath = os.path.join(google_drive, 'data/test2.txt'),
-		datapath = os.path.join(google_drive, 'data3.txt'), 
-		splitdata = False, weightedw2v = False, removeStopWords = False, size = 0)
-	args = parser.parse_args()
-	datapath = os.path.abspath(args.datapath)
-	trainpath = os.path.abspath(args.trainpath)
-	testpath = os.path.abspath(args.trainpath)
-	w2vpath = os.path.abspath(args.w2vpath)
-	
+
+def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out, file_test_out):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	sys.stdout.write("loading word2vec...\n"); sys.stdout.flush()
 	model = models.Word2Vec.load(w2vpath)
@@ -283,34 +256,88 @@ def main():
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
-		file_train_out = os.path.join(os.path.dirname(trainpath), 'train_word_embeddings.pickle')
 		trainDataVecs.dump(file_train_out)
+		sys.stdout.write("writing train embeddings to %s\n" % file_train_out); sys.stdout.flush()
 		
 		# Apply tf-idf matrix from training to test documents to get weights
 		sys.stdout.write("averaging word embeddings in test data...\n"); sys.stdout.flush()
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
-		file_test_out = os.path.join(os.path.dirname(testpath), 'test_word_embeddings.pickle')
 		testDataVecs.dump(file_test_out)
+		sys.stdout.write("writing test embeddings to %s\n" % file_test_out); sys.stdout.flush()
+		
+		return trainDataVecs, testDataVecs
 		
 	else:
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features)
 		# write the word embeddings to file so we can read in quickly
-		file_train_out = os.path.join(os.path.dirname(trainpath), 'train_word_embeddings.pickle')
 		trainDataVecs.dump(file_train_out)
+		sys.stdout.write("writing train embeddings to %s\n" % file_train_out); sys.stdout.flush()
 		
 		sys.stdout.write("averaging word embeddings in test data...\n"); sys.stdout.flush()
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features)
-		file_test_out = os.path.join(os.path.dirname(testpath), 'test_word_embeddings.pickle')
 		testDataVecs.dump(file_test_out)
+		sys.stdout.write("writing test embeddings to %s\n" % file_test_out); sys.stdout.flush()
+		
+		return trainDataVecs, testDataVecs
+    
+def main():
+	google_drive = os.path.abspath('../../Google Drive/gdrive/')
+	
+	parser = argparse.ArgumentParser(description = 'Get word2vec model path')
+	parser.add_argument('-w2v', dest = 'w2vpath', help = 'location of pre-built word2vec model')
+	parser.add_argument('-train', dest = 'trainpath', help = 'location of pre-split training data')
+	parser.add_argument('-test', dest = 'testpath', help = 'location of pre-split test data')
+	parser.add_argument('-data', dest = 'datapath', help = 'location of unsplit data file')
+	parser.add_argument('-size', dest = 'numSamples', 
+		help = 'how many samples to use in the training', type = int)
+	parser.add_argument('-loadembeddings', dest = 'loadW2Vembeddings', help = 'load stored word embeddings',
+		action = 'store_true')
+	parser.add_argument('-storedvecpath', dest = 'avgVecPath', help = 'location of stored word embeddings')
+	parser.add_argument('-split', dest = 'splitdata', 
+		help = 'split data into train and test?', action = 'store_true')
+	parser.add_argument('-weighted', dest = 'weightedw2v', 
+		help = 'use tf-idf weighting for words', action = 'store_true')
+	parser.add_argument('-stopwords', dest = 'removeStopWords', 
+		help = 'remove English stop words', action = 'store_true')
+	
+	parser.set_defaults(w2vpath = os.path.join(google_drive, 'w2v_output1/w2v_train_only.txt'), 
+		trainpath = os.path.join(google_drive, 'data/train2.txt'), 
+		testpath = os.path.join(google_drive, 'data/test2.txt'),
+		datapath = os.path.join(google_drive, 'data3.txt'), 
+		avgVecPath = os.path.join(google_drive, 'data/'),
+		splitdata = False, weightedw2v = False, removeStopWords = False, loadW2Vembeddings = False, size = 0)
+	args = parser.parse_args()
+	datapath = os.path.abspath(args.datapath)
+	trainpath = os.path.abspath(args.trainpath)
+	testpath = os.path.abspath(args.trainpath)
+	w2vpath = os.path.abspath(args.w2vpath)
+	
+	storedpath = os.path.abspath(args.avgVecPath)
+	storedpath_train = os.path.join(storedpath, 'train_word_embeddings.pickle')
+	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
+	
+	if args.loadW2Vembeddings:
+		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
+			w2vpath, storedpath_train, storedpath_test)
+		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.flush()
+		
+	else:
+		trainDataVecs = np.load(storedpath_train)
+		testDataVecs = np.load(storedpath_test)
+		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.flush()
 	
 	sys.stdout.write("fitting baseline model on averaged word embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(w2vpath)
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, )
+	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
