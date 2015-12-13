@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 from sklearn.cross_validation import train_test_split
+from sklearn.cross_validation import StratifiedShuffleSplit
 import sys, operator, random
+from numpy.random import RandomState
 
 def ParseData(path):
     '''
@@ -27,7 +29,7 @@ def ParseData(path):
     sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d\n' % (skip_count, rows_dropped, len(tempD)))
     return tempD
 
-def Split(path, data = None, parse = True):
+def Split(path, data = None, parse = True, random_seed = 83):
     '''
     arguments: path= path to data.txt
     returns: train and test split in panda DataFrame
@@ -39,36 +41,27 @@ def Split(path, data = None, parse = True):
     
     groups = data.label.unique()
     group_size = data.label.value_counts()
-    threshold = 40000
-    subgroups = groups[group_size > threshold]
     
-    # nested dictionary of reddit types
-    groups = {i:[] for i in Counter.keys()}
-    for j in D:
-        groups[j[0]].append(j)
-            
+    strat_size = 20000
+    random_state = RandomState(seed = random_seed)
+    
     # training and test
-    train = {i:[] for i in Counter.keys()}
-    test = {i:[] for i in Counter.keys()}
-    for i in groups.keys():
-        if Counter[i] > 40000:
-            subtrain, subtest = train_test_split(groups[i], test_size=20000, random_state=83)
-            train[i] = subtrain
-            test[i] = subtest
-        else:
-            # those that dont have enough samples
-            pass
-        
-    # append
-    trainlist = []
-    testlist = []
-    for idx, key in enumerate(train.keys()):
-        if train[key]:
-            train_df = pd.DataFrame(train[key], columns=['label', 'score', 'text'])
-            test_df = pd.DataFrame(test[key], columns=['label', 'score', 'text'])
-            trainlist.append(train_df)
-            testlist.append(test_df)
+    train = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
+    test = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
+    for i in groups:
+    	subtrain, subtest = train_test_split(data[data.label == i], 
+    		test_size = strat_size, random_state = random_state)
+    	train = train.append(subtrain)
+    	test = test.append(subtest)
     
-    return pd.concat(trainlist).reset_index().drop('index', 1), pd.concat(testlist).reset_index().drop('index', 1)  
+    order_train = random_state.permutation(train.index)
+    order_test = random_state.permutation(test.index)
+    
+    train = train.loc[order_train]
+    test = test.loc[order_test]
+    train.reset_index(inplace=True, drop=True)	
+    test.reset_index(inplace=True, drop=True)
+
+    return train, test  
  
 
