@@ -20,14 +20,13 @@ def Sentences(data, filename='sentences.txt'):
     returns: string of the path to sentences
     '''
     output = open(filename, 'w')
-    print data.shape
     for row in data.itertuples():
         text = str(row[3])
         text = text.replace('\n', ' ')
         text = text.replace('\t', ' ')
         output.write(text+'\n')
     output.close()
-    sys.stdout.write('\rreturns path to file: ' + filename + '\n')
+    sys.stdout.write("returns path to file: %s\n"  % filename)
     return filename
     
 # Count number of lines in a file
@@ -41,23 +40,22 @@ def file_len(fname):
 def w2v(sentencepath, length=300, context=5, 
         samples=10, alpha_limit=0.0001, epochs=1, 
         output='word2vec_model.txt'):
-    print sentencepath
     sentences = word2vec.LineSentence(sentencepath)
     model = models.Word2Vec(sentences, size=length, window=context, 
     	min_alpha=alpha_limit, negative=samples,
     	iter=epochs, min_count=10, workers=4)
     model.save(output)
-    print "All done. Model saved to %s" % (output)
+    sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
     return model
 
 def main(datapath, trainfile, w2vpath):
-	print 'read training data...'
+	sys.stdout.write("read training data...\n"); sys.stdout.flush()
 	path = os.path.join(datapath, trainfile)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
-	print train.shape
-	print 'write sentences to file...'
+	sys.stdout.write("training data: %s\n" % train.shape)
+	sys.stdout.write("write sentences to file...\n"); sys.stdout.flush()
 	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
-	print 'build word embeddings...'
+	sys.stdout.write("build word embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = w2v(sentencepath = sentencePath, length = 300, 
 		context = 5, samples = 10, alpha_limit = 0.001, 
@@ -65,14 +63,10 @@ def main(datapath, trainfile, w2vpath):
 	
 if __name__ == '__main__':
     script, datapath, trainpath, w2vpath = sys.argv
-    print 'start!'
-    start_time = time.time()
-    main(datapath, trainpath, w2vpath) 
-    lapse = time.time() - start_time 
-    print "%0.2f min" % (lapse / 60.)
-			 
-	
-    
-    
-    
-    
+    sys.stdout.write("start!\n"); sys.stdout.flush()
+	stime = time.time()
+	main(datapath, trainpath, w2vpath)
+	sys.stdout.write("done!\n"); sys.stdout.flush()
+	etime = time.time()
+	lapse = etime - stime
+	sys.stdout.write("%0.2f min\n" % (lapse / 60.); sys.stdout.flush()

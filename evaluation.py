@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
 
-def readProbability(pathToFile, header = True):
+def readProbability(pathToFile, header = True, index = True, label = True):
 	
 
 def main():
@@ -24,4 +24,4 @@ if __name__ == '__main__':
 	print 'done!'
 	etime = time.time()
 	ttime = etime - stime
-	print ttime / 60
+	print ttime / 60.

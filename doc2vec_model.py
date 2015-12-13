@@ -27,14 +27,16 @@ def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	logit = LogisticRegression()
 	model = logit.fit(trainDataVecs, train.y.values)
 	
-	print 'Test sample score: %s' % str(model.score(testDataVecs, test.y.values))
-	print 'In sample scores: %s' % str(model.score(trainDataVecs, train.y.values))
+	sys.stdout.write('Test sample score: %0.4f\n' % model.score(testDataVecs, test.y.values))
+	sys.stdout.write('In sample scores: %0.4f\n' % model.score(trainDataVecs, train.y.values))
+	sys.stdout.flush()
 
 	outfile = os.path.join(outputPath, 'doc2vec_logit_predict_proba.csv')
 	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
 		sep = '\t', header = list(le.classes_), index = False)
 	
-	print 'CLASSES', le.classes_ 
+	sys.stdout.write('CLASSES: %s\n' % le.classes_)
+	sys.stdout.flush()
 
 def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# encode labels
@@ -47,14 +49,16 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	C = 1.0  # SVM regularization parameter
 	model = svm.SVC(kernel='linear', C=C).fit(trainDataVecs, train.y.values)
 	
-	print 'Test sample score: %s' % str(model.score(testDataVecs, test.y.values))
-	print 'In sample scores: %s' % str(model.score(trainDataVecs, train.y.values))
+	sys.stdout.write('Test sample score: %0.4f\n' % model.score(testDataVecs, test.y.values))
+	sys.stdout.write('In sample scores: %0.4f\n' % model.score(trainDataVecs, train.y.values))
+	sys.stdout.flush()
 
 	outfile = os.path.join(outputPath, 'doc2vec_svm_predict_proba.csv')
 	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
 		sep = '\t', header = list(le.classes_), index = False)
 	
-	print 'CLASSES', le.classes_ 
+	sys.stdout.write('CLASSES: %s\n' % le.classes_)
+	sys.stdout.flush()
 
 def getTestVectors(test, model, remove_stopwords = False):
 	# test should be a pandas dataframe, column 'text' contains the text of the document
@@ -103,9 +107,9 @@ def main():
 	testVecPath = os.path.join(os.path.abspath(args.google_drive), args.testVecPath)
 	
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-	print "loading doc2vec..."
+	sys.stdout.write("loading doc2vec...\n"); sys.stdout.flush()
 	model = models.Doc2Vec.load(doc2vpath)
-	print "loading train and test data..."
+	sys.stdout.write("loading train and test data..."); sys.stdout.flush()
 	if args.splitdata:
 		train, test = write_training(datapath, trainpath, testpath)
 	else:
@@ -114,29 +118,33 @@ def main():
 		test = pd.read_csv(testpath, sep = '\t', header=None, 
 			names = ['label', 'score', 'text'])
 	
-	print "fetching training document embeddings..."
+	sys.stdout.write("fetching training document embeddings...\n"); sys.stdout.flush()
 	trainDataVecs = model.docvecs
-	print len(trainDataVecs), len(trainDataVecs[0])
+	sys.stdout.write("%d posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
 	
-	print "inferring test document embeddings..."
+	sys.stdout.write("inferring test document embeddings...\n"); sys.stdout.flush()
 	if args.loadTestVecs:
 		testDataVecs = np.load(testVecPath)
-		print len(testDataVecs), len(testDataVecs[0])
+		sys.stdout.write("%d posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.flush()
 	else:	
 		testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
 		testDataVecs.dump(testVecPath)
-		print len(testDataVecs), len(testDataVecs[0])
+		sys.stdout.write("%d posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.flush()
 	
-	print "fitting logit and svm model on document embeddings..."
+	sys.stdout.write("fitting logit and svm model on document embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(doc2vpath)
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	
 if __name__ == '__main__':
-	print 'start'
+	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
 	main()
-	print 'done!'
+	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
-	print "%0.2f min" % (lapse / 60.)
+	sys.stdout.write("%0.2f min\n" % (lapse / 60.); sys.stdout.flush()

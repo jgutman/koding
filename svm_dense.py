@@ -89,9 +89,6 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_)
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
 
-
-
-
 if __name__ == '__main__':
     sys.stdout.write('START')
     sys.stdout.flush()
