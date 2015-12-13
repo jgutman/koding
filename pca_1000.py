@@ -14,7 +14,7 @@ from TrainTest import Split
 
 def traintest(path):
     data = pd.read_csv(path, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
-    train, test = Split(path, data=data, parse=False, testsize=40000)
+    train, test = Split(path, data=data, parse=False, testsize=20000)
     # encode labels
     le = LabelEncoder()
     le.fit(train.label)
@@ -31,7 +31,7 @@ def DimReduce(train, test, sample):
     # convert to dense matrix
     sys.stdout.write('vectorizing...\n')
     sys.stdout.flush()
-    count_vect = CountVectorizer(min_df=10, ngram_range=(1, 4))
+    count_vect = CountVectorizer(min_df=10, ngram_range=(1, 1))
     train_vect = count_vect.fit(train.text.values)
     train_count = train_vect.transform(train.text.values)
     test_count = train_vect.transform(test.text.values)
