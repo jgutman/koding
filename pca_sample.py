@@ -52,8 +52,8 @@ def DimReduce(train, test, sample):
         for i, v in enumerate(batch_loop):
             sys.stdout.write(str(i) + '\n')
             sys.stdout.flush()
-            large, sample = train_test_split(train_count, test_size=50000, stratify=train.y.tolist())
-            pca.partial_fit(sample)
+            large, sample = train_test_split(train_count, test_size=500, stratify=train.y.tolist())
+            pca.partial_fit(sample.toarray())
         sys.stdout.write('trying pca at dim: ' + str(columns) + ' score: ' + str(pca.explained_variance_ratio_.sum()) + '\n')
         sys.stdout.flush()
         if pca.explained_variance_ratio_.sum() >= 0.81:
