@@ -67,7 +67,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         print 'kernel true:', comp
     clf = SGDClassifier(alpha=10.0, loss='log', penalty='l2', 
                         l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                        learning_rate='optimal', class_weight=weights)
+                        learning_rate='optimal')
     model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.predict_proba(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
