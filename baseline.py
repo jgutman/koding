@@ -9,8 +9,7 @@ import random, sys, time
 
 
 def baseline(path):
-    data = pd.read_csv(path, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
-    train, test = Split(path, data=data, parse=False)
+	train, test = Split(path)
 
 	# encode labels
 	le = LabelEncoder()
@@ -32,11 +31,7 @@ def baseline(path):
 	print 'In sample scores: %s' % str(model.score(X_train_counts, train.y.values))
 	
 	# pd.Dataframe(model.coef_).to_csv('coef_.csv', index=False)
-	df = pd.DataFrame(model.predict_proba(test_matrix))
-	df['y'] = test.y.values
-	df['predict'] = model.predict(test_matrix)
-	df.to_csv('predict_proba.csv', index=False)
-
+	pd.DataFrame(model.predict_proba(test_matrix)).to_csv('predict_proba.csv', index=False)
 
 	print 'CLASSES', le.classes_ 
 
