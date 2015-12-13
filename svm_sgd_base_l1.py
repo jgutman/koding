@@ -101,7 +101,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
     df = pd.DataFrame(model.decision_function(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
-    df.to_csv('decision_function_svm_dense_matrix_ngram-'+str(ngram)+'.csv', index=False)
+    df.to_csv('decision_function_svm_dense_l1_matrix_ngram-'+str(ngram)+'.csv', index=False)
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
 
