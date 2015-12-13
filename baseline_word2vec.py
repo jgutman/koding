@@ -1,9 +1,9 @@
 from gensim import models
-import argparse, os
+import argparse, os, logging
 import nltk
 
-from TrainTest import Split
-from TrainTest import ParseData
+from TrainTest2 import Split
+from TrainTest2 import ParseData
 import pandas as pd
 import numpy as np
 
@@ -183,6 +183,7 @@ def main():
 	testpath = os.path.abspath(args.trainpath)
 	w2vpath = os.path.abspath(args.w2vpath)
 	
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	print "loading word2vec..."
 	model = models.Word2Vec.load(w2vpath)
 	print "loading train and test data..."
@@ -252,5 +253,5 @@ if __name__ == '__main__':
 	main()
 	print 'done!'
 	etime = time.time()
-	ttime = etime - stime
-	print ttime / 60
+	lapse = etime - stime
+	print "%0.2f min" % (lapse / 60.)

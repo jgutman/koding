@@ -1,5 +1,5 @@
 from gensim import models
-import argparse, os
+import argparse, os, logging
 import nltk
 
 from TrainTest import Split
@@ -102,6 +102,7 @@ def main():
 	doc2vpath = os.path.join(os.path.abspath(args.google_drive), args.doc2vpath)
 	testVecPath = os.path.join(os.path.abspath(args.google_drive), args.testVecPath)
 	
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	print "loading doc2vec..."
 	model = models.Doc2Vec.load(doc2vpath)
 	print "loading train and test data..."
@@ -137,5 +138,5 @@ if __name__ == '__main__':
 	main()
 	print 'done!'
 	etime = time.time()
-	ttime = etime - stime
-	print ttime / 60
+	lapse = etime - stime
+	print "%0.2f min" % (lapse / 60.)

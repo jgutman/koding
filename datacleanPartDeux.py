@@ -32,8 +32,7 @@ def cleanData(filepath, outputPath):
 	
 	print 'Merging split newline cells...'
 	dataCleaned.drop(weirdRows, inplace = True)
-	emptyRows = dataCleaned[pd.isnull(dataCleaned.label)].index
-	dataCleaned.drop(emptyRows, inplace = True)
+	dataCleaned.dropna(subset = ['label', 'text'], inplace = True)
 	
 	print 'Dealing with suspicious duplicates...'
 	textCounts = dataCleaned.text.value_counts(dropna = False)
@@ -48,12 +47,7 @@ def cleanData(filepath, outputPath):
 	
 	print 'Removing whitespace characters...'
 	dataTrimmed = dataCleaned.drop(duplicateRowsToDrop)
-	#for row in dataTrimmed.itertuples():
-	#	text = str(row[3])
-	#	text = text.replace('\n', ' ')
-	#	text = text.replace('\t', ' ')
-	#	dataTrimmed.text.loc[row[0]] = text
-	
+	dataTrimmed.dropna(subset = ['label', 'text'], inplace = True)
 	print 'Copying and writing to file...'
 	dataTrimmed.to_csv(outputPath, sep = '\t', header = False, index = False)
 

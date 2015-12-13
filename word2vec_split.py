@@ -11,6 +11,7 @@ import numpy as np
 from gensim import models
 from gensim.models import word2vec
 import sys, time, os
+import logging
 
 # Create a file of just sentences for NN
 def Sentences(data, filename='sentences.txt'):
@@ -44,29 +45,31 @@ def w2v(sentencepath, length=300, context=5,
     sentences = word2vec.LineSentence(sentencepath)
     model = models.Word2Vec(sentences, size=length, window=context, 
     	min_alpha=alpha_limit, negative=samples,
-    	iter=epochs, min_count=5, workers=4)
+    	iter=epochs, min_count=10, workers=4)
     model.save(output)
-    sys.stdout.write("\rAll done. Model saved to " + output+'\n')
+    print "All done. Model saved to %s" % (output)
     return model
 
 def main(datapath, trainfile, w2vpath):
 	print 'read training data...'
 	path = os.path.join(datapath, trainfile)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
-	print(train.shape)
+	print train.shape
 	print 'write sentences to file...'
 	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
 	print 'build word embeddings...'
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = w2v(sentencepath = sentencePath, length = 300, 
 		context = 5, samples = 10, alpha_limit = 0.001, 
 		epochs = 1, output = os.path.join(w2vpath, 'w2v_train_only.txt'))
 	
 if __name__ == '__main__':
     script, datapath, trainpath, w2vpath = sys.argv
+    print 'start!'
     start_time = time.time()
     main(datapath, trainpath, w2vpath) 
     lapse = time.time() - start_time 
-    print lapse / 60	 
+    print "%0.2f min" % (lapse / 60.)
 			 
 	
     
