@@ -27,7 +27,7 @@ def ParseData(path):
     sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d\n' % (skip_count, rows_dropped, len(tempD)))
     return tempD
 
-def Split(path, data = None, parse = True):
+def Split(path, data = None, parse = True, testsize=20000):
     '''
     arguments: path= path to data.txt
     returns: train and test split in panda DataFrame
@@ -56,7 +56,7 @@ def Split(path, data = None, parse = True):
     test = {i:[] for i in Counter.keys()}
     for i in groups.keys():
         if Counter[i] > 40000:
-            subtrain, subtest = train_test_split(groups[i], test_size=20000, random_state=83)
+            subtrain, subtest = train_test_split(groups[i], test_size=testsize, random_state=83)
             train[i] = subtrain
             test[i] = subtest
         else:
