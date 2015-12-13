@@ -28,8 +28,8 @@ def DimReduce(train, test, sample):
     # convert to dense matrix
     print 'vectorizing...'
     count_vect = CountVectorizer(min_df=10, ngram_range=(1, 3))
-    train_vect = count_vect.fit(train.text.values)
-    train_count = train_vect.transform(train.text.values)
+    train_vect = count_vect.fit(sample.text.values)
+    train_count = train_vect.transform(sample.text.values)
     test_count = train_vect.transform(test.text.values)
     print 'train_count dims:', train_count.shape
     # find the best number of components base on when it hits 0.8 total variance

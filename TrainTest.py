@@ -27,7 +27,7 @@ def ParseData(path):
     sys.stdout.write('\rerrors catched: %d, rows dropped: %d, return size: %d\n' % (skip_count, rows_dropped, len(tempD)))
     return tempD
 
-def Split(path, data = None, parse = True, testsize = 20000):
+def Split(path, data = None, parse = True, testsize=20000):
     '''
     arguments: path= path to data.txt
     returns: train and test split in panda DataFrame
