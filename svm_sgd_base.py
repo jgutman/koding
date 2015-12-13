@@ -39,7 +39,15 @@ def SparseMatrix(train, test, sample, ngram):
     return train_count, test_count, sample_count
 
 
-def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, ngram, kernel=False):
+def RBFtransform(train_count, val_count, test_count, comp):
+    clf = RBFSampler(gamma=2, n_components=comp, random_state=83)
+    train_RBF = clf.fit_transform(train_count)
+    val_RBF = clf.transform(val_count)
+    test_RBF = clf.transform(test_count)
+    return train_RBF, val_RBF, test_RBF
+
+
+def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, ngram, comp, kernel=False):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
@@ -54,8 +62,9 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
     sys.stdout.write('test_bins dims: ' +  str(np.bincount(test_y)) + '\n')
     sys.stdout.flush() 
     if kernel:
-        train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test)
+        train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
         print 'tx', train_X.shape, 'vx', val_X.shape
+        print 'kernel true:', comp
     lower = 1e-6
     upper = 10
     # weights
@@ -111,10 +120,10 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
 if __name__ == '__main__':
     sys.stdout.write('START')
     sys.stdout.flush()
-    script, path, ngram = sys.argv
+    script, path, ngram, comp = sys.argv
     train, test, sample, cat = traintest(path)
     train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
     test_count.shape, sample_count.shape
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), kernel=False)
+    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=True)
     print path, 'ngram: ', ngram
 
