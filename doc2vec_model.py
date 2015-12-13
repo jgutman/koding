@@ -137,5 +137,5 @@ if __name__ == '__main__':
 	main()
 	print 'done!'
 	etime = time.time()
-	ttime = etime - stime
-	print ttime / 60
+	lapse = etime - stime
+	print "%0.2f min" % (lapse / 60.)

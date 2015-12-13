@@ -44,16 +44,16 @@ def w2v(sentencepath, length=300, context=5,
     sentences = word2vec.LineSentence(sentencepath)
     model = models.Word2Vec(sentences, size=length, window=context, 
     	min_alpha=alpha_limit, negative=samples,
-    	iter=epochs, min_count=5, workers=4)
+    	iter=epochs, min_count=10, workers=4)
     model.save(output)
-    sys.stdout.write("\rAll done. Model saved to " + output+'\n')
+    print "All done. Model saved to %s" % (output)
     return model
 
 def main(datapath, trainfile, w2vpath):
 	print 'read training data...'
 	path = os.path.join(datapath, trainfile)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
-	print(train.shape)
+	print train.shape
 	print 'write sentences to file...'
 	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
 	print 'build word embeddings...'
@@ -63,10 +63,11 @@ def main(datapath, trainfile, w2vpath):
 	
 if __name__ == '__main__':
     script, datapath, trainpath, w2vpath = sys.argv
+    print 'start!'
     start_time = time.time()
     main(datapath, trainpath, w2vpath) 
     lapse = time.time() - start_time 
-    print lapse / 60	 
+    print "%0.2f min" % (lapse / 60.)
 			 
 	
     
