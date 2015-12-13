@@ -38,27 +38,66 @@ def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	sys.stdout.write('CLASSES: %s\n' % le.classes_)
 	sys.stdout.flush()
 
-def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
+def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom, 
+		random_seed = 100, strat_size = 20000):
+		
 	# encode labels
 	le = LabelEncoder()
 	le.fit(train.label)
 	train['y'] = le.transform(train.label)
 	test['y'] = le.transform(test.label)
 	
-	# train model
-	C = 1.0  # SVM regularization parameter
-	model = svm.SVC(kernel='linear', C=C).fit(trainDataVecs, train.y.values)
+	# split training into subtraining and validation
+	subtrain, val, subtrain_Y, val_Y = trainValidationSplit(train, train.y.values,
+		random_seed, strat_size)
+	subtrain_X = trainDataVecs[subtrain.index, :]
+	val_X = trainDataVecs[val.index, :]
 	
-	sys.stdout.write('Test sample score: %0.4f\n' % model.score(testDataVecs, test.y.values))
-	sys.stdout.write('In sample scores: %0.4f\n' % model.score(trainDataVecs, train.y.values))
-	sys.stdout.flush()
-
-	outfile = os.path.join(outputPath, 'doc2vec_svm_predict_proba.csv')
-	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
-		sep = '\t', header = list(le.classes_), index = False)
-	
-	sys.stdout.write('CLASSES: %s\n' % le.classes_)
-	sys.stdout.flush()
+	sys.stdout.write('train_count dims: %s\n' % str(subtrain_X.shape))
+    sys.stdout.write('validation_count dims: %s\n' % str(val_X.shape))
+    sys.stdout.write('test_count dims: %s\n' % str(testDataVecs.shape))
+    sys.stdout.write('validation_bins dims: %s\n' % str(np.bincount(val_Y)))
+    sys.stdout.write('test_bins dims: %s\n' % str(np.bincount(test.y.values)))
+    sys.stdout.flush() 
+    
+    lower = 1e-6
+    upper = 10
+    
+	for level in xrange(zoom):
+        lambda_range = np.linspace(lower, upper, lamb)
+        nested_scores = []
+        for i, v in enumerate(lambda_range):
+            clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
+                                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
+                                learning_rate='optimal', class_weight="balanced")
+            model = clf.fit(subtrain_X, sub_train_Y)
+            nested_scores.append(model.score(val_X, val_Y))
+            sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
+            sys.stdout.flush()
+        best = np.argmax(nested_scores)
+        # update the lower and upper bounds
+        if best == 0:
+            lower = lambda_range[best]
+            upper = lambda_range[best+1]
+        elif best == lamb-1:
+            lower = lambda_range[best-1]
+            upper = lambda_range[best]
+        else:
+            lower = lambda_range[best-1]
+            upper = lambda_range[best+1]
+        sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
+        sys.stdout.flush()
+    clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
+                        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
+                        learning_rate='optimal', class_weight="balanced")
+    model = clf.fit(subtrain_X, subtrain_Y)
+    df = pd.DataFrame(model.decision_function(testDataVecs), 
+                      columns=[v for i,v in enumerate(le_classes_)])
+	df['y'] = test.y.values
+    df['predict'] = model.predict(testDataVecs)
+    df.to_csv('decision_function_svm_doc2vec.csv', sep='\t', index=False)
+    sys.stdout.write('FINAL SCORE %0.4f\n' % model.score(testDataVecs, test.y.values))
+    sys.stdout.flush()
 
 def getTestVectors(test, model, remove_stopwords = False):
 	# test should be a pandas dataframe, column 'text' contains the text of the document
@@ -120,17 +159,17 @@ def main():
 	
 	sys.stdout.write("fetching training document embeddings...\n"); sys.stdout.flush()
 	trainDataVecs = model.docvecs
-	sys.stdout.write("%d posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
+	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
 	
 	sys.stdout.write("inferring test document embeddings...\n"); sys.stdout.flush()
 	if args.loadTestVecs:
 		testDataVecs = np.load(testVecPath)
-		sys.stdout.write("%d posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
 		sys.stdout.flush()
 	else:	
 		testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
 		testDataVecs.dump(testVecPath)
-		sys.stdout.write("%d posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
 		sys.stdout.flush()
 	
 	sys.stdout.write("fitting logit and svm model on document embeddings...\n"); sys.stdout.flush()
