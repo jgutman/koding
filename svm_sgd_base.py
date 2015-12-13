@@ -38,7 +38,7 @@ def SparseMatrix(train, test, sample, ngram):
     return train_count, test_count, sample_count
 
 
-def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_, ngram, kernel=False):
+def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_, kernel=False, ngram):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
@@ -106,6 +106,6 @@ if __name__ == '__main__':
     train, test, sample, cat = traintest(path)
     train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
     test_count.shape, sample_count.shape
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram),  kernel=False)
+    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, kernel=False, int(ngram))
     print path, 'ngram: ', ngram
 
