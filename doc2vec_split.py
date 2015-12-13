@@ -9,7 +9,7 @@ to the current directory.
 import pandas as pd
 import numpy as np
 from gensim.models import doc2vec
-import sys, time, os
+import sys, time, os, logging
   
 # Word2Vec model
 def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, output='doc2vec_model.txt'):
@@ -25,6 +25,7 @@ def main(trainpath, sentencepath, d2vpath):
 	train = pd.read_csv(trainpath, sep = '\t', header = None, names = ['label', 'score', 'text'])
 	print train.shape
 	print 'build document embeddings...'
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level
 	model = d2v(sentencepath=sentencepath, length=300, samples=10, alpha_limit=0.001, 
 		epochs=5, output=os.path.join(d2vpath, 'd2v_train_only_labels.txt'))
 	
