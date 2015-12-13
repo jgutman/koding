@@ -106,6 +106,6 @@ if __name__ == '__main__':
     train, test, sample, cat = traintest(path)
     train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
     test_count.shape, sample_count.shape
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, kernel=False, int(ngram))
+    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), kernel=False)
     print path, 'ngram: ', ngram
 
