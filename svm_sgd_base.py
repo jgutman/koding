@@ -38,14 +38,20 @@ def SparseMatrix(train, test, sample, ngram):
     return train_count, test_count, sample_count
 
 
-def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_, ngram, kernel=False):
+def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, ngram, kernel=False):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
                       plus and minus the max score the
                       previous iteration.
     '''
-    train_X, val_X, train_Y, val_Y = train_test_split(pca_train, train_y, test_size=30000, random_state=83)
+    val_X, pca_test, val_Y, test_y = train_test_split(pca_test, test_y, test_size=len(test_y)/2, random_state=83, stratify=test_y.tolist())
+    sys.stdout.write('train_count dims: ' +  str(train_X.shape) + '\n')
+    sys.stdout.write('validation_count dims: ' +  str(val_X.shape) + '\n')
+    sys.stdout.write('test_count dims: ' +  str(pca_test.shape) + '\n')
+    sys.stdout.write('validation_bins dims: ' +  str(np.bincount(val_Y)) + '\n')
+    sys.stdout.write('test_bins dims: ' +  str(np.bincount(test_y)) + '\n')
+    sys.stdout.flush() 
     if kernel:
         train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test)
         print 'tx', train_X.shape, 'vx', val_X.shape
@@ -58,15 +64,17 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_,
             Counter[i] += 1.0
         else:
             Counter[i] = 1.0
+    n_sample = len(train_Y)
+    n_classes = len(np.unique(train_Y))
     topCount = max(Counter.values())
-    weights = {i: topCount/Counter[i] for i, v in enumerate(le_classes_)}
+    weights = {i: n_sample/(n_classes * Counter[i]) for i, v in enumerate(le_classes_)}
     print weights
     for level in xrange(zoom):
         lambda_range = np.linspace(lower, upper, lamb)
         nested_scores = []
         for i, v in enumerate(lambda_range):
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                                l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  
+                                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
                                 learning_rate='optimal', class_weight=weights)
             model = clf.fit(train_X, train_Y)
             nested_scores.append(model.score(val_X, val_Y))
@@ -86,7 +94,7 @@ def SVMModelDense(pca_train, train_y, pca_test, test_y, lamb, zoom, le_classes_,
         sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-                        l1_ratio=0, n_iter=3, n_jobs=4, shuffle=True,  
+                        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
                         learning_rate='optimal', class_weight=weights)
     model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.decision_function(pca_test), 
