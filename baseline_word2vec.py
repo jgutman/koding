@@ -68,8 +68,10 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
             		weight = sparse_weight.data[0]
             		featureVec = np.add(featureVec, np.multiply(model[word], weight))	
 	
+	if nwords == 0.:
+		nwords = 1.
     # Divide the result by the number of words to get the average
-    featureVec = np.divide(featureVec,nwords)
+    featureVec = np.true_divide(featureVec, nwords)
     return featureVec
 
 def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index = None):
