@@ -12,7 +12,8 @@ from TrainTest import Split
 
 
 def traintest(path):
-    train, test = Split(path)
+    data = pd.read_csv(path, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
+    train, test = Split(path, data=data, parse=False, testsize=40000)
     # encode labels
     le = LabelEncoder()
     le.fit(train.label)
