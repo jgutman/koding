@@ -76,8 +76,9 @@ def AdaBoostModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classe
     n_classes = len(np.unique(train_Y))
     topCount = max(Counter.values())
     weights = {i: n_sample/(n_classes * Counter[i]) for i, v in enumerate(le_classes_)}
-    print weights
-    lambda_range = np.linspace(lower, upper, upper)
+    # print weights
+    # lambda_range = np.linspace(lower, upper, upper)
+    lambda_range = [11, 12, 13, 14, 15, 20, 25, 35, 50]
     nested_scores = []
     for i, v in enumerate(lambda_range):
         tree = DecisionTreeClassifier(max_depth=int(v))
