@@ -217,18 +217,11 @@ def docWordList(text, remove_stopwords = False, to_lower = False):
 		words = [w for w in words if not w in stops]  	
 	return words
 
-def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out, file_test_out):
+def computeAverage(args, train, test, w2vpath, file_train_out, file_test_out):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	sys.stdout.write("loading word2vec...\n"); sys.stdout.flush()
 	model = models.Word2Vec.load(w2vpath)
 	sys.stdout.write("loading train and test data...\n"); sys.stdout.flush()
-	if args.splitdata:
-		train, test = write_training(datapath, trainpath, testpath)
-	else:
-		train = pd.read_csv(trainpath, 
-			sep = '\t', header=None, names = ['label', 'score', 'text'])
-		test = pd.read_csv(testpath, 
-			sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
 	vocabulary_size = int(word_vectors.shape[0])
@@ -318,6 +311,14 @@ def main():
 	storedpath_train = os.path.join(storedpath, 'train_word_embeddings.pickle')
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
+	if args.splitdata:
+		train, test = write_training(datapath, trainpath, testpath)
+	else:
+		train = pd.read_csv(trainpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
+		test = pd.read_csv(testpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
+	
 	if args.loadW2Vembeddings:
 		trainDataVecs = np.load(storedpath_train)
 		testDataVecs = np.load(storedpath_test)
@@ -326,8 +327,8 @@ def main():
 		sys.stdout.flush()
 		
 	else:
-		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
-		w2vpath, storedpath_train, storedpath_test)
+		trainDataVecs, testDataVecs = computeAverage(args, train, test, 
+				w2vpath, storedpath_train, storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
