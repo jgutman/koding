@@ -89,7 +89,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         for i, v in enumerate(lambda_range):
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
                                 l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                                learning_rate='optimal', class_weight=weights)
+                                class_weight=weights)
             model = clf.fit(train_X, train_Y)
             nested_scores.append(model.score(val_X, val_Y))
             sys.stdout.write('level: '+str(level)+' lambda: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
@@ -109,7 +109,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
                         l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                        learning_rate='optimal', class_weight=weights)
+                        class_weight=weights)
     model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.decision_function(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
