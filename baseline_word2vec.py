@@ -59,7 +59,6 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# the model's vocabulary. Convert it to a set, for speed 
 	index2word_set = set(model.index2word)
 	
-	logging.info('Making avg word vectors')
 	# Loop over each word in the reddit post and, if it is in the model's
 	# vocabulary, add its feature vector to the total
 	
@@ -133,7 +132,7 @@ def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	sys.stdout.flush() 
 
 def trainValidationSplit(data, dataY, random_seed = 100, strat_size = 20000):
-	groups = data.unique()
+	groups = data.label.unique()
 	random_state = RandomState(seed = random_seed)
 
 	# training and validation
