@@ -14,7 +14,6 @@ from nltk.corpus import stopwords
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
 
-from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
@@ -58,6 +57,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# the model's vocabulary. Convert it to a set, for speed 
 	index2word_set = set(model.index2word)
 	
+	logging.info('Making avg word vectors')
 	# Loop over each word in the reddit post and, if it is in the model's
 	# vocabulary, add its feature vector to the total
 	for word in words:
