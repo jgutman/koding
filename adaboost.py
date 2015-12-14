@@ -10,6 +10,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.utils import shuffle
 from TrainTest import Split
 
 
@@ -22,7 +23,7 @@ def traintest(path):
     train['y'] = le.transform(train.label)
     test['y'] = le.transform(test.label)
     sample = train.iloc[random.sample(np.arange(0, train.shape[0]), 10000)]
-    return train, test, sample, le.classes_
+    return shuffle(train), shuffle(test), shuffle(sample), le.classes_
     sys.stdout.write( 'traintest\n')
     sys.stdout.flush()
 
