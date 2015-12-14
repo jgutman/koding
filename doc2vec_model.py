@@ -84,7 +84,7 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 		else:
 			lower = lambda_range[best-1]
 			upper = lambda_range[best+1]
-		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
+		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best]))
 		sys.stdout.flush()
 	clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
 				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
