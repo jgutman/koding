@@ -87,8 +87,9 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best]))
 		sys.stdout.flush()
 	clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-				model = clf.fit(subtrain_X, subtrain_Y)
+				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,
+				learning_rate='optimal', class_weight="balanced")
+	model = clf.fit(subtrain_X, subtrain_Y)
 	df = pd.DataFrame(model.decision_function(testDataVecs), 
 				columns=[v for i,v in enumerate(le_classes_)])
 	df['y'] = test.y.values
