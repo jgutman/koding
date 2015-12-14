@@ -52,6 +52,8 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,) , dtype=np.float32)
 	nwords = 0.
+	if len(words):
+		return featureVec
 	
 	# Index2word is a list that contains the names of the words in 
 	# the model's vocabulary. Convert it to a set, for speed 
@@ -60,6 +62,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	logging.info('Making avg word vectors')
 	# Loop over each word in the reddit post and, if it is in the model's
 	# vocabulary, add its feature vector to the total
+	
 	for word in words:
 		if word in index2word_set: 
 			nwords = nwords + 1.
