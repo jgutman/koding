@@ -17,6 +17,8 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     train_X = np.zeros((len(vectors), len(vectors[0])))
     for i in xrange(len(vectors)):
         train_X[i] = vectors[i]
+    sys.stdout.write(str(train_X[999]))
+    sys.stdout.flush()
     test_X = np.load(d2v_test_path)
     df_train = pd.read_csv(train2, sep='\t', header=None, names=['label', 'score', 'text'])
     df_test = pd.read_csv(test2, sep='\t', header=None, names=['label', 'score', 'text'])
@@ -36,7 +38,7 @@ def Cluster(train_X, test_X, train_Y, test_Y):
     sys.stdout.write('clustering...\n')
     sys.stdout.flush()
     # clf = MiniBatchKMeans(n_clusters=5)
-    clf = KMeans(n_cluster = 5, precompute_distances = True, n_jobs=5)
+    clf = KMeans(n_clusters = 5, precompute_distances = True, n_jobs=5)
     model = clf.fit(train_X)
     predict = model.predict(test_X)
     return predict
