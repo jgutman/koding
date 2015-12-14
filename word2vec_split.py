@@ -16,41 +16,41 @@ from nltk.corpus import stopwords
 
 # Create a file of just sentences for NN
 def Sentences(data, filename='sentences.txt', tolowercase = False):
-    '''
-    argument: data = Pandas dataframe, filename = file name
-    returns: string of the path to sentences
-    '''
-    output = open(filename, 'w')
-    space = ' '
-    pattern = re.compile("\W")
-    for row in data.itertuples():
-        text = str(row[3])
-        text = space.join(re.split(pattern, sentence))
-        if tolowercase:
-        	text = text.lower()
-        output.write(text+'\n')
-    output.close()
-    sys.stdout.write("returns path to file: %s\n"  % filename)
-    return filename
-    
+	'''
+	argument: data = Pandas dataframe, filename = file name
+	returns: string of the path to sentences
+	'''
+	output = open(filename, 'w')
+	space = ' '
+	pattern = re.compile("\W")
+	for row in data.itertuples():
+		text = str(row[3])
+		text = space.join(re.split(pattern, sentence))
+		if tolowercase:
+			text = text.lower()
+		output.write(text+'\n')
+	output.close()
+	sys.stdout.write("returns path to file: %s\n"  % filename)
+	return filename
+	
 # Count number of lines in a file
 def file_len(fname):
-     with open(fname) as f:
-             for i, l in enumerate(f):
-                     pass
-     return (i+1)
+	with open(fname) as f:
+		for i, l in enumerate(f):
+			pass
+	return (i+1)
  
 # Word2Vec model
 def w2v(sentencepath, length=300, context=5, 
-        samples=10, alpha_limit=0.0001, epochs=1, 
-        output='word2vec_model.txt'):
-    sentences = word2vec.LineSentence(sentencepath)
-    model = models.Word2Vec(sentences, size=length, window=context, 
-    	min_alpha=alpha_limit, negative=samples,
-    	iter=epochs, min_count=10, workers=4)
-    model.save(output)
-    sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
-    return model
+		samples=10, alpha_limit=0.0001, epochs=1, 
+		output='word2vec_model.txt'):
+	sentences = word2vec.LineSentence(sentencepath)
+	model = models.Word2Vec(sentences, size=length, window=context, 
+		min_alpha=alpha_limit, negative=samples,
+		iter=epochs, min_count=10, workers=4)
+	model.save(output)
+	sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
+	return model
 
 def main(datapath, trainfile, w2vpath):
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
@@ -66,8 +66,8 @@ def main(datapath, trainfile, w2vpath):
 		epochs = 1, output = os.path.join(w2vpath, 'w2v_train_only.txt'))
 	
 if __name__ == '__main__':
-    script, datapath, trainpath, w2vpath = sys.argv
-    sys.stdout.write("start!\n"); sys.stdout.flush()
+	script, datapath, trainpath, w2vpath = sys.argv
+	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
 	main(datapath, trainpath, w2vpath)
 	sys.stdout.write("done!\n"); sys.stdout.flush()

@@ -13,15 +13,15 @@ from gensim.models import doc2vec
 import sys, time, os, logging
 import argparse, string, re
 from nltk.corpus import stopwords
-  
+
 # Word2Vec model
 def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, output='doc2vec_model.txt'):
-    sentences = doc2vec.TaggedLineDocument(sentencepath)
-    model = models.Doc2Vec(sentences, size=length, min_alpha=alpha_limit, negative=samples,
-                            iter=epochs, min_count=10, workers=4)
-    model.save(output)
-    sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
-    return model
+	sentences = doc2vec.TaggedLineDocument(sentencepath)
+	model = models.Doc2Vec(sentences, size=length, min_alpha=alpha_limit, negative=samples,
+		iter=epochs, min_count=10, workers=4)
+	model.save(output)
+	sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
+	return model
 
 def main(trainpath, sentencepath, d2vpath):	
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
