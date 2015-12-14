@@ -71,7 +71,7 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 				learning_rate='optimal', class_weight="balanced")
 			model = clf.fit(subtrain_X, sub_train_Y)
 			nested_scores.append(model.score(val_X, val_Y))
-			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
+			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y)))
 			sys.stdout.flush()
 		best = np.argmax(nested_scores)
 		# update the lower and upper bounds
@@ -84,11 +84,12 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 		else:
 			lower = lambda_range[best-1]
 			upper = lambda_range[best+1]
-		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
+		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best]))
 		sys.stdout.flush()
 	clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-				model = clf.fit(subtrain_X, subtrain_Y)
+				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,
+				learning_rate='optimal', class_weight="balanced")
+	model = clf.fit(subtrain_X, subtrain_Y)
 	df = pd.DataFrame(model.decision_function(testDataVecs), 
 				columns=[v for i,v in enumerate(le_classes_)])
 	df['y'] = test.y.values
@@ -157,25 +158,26 @@ def main():
 	
 	sys.stdout.write("fetching training document embeddings...\n"); sys.stdout.flush()
 	trainDataVecs = model.docvecs
-	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
+	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 	
 	sys.stdout.write("inferring test document embeddings...\n"); sys.stdout.flush()
 	if args.loadTestVecs:
 		testDataVecs = np.load(testVecPath)
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	else:	
 		testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
 		testDataVecs.dump(testVecPath)
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	
-	sys.stdout.write("fitting logit and svm model on document embeddings...\n"); sys.stdout.flush()
+	sys.stdout.write("fitting logit model on document embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(doc2vpath)
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	sys.stdout.write("fitting svm model on document embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 	
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
@@ -184,4 +186,4 @@ if __name__ == '__main__':
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
-	sys.stdout.write("%0.2f min\n" % (lapse / 60.); sys.stdout.flush()
+	sys.stdout.write("%0.2f min\n" % (lapse / 60.)); sys.stdout.flush()

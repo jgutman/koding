@@ -27,6 +27,10 @@ nohup python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$T
 nohup python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TEST}" -stopwords > d2v_fit.out
 
 
-nohup python ../koding/baseline_word2vec.py -w2v './word2vec/' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -loadembeddings -storedvecpath './data/' > w2v.part2.fit.out
+nohup python ../koding/baseline_word2vec.py -w2v './word2vec/w2v_train_only.txt' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -loadembeddings -storedvecpath './data/' > w2v.part2.fit.out
 
-nohup python ../koding/doc2vec_model.py -google './' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords loadtest -storedvecpath './doc2vec/test2.d2v.embeddings.pickle' > d2v.part2.fit.out
+nohup python ../koding/baseline_word2vec.py -w2v './word2vec/w2v_train_only.txt' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -storedvecpath './data/w2vembeddings/' > w2v.part2.fit.out
+
+nohup python ../koding/doc2vec_model.py -google './' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords -loadtest -testvecpath './doc2vec/test2.d2v.embeddings.pickle' > d2v.part2.fit.out
+
+python doc2vec_model.py -google '../../Google Drive/gdrive/' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords  -testvecpath './doc2vec/test2.d2v.embeddings.pickle'

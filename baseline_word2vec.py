@@ -178,7 +178,7 @@ def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom
 				learning_rate='optimal', class_weight="balanced")
 			model = clf.fit(subtrain_X, sub_train_Y)
 			nested_scores.append(model.score(val_X, val_Y))
-			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
+			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y)))
 			sys.stdout.flush()
 		best = np.argmax(nested_scores)
 		# update the lower and upper bounds
@@ -191,7 +191,7 @@ def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom
 		else:
 			lower = lambda_range[best-1]
 			upper = lambda_range[best+1]
-		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
+		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best]))
 		sys.stdout.flush()
 	clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
 				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
@@ -252,7 +252,7 @@ def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out,
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
-		sys.stdout.write("tf-idf matrix %s\n" % tfidf_matrix_train.shape); sys.stdout.flush()
+		sys.stdout.write("tf-idf matrix %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
@@ -319,17 +319,17 @@ def main():
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
 	if args.loadW2Vembeddings:
-		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
-			w2vpath, storedpath_train, storedpath_test)
-		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		trainDataVecs = np.load(storedpath_train)
+		testDataVecs = np.load(storedpath_test)
+		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 		
 	else:
-		trainDataVecs = np.load(storedpath_train)
-		testDataVecs = np.load(storedpath_test)
-		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
+		w2vpath, storedpath_train, storedpath_test)
+		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	
 	sys.stdout.write("fitting baseline model on averaged word embeddings...\n"); sys.stdout.flush()
@@ -346,4 +346,4 @@ if __name__ == '__main__':
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
-	sys.stdout.write("%0.2f min\n" % (lapse / 60.); sys.stdout.flush()
+	sys.stdout.write("%0.2f min\n" % (lapse / 60.)); sys.stdout.flush()
