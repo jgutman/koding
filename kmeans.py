@@ -17,8 +17,8 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     for i in xrange(len(vectors)):
         train_X[i] = vectors[i]
     test_X = np.load(d2v_test_path)
-    df_train = pd.read_csv(train2, header=None, names=['label', 'score', 'text'])
-    df_test = pd.read_csv(test2, header=None, names=['label', 'score', 'text'])
+    df_train = pd.read_csv(train2, sep='\t', header=None, names=['label', 'score', 'text'])
+    df_test = pd.read_csv(test2, sep='\t', header=None, names=['label', 'score', 'text'])
     sys.stdout.write('encoding...\n')
     sys.stdout.flush()
     le = LabelEncoder()
