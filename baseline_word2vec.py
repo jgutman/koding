@@ -38,47 +38,47 @@ def checkfiles():
 	
 def tokenize(textdf):
 	logging.info('Tokenizing text')
-    tokens = nltk.tokenize_sents(textdf['text'])
-    stems = []
-    for post in tokens:
-    	for item in post:
-        	stems.append(PorterStemmer().stem(item))
-    return stems
+	tokens = nltk.tokenize_sents(textdf['text'])
+	stems = []
+	for post in tokens:
+		for item in post:
+			stems.append(PorterStemmer().stem(item))
+	return stems
 
 # Code below based on Kaggle competition: Bag of Words Meets Bags of Popcorn
 # Credited to Angela Chapman https://github.com/wendykan/DeepLearningMovies/
 
 def makeFeatureVec(words, model, num_features, weights = None, word_index = None):
-    # Function to average all of the word vectors in a given paragraph
-    # Pre-initialize an empty numpy array (for speed)
-    featureVec = np.zeros((num_features,) , dtype=np.float32)
-    nwords = 0.
-    
-    # Index2word is a list that contains the names of the words in 
-    # the model's vocabulary. Convert it to a set, for speed 
-    index2word_set = set(model.index2word)
-    
-    # Loop over each word in the reddit post and, if it is in the model's
-    # vocabulary, add its feature vector to the total
-    for word in words:
-        if word in index2word_set: 
-            nwords = nwords + 1.
-            if (weights == None):
-            	featureVec = np.add(featureVec,model[word])
-            else:
-            	# calculate weights and multiply model[word] by weight before adding
-            	idx = word_index.get(word)
-            	# get weight from weights, using index from word_index dict
-            	sparse_weight = weights.getcol(idx)
-            	if (sparse_weight.nnz != 0):
-            		weight = sparse_weight.data[0]
-            		featureVec = np.add(featureVec, np.multiply(model[word], weight))	
+	# Function to average all of the word vectors in a given paragraph
+	# Pre-initialize an empty numpy array (for speed)
+	featureVec = np.zeros((num_features,) , dtype=np.float32)
+	nwords = 0.
 	
+	# Index2word is a list that contains the names of the words in 
+	# the model's vocabulary. Convert it to a set, for speed 
+	index2word_set = set(model.index2word)
+	
+	# Loop over each word in the reddit post and, if it is in the model's
+	# vocabulary, add its feature vector to the total
+	for word in words:
+		if word in index2word_set: 
+			nwords = nwords + 1.
+			if (weights == None):
+				featureVec = np.add(featureVec,model[word])
+			else:
+				# calculate weights and multiply model[word] by weight before adding
+				idx = word_index.get(word)
+				# get weight from weights, using index from word_index dict
+				sparse_weight = weights.getcol(idx)
+				if (sparse_weight.nnz != 0):
+					weight = sparse_weight.data[0]
+					featureVec = np.add(featureVec, np.multiply(model[word], weight))	
+
 	if nwords == 0.:
 		nwords = 1.
-    # Divide the result by the number of words to get the average
-    featureVec = np.true_divide(featureVec, nwords)
-    return featureVec
+	# Divide the result by the number of words to get the average
+	featureVec = np.true_divide(featureVec, nwords)
+	return featureVec
 
 def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index = None):
 	# Given a collection of documents (each one a list of words), calculate 
@@ -101,7 +101,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 			weightPost = weights.getrow(counter) # sparse row vector (1, size of vocabulary)
 			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features, 
 				weights = weightPost, word_index = word_index)  		
-     	
+	
 	return docFeatureVecs
 
 def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
@@ -131,18 +131,18 @@ def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 
 def trainValidationSplit(data, dataY, random_seed = 100, strat_size = 20000):
 	groups = data.unique()
-    random_state = RandomState(seed = random_seed)
-    
-    # training and validation
-    subtrain = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
-    val = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
-    for i in groups:
-    	subtrain_i, val_i = train_test_split(data[data.label == i], 
-    		test_size = strat_size, random_state = random_state)
-    	subtrain = subtrain.append(subtrain_i)
-    	val = val.append(val_i)
-    
-    return subtrain, val, dataY.loc[subtrain.index], dataY.loc[val.index]
+	random_state = RandomState(seed = random_seed)
+
+	# training and validation
+	subtrain = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
+	val = pd.DataFrame(data = None, columns = ['label', 'score', 'text']) 
+	for i in groups:
+		subtrain_i, val_i = train_test_split(data[data.label == i], 
+			test_size = strat_size, random_state = random_state)
+		subtrain = subtrain.append(subtrain_i)
+		val = val.append(val_i)
+	
+	return subtrain, val, dataY.loc[subtrain.index], dataY.loc[val.index]
 	
 def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom, 
 		random_seed = 100, strat_size = 20000):
@@ -160,62 +160,62 @@ def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom
 	val_X = trainDataVecs[val.index, :]
 	
 	sys.stdout.write('train_count dims: %s\n' % str(subtrain_X.shape))
-    sys.stdout.write('validation_count dims: %s\n' % str(val_X.shape))
-    sys.stdout.write('test_count dims: %s\n' % str(testDataVecs.shape))
-    sys.stdout.write('validation_bins dims: %s\n' % str(np.bincount(val_Y)))
-    sys.stdout.write('test_bins dims: %s\n' % str(np.bincount(test.y.values)))
-    sys.stdout.flush() 
-    
-    lower = 1e-6
-    upper = 10
-    
+	sys.stdout.write('validation_count dims: %s\n' % str(val_X.shape))
+	sys.stdout.write('test_count dims: %s\n' % str(testDataVecs.shape))
+	sys.stdout.write('validation_bins dims: %s\n' % str(np.bincount(val_Y)))
+	sys.stdout.write('test_bins dims: %s\n' % str(np.bincount(test.y.values)))
+	sys.stdout.flush() 
+	
+	lower = 1e-6
+	upper = 10
+	
 	for level in xrange(zoom):
-        lambda_range = np.linspace(lower, upper, lamb)
-        nested_scores = []
-        for i, v in enumerate(lambda_range):
-            clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                                learning_rate='optimal', class_weight="balanced")
-            model = clf.fit(subtrain_X, sub_train_Y)
-            nested_scores.append(model.score(val_X, val_Y))
-            sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
-            sys.stdout.flush()
-        best = np.argmax(nested_scores)
-        # update the lower and upper bounds
-        if best == 0:
-            lower = lambda_range[best]
-            upper = lambda_range[best+1]
-        elif best == lamb-1:
-            lower = lambda_range[best-1]
-            upper = lambda_range[best]
-        else:
-            lower = lambda_range[best-1]
-            upper = lambda_range[best+1]
-        sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
-        sys.stdout.flush()
-    clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-                        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                        learning_rate='optimal', class_weight="balanced")
-    model = clf.fit(subtrain_X, subtrain_Y)
-    df = pd.DataFrame(model.decision_function(testDataVecs), 
-                      columns=[v for i,v in enumerate(le_classes_)])
+		lambda_range = np.linspace(lower, upper, lamb)
+		nested_scores = []
+		for i, v in enumerate(lambda_range):
+			clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
+				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
+				learning_rate='optimal', class_weight="balanced")
+			model = clf.fit(subtrain_X, sub_train_Y)
+			nested_scores.append(model.score(val_X, val_Y))
+			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
+			sys.stdout.flush()
+		best = np.argmax(nested_scores)
+		# update the lower and upper bounds
+		if best == 0:
+			lower = lambda_range[best]
+			upper = lambda_range[best+1]
+		elif best == lamb-1:
+			lower = lambda_range[best-1]
+			upper = lambda_range[best]
+		else:
+			lower = lambda_range[best-1]
+			upper = lambda_range[best+1]
+		sys.stdout.write('best: %0.4f score: %0.4f\n'  % (best, nested_scores[best])
+		sys.stdout.flush()
+	clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
+				l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
+				learning_rate='optimal', class_weight="balanced")
+	model = clf.fit(subtrain_X, subtrain_Y)
+	df = pd.DataFrame(model.decision_function(testDataVecs), 
+		columns=[v for i,v in enumerate(le_classes_)])
 	df['y'] = test.y.values
-    df['predict'] = model.predict(testDataVecs)
-    df.to_csv('decision_function_svm_word2vec.csv', sep='\t', index=False)
-    sys.stdout.write('FINAL SCORE %0.4f\n' % model.score(testDataVecs, test.y.values))
-    sys.stdout.flush()
+	df['predict'] = model.predict(testDataVecs)
+	df.to_csv('decision_function_svm_word2vec.csv', sep='\t', index=False)
+	sys.stdout.write('FINAL SCORE %0.4f\n' % model.score(testDataVecs, test.y.values))
+	sys.stdout.flush()
 
 def docWordList(text, remove_stopwords = False, to_lower = False):
 	# Function to convert a document to a sequence of words,
-    # optionally removing stop words.  Returns a list of words.
-    if to_lower:
-    	words = text.lower().split()
-    else:
-    	words = text.split()
-    if remove_stopwords:
-    	stops = set(stopwords.words("english"))
-    	words = [w for w in words if not w in stops]  	
-    return words
+	# optionally removing stop words.  Returns a list of words.
+	if to_lower:
+		words = text.lower().split()
+	else:
+		words = text.split()
+	if remove_stopwords:
+		stops = set(stopwords.words("english"))
+		words = [w for w in words if not w in stops]  	
+	return words
 
 def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out, file_test_out):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -281,7 +281,7 @@ def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out,
 		sys.stdout.write("writing test embeddings to %s\n" % file_test_out); sys.stdout.flush()
 		
 		return trainDataVecs, testDataVecs
-    
+
 def main():
 	google_drive = os.path.abspath('../../Google Drive/gdrive/')
 	

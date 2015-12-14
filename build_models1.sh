@@ -25,3 +25,8 @@ python doc2vec_split.py "$TRAINPATH" "$SENTENCEPATH" "$D2V"
 python check_models.py "$W2VMODEL" "$D2VMODEL"
 nohup python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$TESTPATH" -weighted -stopwords > w2v_fit.out
 nohup python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TEST}" -stopwords > d2v_fit.out
+
+
+nohup python ../koding/baseline_word2vec.py -w2v './word2vec/' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -loadembeddings -storedvecpath './data/' > w2v.part2.fit.out
+
+nohup python ../koding/doc2vec_model.py -google './' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords loadtest -storedvecpath './doc2vec/test2.d2v.embeddings.pickle' > d2v.part2.fit.out
