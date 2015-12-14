@@ -54,19 +54,19 @@ def w2v(sentencepath, length=300, context=5,
 
 def main(datapath, trainfile, w2vpath):
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
-	path = os.path.join(datapath, trainfile)
+	path = os.path.abspath(trainpath)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
 	sys.stdout.write("training data: %s\n" % str(train.shape))
 	sys.stdout.write("write sentences to file...\n"); sys.stdout.flush()
-	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
+	sentencePath = Sentences(data = train, filename = os.path.abspath(sentencepath))
 	sys.stdout.write("build word embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = w2v(sentencepath = sentencePath, length = 300, 
 		context = 5, samples = 10, alpha_limit = 0.001, 
-		epochs = 1, output = os.path.join(w2vpath, 'w2v_train_only.txt'))
+		epochs = 1, output = os.path.abspath(w2vpath))
 	
 if __name__ == '__main__':
-	script, datapath, trainpath, w2vpath = sys.argv
+	script, trainpath, w2vpath, sentencepath = sys.argv
 	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
 	main(datapath, trainpath, w2vpath)

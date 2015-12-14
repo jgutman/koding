@@ -30,10 +30,10 @@ def main(trainpath, sentencepath, d2vpath):
 	sys.stdout.write("build document embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = d2v(sentencepath=sentencepath, length=300, samples=10, alpha_limit=0.001, 
-		epochs=5, output=os.path.join(d2vpath, 'd2v_train_only_labels.txt'))
+		epochs=5, output=os.path.abspath(d2vpath))
 	
 if __name__ == '__main__':
-	script, trainpath, sentencepath, d2vpath = sys.argv
+	script, trainpath, d2vpath, sentencepath = sys.argv
 	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
 	main(trainpath, sentencepath, d2vpath)
