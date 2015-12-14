@@ -9,6 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 import random, sys, time
 from baseline_word2vec import docWordList, trainValidationSplit, write_training
 from nltk.corpus import stopwords
+from numpy.random import RandomState
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
