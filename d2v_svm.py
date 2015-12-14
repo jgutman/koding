@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.cluster import MiniBatchKMeans
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
+from sklearn.cross_validation import train_test_split
 from gensim import models
 import sys
 
