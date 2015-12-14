@@ -8,10 +8,6 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.kernel_approximation import RBFSampler
-<<<<<<< HEAD
-=======
-from sklearn.preprocessing import normalize
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
 from TrainTest import Split
 
 
@@ -69,12 +65,6 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
         print 'tx', train_X.shape, 'vx', val_X.shape
         print 'kernel true:', comp
-<<<<<<< HEAD
-=======
-    train_X = normalize(train_X)
-    val_X = normalize(val_X)
-    pca_test = normalize(pca_test)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
     lower = 1e-6
     upper = 10
     # weights
@@ -95,11 +85,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         for i, v in enumerate(lambda_range):
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
                                 l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-<<<<<<< HEAD
                                 learning_rate='optimal', class_weight=weights)
-=======
-                                class_weight=weights)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
             model = clf.fit(train_X, train_Y)
             nested_scores.append(model.score(val_X, val_Y))
             sys.stdout.write('level: '+str(level)+' lambda: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
@@ -119,21 +105,13 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
                         l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-<<<<<<< HEAD
                         learning_rate='optimal', class_weight=weights)
-=======
-                        class_weight=weights)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
     model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.decision_function(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
     df['predict'] = model.predict(pca_test)
-<<<<<<< HEAD
     df.to_csv('decision_function_svm_dense_matrix_ngram-'+str(ngram)+'.csv', index=False)
-=======
-    df.to_csv('decision_function_svm_dense_hinge_ngram-'+str(ngram)+'.csv', index=False)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
 
@@ -147,10 +125,6 @@ if __name__ == '__main__':
     train, test, sample, cat = traintest(path)
     train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
     test_count.shape, sample_count.shape
-<<<<<<< HEAD
     SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=True)
-=======
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=False)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
     print path, 'ngram: ', ngram
 

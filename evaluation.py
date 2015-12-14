@@ -2,8 +2,15 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.preprocessing import LabelEncoder
 
-def readProbability(pathToFile, header = True, index = True, label = True):
+
+def readProbability(pathToFile, header = True, index = True, label = True, sep=',', data = None):
+	labels = []
+	if (data != None):
+		le = LabelEncoder()
+		le.fit(data.label)
+		labels = list(le.classes_)
 	
+	predictions = pd.read_csv(pathToFile, header = 0 if header else None, index_col = 0 if index else None)
 
 def main():
 	google_drive = os.path.abspath('../../Google Drive/gdrive/')
@@ -14,7 +21,7 @@ def main():
 	parser.set_defaults(modelpath = os.path.join(google_drive, 'baseline/predict_proba.csv'),
 		hasheader = False)
 	args = parser.parse_args()
-	
+
 	prob = readProbability(args.modelpath, args.hasheader)
 
 if __name__ == '__main__':
