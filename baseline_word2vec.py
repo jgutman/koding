@@ -13,6 +13,7 @@ from nltk.corpus import stopwords
 
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
+from numpy.random import RandomState
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer

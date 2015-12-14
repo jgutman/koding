@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 from gensim.models import doc2vec
 import sys, time, os, logging
+from numpy.random import RandomState
   
 # Word2Vec model
 def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, output='doc2vec_model.txt'):
