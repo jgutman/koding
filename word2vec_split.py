@@ -10,20 +10,24 @@ import pandas as pd
 import numpy as np
 from gensim import models
 from gensim.models import word2vec
-import sys, time, os
-import logging
+import sys, time, os, logging
+import argparse, string, re
+from nltk.corpus import stopwords
 
 # Create a file of just sentences for NN
-def Sentences(data, filename='sentences.txt'):
+def Sentences(data, filename='sentences.txt', tolowercase = False):
     '''
     argument: data = Pandas dataframe, filename = file name
     returns: string of the path to sentences
     '''
     output = open(filename, 'w')
+    space = ' '
+    pattern = re.compile("\W")
     for row in data.itertuples():
         text = str(row[3])
-        text = text.replace('\n', ' ')
-        text = text.replace('\t', ' ')
+        text = space.join(re.split(pattern, sentence))
+        if tolowercase:
+        	text = text.lower()
         output.write(text+'\n')
     output.close()
     sys.stdout.write("returns path to file: %s\n"  % filename)
