@@ -52,7 +52,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,) , dtype=np.float32)
 	nwords = 0.
-	if len(words):
+	if len(words == 0):
 		return featureVec
 	
 	# Index2word is a list that contains the names of the words in 
