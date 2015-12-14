@@ -53,7 +53,7 @@ def ListScores(df_predict_values, df_y_values):
         if v != df_y_values[i]:
             count+=1.0
         tempDict[v][df_y_values[i]]+=1
-    print count/df.shape[0]
+    print count/len(df_predict_values)
     return tempDict
 
 
