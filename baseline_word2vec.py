@@ -252,7 +252,7 @@ def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out,
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
-		sys.stdout.write("tf-idf matrix %s\n" % tfidf_matrix_train.shape); sys.stdout.flush()
+		sys.stdout.write("tf-idf matrix %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)

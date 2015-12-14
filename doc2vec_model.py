@@ -171,12 +171,13 @@ def main():
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	
-	sys.stdout.write("fitting logit and svm model on document embeddings...\n"); sys.stdout.flush()
+	sys.stdout.write("fitting logit model on document embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(doc2vpath)
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	sys.stdout.write("fitting svm model on document embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
+	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 	
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
