@@ -52,7 +52,7 @@ def w2v(sentencepath, length=300, context=5,
 	sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
 	return model
 
-def main(datapath, trainfile, w2vpath):
+def main(trainpath, w2vpath, sentencepath):
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
 	path = os.path.abspath(trainpath)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
@@ -69,7 +69,7 @@ if __name__ == '__main__':
 	script, trainpath, w2vpath, sentencepath = sys.argv
 	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
-	main(datapath, trainpath, w2vpath)
+	main(trainpath, w2vpath, sentencepath)
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
