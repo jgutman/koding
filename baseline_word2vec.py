@@ -14,7 +14,6 @@ from nltk.corpus import stopwords
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
 
-from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import SGDClassifier
@@ -53,6 +52,8 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,) , dtype=np.float32)
 	nwords = 0.
+	if len(words == 0):
+		return featureVec
 	
 	# Index2word is a list that contains the names of the words in 
 	# the model's vocabulary. Convert it to a set, for speed 
@@ -60,6 +61,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	
 	# Loop over each word in the reddit post and, if it is in the model's
 	# vocabulary, add its feature vector to the total
+	
 	for word in words:
 		if word in index2word_set: 
 			nwords = nwords + 1.
@@ -96,7 +98,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 			sys.stdout.write("Reddit post %d of %d\n" % (counter, len(documents)))
 			sys.stdout.flush()
 		if (weights == None):
-			docFeatureVecs[counter] = makeFeatureVec(post, model, snum_features)
+			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features)
 		else:
 			weightPost = weights.getrow(counter) # sparse row vector (1, size of vocabulary)
 			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features, 
@@ -130,7 +132,7 @@ def logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	sys.stdout.flush() 
 
 def trainValidationSplit(data, dataY, random_seed = 100, strat_size = 20000):
-	groups = data.unique()
+	groups = data.label.unique()
 	random_state = RandomState(seed = random_seed)
 
 	# training and validation
@@ -217,18 +219,11 @@ def docWordList(text, remove_stopwords = False, to_lower = False):
 		words = [w for w in words if not w in stops]  	
 	return words
 
-def computeAverage(args, datapath, trainpath, testpath, w2vpath, file_train_out, file_test_out):
+def computeAverage(args, train, test, w2vpath, file_train_out, file_test_out):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	sys.stdout.write("loading word2vec...\n"); sys.stdout.flush()
 	model = models.Word2Vec.load(w2vpath)
 	sys.stdout.write("loading train and test data...\n"); sys.stdout.flush()
-	if args.splitdata:
-		train, test = write_training(datapath, trainpath, testpath)
-	else:
-		train = pd.read_csv(trainpath, 
-			sep = '\t', header=None, names = ['label', 'score', 'text'])
-		test = pd.read_csv(testpath, 
-			sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	word_vectors = model.syn0
 	vocabulary_size = int(word_vectors.shape[0])
@@ -318,6 +313,14 @@ def main():
 	storedpath_train = os.path.join(storedpath, 'train_word_embeddings.pickle')
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
+	if args.splitdata:
+		train, test = write_training(datapath, trainpath, testpath)
+	else:
+		train = pd.read_csv(trainpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
+		test = pd.read_csv(testpath, 
+			sep = '\t', header=None, names = ['label', 'score', 'text'])
+	
 	if args.loadW2Vembeddings:
 		trainDataVecs = np.load(storedpath_train)
 		testDataVecs = np.load(storedpath_test)
@@ -326,8 +329,8 @@ def main():
 		sys.stdout.flush()
 		
 	else:
-		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
-		w2vpath, storedpath_train, storedpath_test)
+		trainDataVecs, testDataVecs = computeAverage(args, train, test, 
+				w2vpath, storedpath_train, storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()

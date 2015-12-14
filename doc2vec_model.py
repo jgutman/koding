@@ -1,20 +1,19 @@
 from gensim import models
-import argparse, os, logging
-import nltk
+import argparse, os, logging, nltk
 
-from TrainTest2 import Split
-from TrainTest2 import ParseData
+from TrainTest2 import Split, ParseData
 import pandas as pd
 import numpy as np
-from baseline_word2vec import write_training
 
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
-from baseline_word2vec import docWordList
+from baseline_word2vec import docWordList, trainValidationSplit, write_training
 from nltk.corpus import stopwords
 
 from sklearn.linear_model import LogisticRegression
-from sklearn import svm
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import SGDClassifier
+from sklearn.cross_validation import train_test_split
 
 def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
 	# encode labels
