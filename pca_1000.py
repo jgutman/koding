@@ -10,8 +10,6 @@ from sklearn.cross_validation import train_test_split
 import statsmodels.formula.api as smf
 from TrainTest import Split
 
-
-
 def traintest(path):
     data = pd.read_csv(path, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
     train, test = Split(path, data=data, parse=False, testsize=20000)
