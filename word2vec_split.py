@@ -56,7 +56,7 @@ def main(datapath, trainfile, w2vpath):
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
 	path = os.path.join(datapath, trainfile)
 	train = pd.read_csv(path, sep = '\t', header = None, names = ['label', 'score', 'text'])
-	sys.stdout.write("training data: %s\n" % train.shape)
+	sys.stdout.write("training data: %s\n" % str(train.shape))
 	sys.stdout.write("write sentences to file...\n"); sys.stdout.flush()
 	sentencePath = Sentences(data = train, filename = os.path.join(datapath, 'train_w2v_ready.txt'))
 	sys.stdout.write("build word embeddings...\n"); sys.stdout.flush()

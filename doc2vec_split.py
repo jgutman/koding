@@ -26,7 +26,7 @@ def d2v(sentencepath, length=300, samples=10, alpha_limit=0.0001, epochs=1, outp
 def main(trainpath, sentencepath, d2vpath):	
 	sys.stdout.write("read training data...\n"); sys.stdout.flush()
 	train = pd.read_csv(trainpath, sep = '\t', header = None, names = ['label', 'score', 'text'])
-	sys.stdout.write("training data: %s\n" % train.shape)
+	sys.stdout.write("training data: %s\n" % str(train.shape))
 	sys.stdout.write("build document embeddings...\n"); sys.stdout.flush()
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	model = d2v(sentencepath=sentencepath, length=300, samples=10, alpha_limit=0.001, 
