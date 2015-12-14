@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import KMeans
 from sklearn.preprocessing import LabelEncoder
 from gensim import models
 import sys
@@ -34,7 +35,8 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
 def Cluster(train_X, test_X, train_Y, test_Y):
     sys.stdout.write('clustering...\n')
     sys.stdout.flush()
-    clf = MiniBatchKMeans(n_clusters=5)
+    # clf = MiniBatchKMeans(n_clusters=5)
+    clf = KMeans(n_cluster = 5, precompute_distances = True, n_jobs=5)
     model = clf.fit(train_X)
     predict = model.predict(test_X)
     return predict
@@ -53,7 +55,7 @@ def ListScores(df_predict_values, df_y_values):
         if v != df_y_values[i]:
             count+=1.0
         tempDict[v][df_y_values[i]]+=1
-    print count/len(df_predict_values)
+    print 1 - count/len(df_predict_values)
     return tempDict
 
 
