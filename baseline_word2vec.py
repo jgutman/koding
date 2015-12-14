@@ -53,7 +53,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,) , dtype=np.float32)
 	nwords = 0.
-	if len(words == 0):
+	if (len(words) == 0):
 		return featureVec
 	
 	# Index2word is a list that contains the names of the words in 
@@ -243,22 +243,28 @@ def computeAverage(args, train, test, w2vpath, file_train_out, file_test_out):
 	
 	if args.weightedw2v:
 		# Build tf-idf matrix on training documents
-		sys.stdout.write("fitting tf-idf matrix...\n"); sys.stdout.flush()
+		sys.stdout.write("fitting tf-idf matrix on train...\n"); sys.stdout.flush()
 		tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
-		sys.stdout.write("tf-idf matrix %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
+		sys.stdout.write("tf-idf matrix train %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
 		trainDataVecs.dump(file_train_out)
 		sys.stdout.write("writing train embeddings to %s\n" % file_train_out); sys.stdout.flush()
 		
-		# Apply tf-idf matrix from training to test documents to get weights
-		sys.stdout.write("averaging word embeddings in test data...\n"); sys.stdout.flush()
+		# Build tf-idf matrix on testing documents
+		sys.stdout.write("fitting tf-idf matrix on test...\n"); sys.stdout.flush()
+		tf = TfidfVectorizer(analyzer='word',
+			stop_words = ('english' if args.removeStopWords else None))
+		tfidf_matrix_test =  tf.fit_transform(test['text'].astype(str))
+		vocabulary = tf.vocabulary_
+		sys.stdout.write("tf-idf matrix test %s\n" % str(tfidf_matrix_test.shape)); sys.stdout.flush()
+		sys.stdout.write("averaging word embeddings in testing data...\n"); sys.stdout.flush()
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
-			weights = tfidf_matrix_train, word_index = vocabulary)
+			weights = tfidf_matrix_test, word_index = vocabulary)
 		testDataVecs.dump(file_test_out)
 		sys.stdout.write("writing test embeddings to %s\n" % file_test_out); sys.stdout.flush()
 		
