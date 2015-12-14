@@ -158,17 +158,17 @@ def main():
 	
 	sys.stdout.write("fetching training document embeddings...\n"); sys.stdout.flush()
 	trainDataVecs = model.docvecs
-	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0]))
+	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 	
 	sys.stdout.write("inferring test document embeddings...\n"); sys.stdout.flush()
 	if args.loadTestVecs:
 		testDataVecs = np.load(testVecPath)
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	else:	
 		testDataVecs = getTestVectors(test, model, remove_stopwords = args.removeStopWords)
 		testDataVecs.dump(testVecPath)
-		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0]))
+		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 	
 	sys.stdout.write("fitting logit and svm model on document embeddings...\n"); sys.stdout.flush()
@@ -185,4 +185,4 @@ if __name__ == '__main__':
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
-	sys.stdout.write("%0.2f min\n" % (lapse / 60.); sys.stdout.flush()
+	sys.stdout.write("%0.2f min\n" % (lapse / 60.)); sys.stdout.flush()
