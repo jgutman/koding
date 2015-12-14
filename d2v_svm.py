@@ -1,12 +1,16 @@
+import operator, sys, random, time
 import numpy as np
 import pandas as pd
-from sklearn.cluster import MiniBatchKMeans
-from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
+from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import normalize
-from gensim import models
-import sys
+from TrainTest import Split
+
 
 
 
