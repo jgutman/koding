@@ -12,7 +12,10 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     sys.stdout.write('loading data...')
     sys.stdout.flush()
     d2v_train = models.Doc2Vec.load(d2v_train_path)
-    train_X = d2v_train.docvecs
+    vectors = d2v_train.docvecs
+    train_X = np.zeros((len(vectors), len(vectors[0])))
+    for i in xrange(len(vectors)):
+        train_X[i] = vectors[i]
     test_X = np.load(d2v_test_path)
     df_train = pd.read_csv(train2, header=None, names=['label', 'score', 'text'])
     df_test = pd.read_csv(test2, header=None, names=['label', 'score', 'text'])
