@@ -87,7 +87,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         lambda_range = np.linspace(lower, upper, lamb)
         nested_scores = []
         for i, v in enumerate(lambda_range):
-            clf = SGDClassifier(alpha=v, loss='squared_hinge', penalty='l2', 
+            clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
                                 l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
                                 learning_rate='optimal', class_weight=weights)
             model = clf.fit(train_X, train_Y)
@@ -107,7 +107,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
             upper = lambda_range[best+1]
         sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
         sys.stdout.flush()
-    clf = SGDClassifier(alpha=lambda_range[best], loss='squared_hinge', penalty='l2', 
+    clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
                         l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
                         learning_rate='optimal', class_weight=weights)
     model = clf.fit(train_X, train_Y)
@@ -115,7 +115,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
     df['predict'] = model.predict(pca_test)
-    df.to_csv('decision_function_svm_dense_matrix_ngram-'+str(ngram)+'.csv', index=False)
+    df.to_csv('decision_function_svm_dense_hinge_ngram-'+str(ngram)+'.csv', index=False)
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
 
