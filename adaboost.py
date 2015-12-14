@@ -84,7 +84,7 @@ def AdaBoostModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classe
         clf = AdaBoostClassifier(base_estimator=tree, random_state=83)
         model = clf.fit(train_X, train_Y)
         nested_scores.append(model.score(val_X, val_Y))
-        sys.stdout.write('level: '+str(level)+' lambda: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
+        sys.stdout.write('depth: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
         sys.stdout.flush()
     best = np.argmax(nested_scores)
     sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
