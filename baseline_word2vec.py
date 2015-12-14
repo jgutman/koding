@@ -319,15 +319,15 @@ def main():
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
 	if args.loadW2Vembeddings:
-		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
-			w2vpath, storedpath_train, storedpath_test)
+		trainDataVecs = np.load(storedpath_train)
+		testDataVecs = np.load(storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
 		
 	else:
-		trainDataVecs = np.load(storedpath_train)
-		testDataVecs = np.load(storedpath_test)
+		trainDataVecs, testDataVecs = computeAverage(args, datapath, trainpath, testpath, 
+		w2vpath, storedpath_train, storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
 		sys.stdout.flush()
