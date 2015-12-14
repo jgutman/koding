@@ -25,7 +25,7 @@ def Sentences(data, filename='sentences.txt', tolowercase = False):
 	pattern = re.compile("\W")
 	for row in data.itertuples():
 		text = str(row[3])
-		text = space.join(re.split(pattern, sentence))
+		text = space.join(re.split(pattern, text))
 		if tolowercase:
 			text = text.lower()
 		output.write(text+'\n')
