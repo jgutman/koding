@@ -9,7 +9,8 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import normalize
-from TrainTest import Split
+from gensim import models
+
 
 
 
