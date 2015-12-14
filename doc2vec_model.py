@@ -157,10 +157,12 @@ def main():
 			names = ['label', 'score', 'text'])
 	
 	sys.stdout.write("fetching training document embeddings...\n"); sys.stdout.flush()
+	logging.info('building train vectors')
 	trainDataVecs = model.docvecs
 	sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
 	
 	sys.stdout.write("inferring test document embeddings...\n"); sys.stdout.flush()
+	logging.info('building test vectors')
 	if args.loadTestVecs:
 		testDataVecs = np.load(testVecPath)
 		sys.stdout.write("%d test posts, %d features\n" % (len(testDataVecs), len(testDataVecs[0])))
@@ -173,10 +175,10 @@ def main():
 	
 	sys.stdout.write("fitting logit model on document embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(doc2vpath)
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('logistic regression')
 	logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
 	sys.stdout.write("fitting svm model on document embeddings...\n"); sys.stdout.flush()
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('svm with sgd')
 	svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 	
 if __name__ == '__main__':

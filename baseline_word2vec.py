@@ -320,6 +320,8 @@ def main():
 	storedpath_train = os.path.join(storedpath, 'train_word_embeddings.pickle')
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('reading data')
 	if args.splitdata:
 		train, test = write_training(datapath, trainpath, testpath)
 	else:
@@ -329,6 +331,7 @@ def main():
 			sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	if args.loadW2Vembeddings:
+		logging.info('loading word vectors')
 		trainDataVecs = np.load(storedpath_train)
 		testDataVecs = np.load(storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
@@ -336,6 +339,7 @@ def main():
 		sys.stdout.flush()
 		
 	else:
+		logging.info('building word vectors')
 		trainDataVecs, testDataVecs = computeAverage(args, train, test, 
 				w2vpath, storedpath_train, storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
@@ -344,9 +348,9 @@ def main():
 	
 	sys.stdout.write("fitting baseline model on averaged word embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(w2vpath)
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('logistic regression')
 	logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('svm with sgd')
 	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 
 if __name__ == '__main__':
