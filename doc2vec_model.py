@@ -71,7 +71,7 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 				learning_rate='optimal', class_weight="balanced")
 			model = clf.fit(subtrain_X, sub_train_Y)
 			nested_scores.append(model.score(val_X, val_Y))
-			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y))
+			sys.stdout.write('level: %d lambda: %0.4f score: %0.4f\n' % (level, v, model.score(val_X, val_Y)))
 			sys.stdout.flush()
 		best = np.argmax(nested_scores)
 		# update the lower and upper bounds
