@@ -17,7 +17,7 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     train_X = np.zeros((len(vectors), len(vectors[0])))
     for i in xrange(len(vectors)):
         train_X[i] = vectors[i]
-    sys.stdout.write(str(train_X[999]))
+    sys.stdout.write(str(train_X[999]) + '\n')
     sys.stdout.flush()
     test_X = np.load(d2v_test_path)
     df_train = pd.read_csv(train2, sep='\t', header=None, names=['label', 'score', 'text'])
