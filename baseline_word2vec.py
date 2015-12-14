@@ -13,6 +13,7 @@ from nltk.corpus import stopwords
 
 from sklearn.preprocessing import LabelEncoder
 import random, sys, time
+from numpy.random import RandomState
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
@@ -52,7 +53,7 @@ def makeFeatureVec(words, model, num_features, weights = None, word_index = None
 	# Pre-initialize an empty numpy array (for speed)
 	featureVec = np.zeros((num_features,) , dtype=np.float32)
 	nwords = 0.
-	if len(words == 0):
+	if (len(words) == 0):
 		return featureVec
 	
 	# Index2word is a list that contains the names of the words in 
@@ -242,22 +243,28 @@ def computeAverage(args, train, test, w2vpath, file_train_out, file_test_out):
 	
 	if args.weightedw2v:
 		# Build tf-idf matrix on training documents
-		sys.stdout.write("fitting tf-idf matrix...\n"); sys.stdout.flush()
+		sys.stdout.write("fitting tf-idf matrix on train...\n"); sys.stdout.flush()
 		tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
 			stop_words = ('english' if args.removeStopWords else None))
 		tfidf_matrix_train =  tf.fit_transform(train['text'].astype(str))
 		vocabulary = tf.vocabulary_
-		sys.stdout.write("tf-idf matrix %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
+		sys.stdout.write("tf-idf matrix train %s\n" % str(tfidf_matrix_train.shape)); sys.stdout.flush()
 		sys.stdout.write("averaging word embeddings in training data...\n"); sys.stdout.flush()
 		trainDataVecs = getAvgFeatureVecs(train_words, model, num_features,
 			weights = tfidf_matrix_train, word_index = vocabulary)
 		trainDataVecs.dump(file_train_out)
 		sys.stdout.write("writing train embeddings to %s\n" % file_train_out); sys.stdout.flush()
 		
-		# Apply tf-idf matrix from training to test documents to get weights
-		sys.stdout.write("averaging word embeddings in test data...\n"); sys.stdout.flush()
+		# Build tf-idf matrix on testing documents
+		sys.stdout.write("fitting tf-idf matrix on test...\n"); sys.stdout.flush()
+		tf = TfidfVectorizer(analyzer='word',
+			stop_words = ('english' if args.removeStopWords else None))
+		tfidf_matrix_test =  tf.fit_transform(test['text'].astype(str))
+		vocabulary = tf.vocabulary_
+		sys.stdout.write("tf-idf matrix test %s\n" % str(tfidf_matrix_test.shape)); sys.stdout.flush()
+		sys.stdout.write("averaging word embeddings in testing data...\n"); sys.stdout.flush()
 		testDataVecs = getAvgFeatureVecs(test_words, model, num_features,
-			weights = tfidf_matrix_train, word_index = vocabulary)
+			weights = tfidf_matrix_test, word_index = vocabulary)
 		testDataVecs.dump(file_test_out)
 		sys.stdout.write("writing test embeddings to %s\n" % file_test_out); sys.stdout.flush()
 		
@@ -313,6 +320,8 @@ def main():
 	storedpath_train = os.path.join(storedpath, 'train_word_embeddings.pickle')
 	storedpath_test = os.path.join(storedpath, 'test_word_embeddings.pickle')
 	
+	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('reading data')
 	if args.splitdata:
 		train, test = write_training(datapath, trainpath, testpath)
 	else:
@@ -322,6 +331,7 @@ def main():
 			sep = '\t', header=None, names = ['label', 'score', 'text'])
 	
 	if args.loadW2Vembeddings:
+		logging.info('loading word vectors')
 		trainDataVecs = np.load(storedpath_train)
 		testDataVecs = np.load(storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
@@ -329,6 +339,7 @@ def main():
 		sys.stdout.flush()
 		
 	else:
+		logging.info('building word vectors')
 		trainDataVecs, testDataVecs = computeAverage(args, train, test, 
 				w2vpath, storedpath_train, storedpath_test)
 		sys.stdout.write("%d training posts, %d features\n" % (len(trainDataVecs), len(trainDataVecs[0])))
@@ -337,9 +348,9 @@ def main():
 	
 	sys.stdout.write("fitting baseline model on averaged word embeddings...\n"); sys.stdout.flush()
 	outputDirectory = os.path.dirname(w2vpath)
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('logistic regression')
 	logitWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory)
-	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+	logging.info('svm with sgd')
 	svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputDirectory, 10., 10.)
 
 if __name__ == '__main__':
