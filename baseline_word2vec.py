@@ -145,7 +145,7 @@ def trainValidationSplit(data, dataY, random_seed = 100, strat_size = 20000):
 		subtrain = subtrain.append(subtrain_i)
 		val = val.append(val_i)
 	
-	return subtrain, val, dataY.loc[subtrain.index], dataY.loc[val.index]
+	return subtrain, val, dataY[subtrain.index], dataY[val.index]
 	
 def svmWord2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom, 
 		random_seed = 100, strat_size = 20000):
@@ -313,7 +313,7 @@ def main():
 	args = parser.parse_args()
 	datapath = os.path.abspath(args.datapath)
 	trainpath = os.path.abspath(args.trainpath)
-	testpath = os.path.abspath(args.trainpath)
+	testpath = os.path.abspath(args.testpath)
 	w2vpath = os.path.abspath(args.w2vpath)
 	
 	storedpath = os.path.abspath(args.avgVecPath)

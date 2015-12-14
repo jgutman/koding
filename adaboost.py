@@ -8,10 +8,8 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
 from sklearn.kernel_approximation import RBFSampler
-<<<<<<< HEAD
-=======
-from sklearn.preprocessing import normalize
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 from TrainTest import Split
 
 
@@ -51,7 +49,7 @@ def RBFtransform(train_count, val_count, test_count, comp):
     return train_RBF, val_RBF, test_RBF
 
 
-def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, ngram, comp, kernel=False):
+def AdaBoostModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
@@ -64,18 +62,8 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
     sys.stdout.write('test_count dims: ' +  str(pca_test.shape) + '\n')
     sys.stdout.write('validation_bins dims: ' +  str(np.bincount(val_Y)) + '\n')
     sys.stdout.write('test_bins dims: ' +  str(np.bincount(test_y)) + '\n')
-    sys.stdout.flush() 
-    if kernel:
-        train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
-        print 'tx', train_X.shape, 'vx', val_X.shape
-        print 'kernel true:', comp
-<<<<<<< HEAD
-=======
-    train_X = normalize(train_X)
-    val_X = normalize(val_X)
-    pca_test = normalize(pca_test)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
-    lower = 1e-6
+    sys.stdout.flush()  
+    lower = 1
     upper = 10
     # weights
     Counter = {}
@@ -89,51 +77,26 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
     topCount = max(Counter.values())
     weights = {i: n_sample/(n_classes * Counter[i]) for i, v in enumerate(le_classes_)}
     print weights
-    for level in xrange(zoom):
-        lambda_range = np.linspace(lower, upper, lamb)
-        nested_scores = []
-        for i, v in enumerate(lambda_range):
-            clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-<<<<<<< HEAD
-                                learning_rate='optimal', class_weight=weights)
-=======
-                                class_weight=weights)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
-            model = clf.fit(train_X, train_Y)
-            nested_scores.append(model.score(val_X, val_Y))
-            sys.stdout.write('level: '+str(level)+' lambda: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
-            sys.stdout.flush()
-        best = np.argmax(nested_scores)
-        # update the lower and upper bounds
-        if best == 0:
-            lower = lambda_range[best]
-            upper = lambda_range[best+1]
-        elif best == lamb-1:
-            lower = lambda_range[best-1]
-            upper = lambda_range[best]
-        else:
-            lower = lambda_range[best-1]
-            upper = lambda_range[best+1]
-        sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
+    lambda_range = np.linspace(lower, upper, upper)
+    nested_scores = []
+    for i, v in enumerate(lambda_range):
+        tree = DecisionTreeClassifier(max_depth=int(v))
+        clf = AdaBoostClassifier(base_estimator=tree, random_state=83)
+        model = clf.fit(train_X, train_Y)
+        nested_scores.append(model.score(val_X, val_Y))
+        sys.stdout.write('depth: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
         sys.stdout.flush()
-    clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2', 
-                        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-<<<<<<< HEAD
-                        learning_rate='optimal', class_weight=weights)
-=======
-                        class_weight=weights)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
+    best = np.argmax(nested_scores)
+    sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
+    sys.stdout.flush()
+    tree = DecisionTreeClassifier(max_depth=int(lambda_range[best]))
+    clf = AdaBoostClassifier(base_estimator=tree, random_state=83)
     model = clf.fit(train_X, train_Y)
-    df = pd.DataFrame(model.decision_function(pca_test), 
+    df = pd.DataFrame(model.predict_proba(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
     df['predict'] = model.predict(pca_test)
-<<<<<<< HEAD
-    df.to_csv('decision_function_svm_dense_matrix_ngram-'+str(ngram)+'.csv', index=False)
-=======
-    df.to_csv('decision_function_svm_dense_hinge_ngram-'+str(ngram)+'.csv', index=False)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
+    df.to_csv('AdaBoostClassifier.csv', index=False)
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
 
@@ -143,14 +106,10 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
 if __name__ == '__main__':
     sys.stdout.write('START')
     sys.stdout.flush()
-    script, path, ngram, comp = sys.argv
+    script, path, ngram = sys.argv
     train, test, sample, cat = traintest(path)
     train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
     test_count.shape, sample_count.shape
-<<<<<<< HEAD
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=True)
-=======
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=False)
->>>>>>> 2548112cc50be5f9d5f483a0c6da456b41d0f64c
+    AdaBoostModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat)
     print path, 'ngram: ', ngram
 
