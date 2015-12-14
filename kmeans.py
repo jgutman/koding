@@ -19,7 +19,7 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     test_X = np.load(d2v_test_path)
     df_train = pd.read_csv(train2, header=None, names=['label', 'score', 'text'])
     df_test = pd.read_csv(test2, header=None, names=['label', 'score', 'text'])
-    sys.stdout.write('encoding...')
+    sys.stdout.write('encoding...\n')
     sys.stdout.flush()
     le = LabelEncoder()
     le.fit(df_train.label)
@@ -32,7 +32,7 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
 
 
 def Cluster(train_X, test_X, train_Y, test_Y):
-    sys.stdout.write('clustering...')
+    sys.stdout.write('clustering...\n')
     sys.stdout.flush()
     clf = MiniBatchKMeans(n_clusters=5)
     model = clf.fit(train_X)
@@ -43,7 +43,7 @@ def Cluster(train_X, test_X, train_Y, test_Y):
 
 
 def ListScores(df_predict_values, df_y_values):
-    sys.stdout.write('scoring...')
+    sys.stdout.write('scoring...\n')
     sys.stdout.flush()
     count = 0.0
     labels = np.unique(df_predict_values)
@@ -61,7 +61,7 @@ def ListScores(df_predict_values, df_y_values):
 
 if __name__ == '__main__':
     script, d2v_train_path, d2v_test_path, train2, test2 = sys.argv
-    sys.stdout.write('START')
+    sys.stdout.write('START\n')
     sys.stdout.flush()
     train_X, test_X, train_Y, test_Y = LoadData(d2v_train_path, d2v_test_path, train2, test2)
     predict = Cluster(train_X, test_X, train_Y, test_Y)
