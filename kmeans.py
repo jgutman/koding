@@ -10,14 +10,14 @@ import sys
 
 def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     sys.stdout.write('loading data...')
-    sys.flush()
+    sys.stdout.flush()
     d2v_train = models.Doc2Vec.load(d2v_train_path)
     train_X = d2v_train.docvecs
     test_X = np.load(d2v_test_path)
     df_train = pd.read_csv(train2, header=None, names=['label', 'score', 'text'])
     df_test = pd.read_csv(test2, header=None, names=['label', 'score', 'text'])
     sys.stdout.write('encoding...')
-    sys.flush()
+    sys.stdout.flush()
     le = LabelEncoder()
     le.fit(df_train.label)
     train_Y = le.transform(df_train.label)
@@ -30,7 +30,7 @@ def LoadData(d2v_train_path, d2v_test_path, train2, test2):
 
 def Cluster(train_X, test_X, train_Y, test_Y):
     sys.stdout.write('clustering...')
-    sys.flush()
+    sys.stdout.flush()
     clf = MiniBatchKMeans(n_clusters=5)
     model = clf.fit(train_X)
     predict = model.predict(test_X)
@@ -41,7 +41,7 @@ def Cluster(train_X, test_X, train_Y, test_Y):
 
 def ListScores(df_predict_values, df_y_values):
     sys.stdout.write('scoring...')
-    sys.flush()
+    sys.stdout.flush()
     count = 0.0
     labels = np.unique(df_predict_values)
     print labels
@@ -59,7 +59,7 @@ def ListScores(df_predict_values, df_y_values):
 if __name__ == '__main__':
     script, d2v_train_path, d2v_test_path, train2, test2 = sys.argv
     sys.stdout.write('START')
-    sys.flush()
+    sys.stdout.flush()
     train_X, test_X, train_Y, test_Y = LoadData(d2v_train_path, d2v_test_path, train2, test2)
     predict = Cluster(train_X, test_X, train_Y, test_Y)
     tempDict = ListScores(predict, test_Y)
