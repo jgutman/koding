@@ -96,7 +96,7 @@ def getAvgFeatureVecs(documents, model, num_features, weights = None, word_index
 			sys.stdout.write("Reddit post %d of %d\n" % (counter, len(documents)))
 			sys.stdout.flush()
 		if (weights == None):
-			docFeatureVecs[counter] = makeFeatureVec(post, model, snum_features)
+			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features)
 		else:
 			weightPost = weights.getrow(counter) # sparse row vector (1, size of vocabulary)
 			docFeatureVecs[counter] = makeFeatureVec(post, model, num_features, 
