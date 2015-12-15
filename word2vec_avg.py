@@ -285,7 +285,7 @@ def computeAverage(args, train, test, w2vpath, file_train_out, file_test_out):
 		return trainDataVecs, testDataVecs
 
 def main():
-	google_drive = os.path.abspath('../../Google Drive/gdrive/')
+	google_drive = os.path.abspath('/home/cusp/rn1041/snlp/reddit/nn_reddit/')
 	
 	parser = argparse.ArgumentParser(description = 'Get word2vec model path')
 	parser.add_argument('-w2v', dest = 'w2vpath', help = 'location of pre-built word2vec model')
