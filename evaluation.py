@@ -25,12 +25,21 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	predictions.columns = labels
 	y_true = predictions['true label']
 	y_pred = predictions['predicted label']
+	if not svm:
+		y_prob = predictions.iloc[:, :5]
 	target_names = labels[:5]
+	
+	accuracy = np.nan
+	jaccard = np.nan
+	precision = np.nan
+	cross_entropy = np.nan
 	
 	report = metrics.classification_report(y_true, y_pred, target_names=target_names)
 	accuracy = metrics.accuracy_score(y_true, y_pred)
 	jaccard = metrics.jaccard_similarity_score(y_true, y_pred)
-	cross_entropy = metrics.log_loss(y_true, y_pred)
+	if not svm:
+		cross_entropy = metrics.log_loss(y_true, y_prob)
+		precision = metrics.average_precision_score(y_true, y_prob, average = 'macro')
 	
 	sys.stdout.write(" Accuracy: %0.3f/n Jaccard: %0.3f/n Cross-Entropy: %0.3f/n"
 		% (accuracy, precision, jaccard, cross_entropy))
