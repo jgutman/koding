@@ -1,4 +1,8 @@
 start!
+ Accuracy: 0.770
+ Precision: 0.778
+ Jaccard: 0.770
+ Cross-Entropy: nan
                precision    recall  f1-score   support
 
        movies       0.80      0.74      0.77     20000
@@ -9,4 +13,4 @@ relationships       0.87      0.80      0.83     20000
 
   avg / total       0.78      0.77      0.77    100000
 done!
-0.11 min
+0.10 min

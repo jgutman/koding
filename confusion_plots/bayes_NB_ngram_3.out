@@ -1,4 +1,8 @@
 start!
+ Accuracy: 0.656
+ Precision: 0.681
+ Jaccard: 0.656
+ Cross-Entropy: 3.793
                precision    recall  f1-score   support
 
        movies       0.50      0.73      0.59     20000
@@ -8,5 +12,7 @@ start!
 relationships       0.78      0.65      0.71     20000
 
   avg / total       0.68      0.66      0.66    100000
+/opt/rh/anaconda/root/lib/python2.7/site-packages/matplotlib/collections.py:590: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  if self._edgecolors == str('face'):
 done!
-0.10 min
+0.11 min
