@@ -75,7 +75,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         lambda_range = np.linspace(lower, upper, lamb)
         nested_scores = []
         for i, v in enumerate(lambda_range):
-            clf = LogisticRegression(C=v, penalty = 'l2', class_weight=weights, multi_class='ovr', n_jobs=4)
+            clf = LogisticRegression(C=v, penalty = 'l2', class_weight=weights, multi_class='ovr', n_jobs=1)
             model = clf.fit(train_X, train_Y)
             nested_scores.append(model.score(val_X, val_Y))
             sys.stdout.write('level: '+str(level)+' lambda: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
