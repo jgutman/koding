@@ -28,8 +28,8 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	target_names = labels[:5]
 	
 	report = metrics.classification_report(y_true, y_pred, target_names=target_names)
-	accuracy = metrics.accuracy_score(y_true, y_pred, average = "macro")
-	precision = metrics.average_precision_score(y_true, y_pred)
+	accuracy = metrics.accuracy_score(y_true, y_pred)
+	precision = metrics.average_precision_score(y_true, y_pred, average = "macro")
 	jaccard = metrics.jaccard_similarity_score(y_true, y_pred)
 	cross_entropy = metrics.log_loss(y_true, y_pred)
 	
