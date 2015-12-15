@@ -67,7 +67,7 @@ def main():
 	args = parser.parse_args()
 	
 	prob = readProbability(args.modelpath, header = args.hasheader, index = args.index, svm = args.svmmodel, 
-		sep = args.sep, datapath = args.datapath)
+		sep = args.sep, datapath = args.datapath, outpath = args.outpath)
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
