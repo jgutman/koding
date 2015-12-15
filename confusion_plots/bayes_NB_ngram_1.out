@@ -1,4 +1,8 @@
 start!
+ Accuracy: 0.751
+ Precision: 0.754
+ Jaccard: 0.751
+ Cross-Entropy: 1.416
                precision    recall  f1-score   support
 
        movies       0.77      0.72      0.75     20000
