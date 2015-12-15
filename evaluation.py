@@ -30,19 +30,19 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	
 def plot_confusion_matrix(cm, target_names, outpath, title='Confusion matrix', cmap=plt.cm.Blues):
 	plt.figure()
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(target_names))
-    plt.xticks(tick_marks, target_names, rotation=45)
-    plt.yticks(tick_marks, target_names)
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')	
-    if (type(outpath) != type(None)):
-    	plt.savefig(outpath)
-    else:
-    	plt.show()
+	plt.imshow(cm, interpolation='nearest', cmap=cmap)
+	plt.title(title)
+	plt.colorbar()
+	tick_marks = np.arange(len(target_names))
+	plt.xticks(tick_marks, target_names, rotation=45)
+	plt.yticks(tick_marks, target_names)
+	plt.tight_layout()
+	plt.ylabel('True label')
+	plt.xlabel('Predicted label')	
+	if (type(outpath) != type(None)):
+		plt.savefig(outpath)
+	else:
+		plt.show()
 		
 def main():
 	root_directory = os.path.abspath('./') # /home/cusp/rn1041/snlp/reddit/nn_reddit
