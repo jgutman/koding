@@ -79,11 +79,12 @@ def AdaBoostModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classe
     weights = {i: n_sample/(n_classes * Counter[i]) for i, v in enumerate(le_classes_)}
     # print weights
     # lambda_range = np.linspace(lower, upper, upper)
-    lambda_range = [11, 12, 13, 14, 15, 20, 25, 35, 50]
+    lambda_range = 1:10
+    lambda_range.extend([11, 12, 13, 14, 15, 20, 25, 35, 50])
     nested_scores = []
     for i, v in enumerate(lambda_range):
-        tree = DecisionTreeClassifier(max_depth=int(v))
-        clf = AdaBoostClassifier(base_estimator=tree, random_state=83)
+        tree = DecisionTreeClassifier(max_depth=int(v), class_weight = weights)
+        clf = AdaBoostClassifier(base_estimator=tree, n_estimators = 100, random_state=83)
         model = clf.fit(train_X, train_Y)
         nested_scores.append(model.score(val_X, val_Y))
         sys.stdout.write('depth: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
