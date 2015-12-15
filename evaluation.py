@@ -29,7 +29,7 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	plot_confusion_matrix(confusion, target_names, outpath = outpath, title = 'Predicted Subreddits')
 	
 def plot_confusion_matrix(cm, target_names, outpath, title='Confusion matrix', cmap=plt.cm.Blues):
-	plt.figure()
+	# plt.figure()
 	plt.imshow(cm, interpolation='nearest', cmap=cmap)
 	plt.title(title)
 	plt.colorbar()
