@@ -67,7 +67,10 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
         train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
         print 'tx', train_X.shape, 'vx', val_X.shape
         print 'kernel true:', comp
-    clf = MultinomialNB(alpha=0)
+    priors = np.ones(len(le_classes_))
+    priors.fill(1./len(le_classes_))
+    # clf = MultinomialNB(alpha=0)
+    clf = MultinomialNB(alpha=0, fit_prior = False, class_prior = priors )
     model = clf.fit(train_X, train_Y)
     df = pd.DataFrame(model.predict_proba(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
