@@ -42,3 +42,6 @@ nohup python ../koding/baseline_word2vec.py -w2v './word2vec/w2v_train_only.txt'
 nohup python ../koding/doc2vec_model.py -google './' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords -loadtest -testvecpath './doc2vec/test2.d2v.embeddings.pickle' > d2v.loaded.fit.out
 
 python doc2vec_model.py -google '../../Google Drive/gdrive/' -doc2v './doc2vec/d2v_train_only_labels.txt' -data './data/data3.txt' -train './data/train2.txt' -test './data/test2.txt' -stopwords  -testvecpath './doc2vec/test2.d2v.embeddings.pickle'
+
+
+python ../koding/evaluation.py -model baseline/predict_proba_log_LogisticRegression_baseline_ngram-1.csv  -saveoutput ./confusion_plots/baseline_LogisticRegression_ngram_1_confusion.png -header > ./confusion_plots/baseline_LogisticRegression_ngram_1.out
