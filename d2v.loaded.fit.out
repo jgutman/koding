@@ -1,0 +1,17 @@
+start!
+loading doc2vec...
+2015-12-14 02:15:08,668 : INFO : loading Doc2Vec object from /gpfs1/cusp/rn1041/snlp/reddit/koding/./doc2vec/d2v_train_only_labels.txt
+Traceback (most recent call last):
+  File "../koding/doc2vec_model.py", line 185, in <module>
+    main()
+  File "../koding/doc2vec_model.py", line 149, in main
+    model = models.Doc2Vec.load(doc2vpath)
+  File "/home/cusp/rn1041/.conda/envs/py27/lib/python2.7/site-packages/gensim/models/word2vec.py", line 1426, in load
+    model = super(Word2Vec, cls).load(*args, **kwargs)
+  File "/home/cusp/rn1041/.conda/envs/py27/lib/python2.7/site-packages/gensim/utils.py", line 255, in load
+    obj = unpickle(fname)
+  File "/home/cusp/rn1041/.conda/envs/py27/lib/python2.7/site-packages/gensim/utils.py", line 917, in unpickle
+    with smart_open(fname) as f:
+  File "/home/cusp/rn1041/.conda/envs/py27/lib/python2.7/site-packages/gensim/utils.py", line 75, in smart_open
+    return open(fname, mode)
+IOError: [Errno 2] No such file or directory: '/gpfs1/cusp/rn1041/snlp/reddit/koding/./doc2vec/d2v_train_only_labels.txt'
