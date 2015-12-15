@@ -1,0 +1,121 @@
+START
+vectorizing...
+train_count dims: (804560, 494609)
+train_count dims: (804560, 494609)
+validation_count dims: (100000, 494609)
+test_count dims: (100000, 494609)
+validation_bins dims: [20000 20000 20000 20000 20000]
+test_bins dims: [20000 20000 20000 20000 20000]
+{0: 1.1992606725494872, 1: 0.9215825525188427, 2: 0.6059209386743785, 3: 1.2330988397934004, 4: 1.6136381869233856}
+level: 0 lambda: 1e-06 score: 0.74687
+level: 0 lambda: 1.111112 score: 0.36167
+level: 0 lambda: 2.222223 score: 0.2976
+level: 0 lambda: 3.333334 score: 0.30588
+level: 0 lambda: 4.444445 score: 0.2792
+level: 0 lambda: 5.555556 score: 0.24519
+level: 0 lambda: 6.666667 score: 0.27798
+level: 0 lambda: 7.777778 score: 0.27437
+level: 0 lambda: 8.888889 score: 0.24197
+level: 0 lambda: 10.0 score: 0.29655
+best: 0 scores 0.74687
+level: 1 lambda: 1e-06 score: 0.75086
+level: 1 lambda: 0.123457777778 score: 0.48654
+level: 1 lambda: 0.246914555556 score: 0.44901
+level: 1 lambda: 0.370371333333 score: 0.4117
+level: 1 lambda: 0.493828111111 score: 0.41291
+level: 1 lambda: 0.617284888889 score: 0.38367
+level: 1 lambda: 0.740741666667 score: 0.35148
+level: 1 lambda: 0.864198444444 score: 0.36707
+level: 1 lambda: 0.987655222222 score: 0.36106
+level: 1 lambda: 1.111112 score: 0.35123
+best: 0 scores 0.75086
+level: 2 lambda: 1e-06 score: 0.74369
+level: 2 lambda: 0.0137184197531 score: 0.67703
+level: 2 lambda: 0.0274358395062 score: 0.6109
+level: 2 lambda: 0.0411532592593 score: 0.56855
+level: 2 lambda: 0.0548706790123 score: 0.54719
+level: 2 lambda: 0.0685880987654 score: 0.53931
+level: 2 lambda: 0.0823055185185 score: 0.52333
+level: 2 lambda: 0.0960229382716 score: 0.51592
+level: 2 lambda: 0.109740358025 score: 0.49792
+level: 2 lambda: 0.123457777778 score: 0.50489
+best: 0 scores 0.74369
+level: 3 lambda: 1e-06 score: 0.75247
+level: 3 lambda: 0.00152515775034 score: 0.74238
+level: 3 lambda: 0.00304931550069 score: 0.73098
+level: 3 lambda: 0.00457347325103 score: 0.72302
+level: 3 lambda: 0.00609763100137 score: 0.71698
+level: 3 lambda: 0.00762178875171 score: 0.71057
+level: 3 lambda: 0.00914594650206 score: 0.70549
+level: 3 lambda: 0.0106701042524 score: 0.70174
+level: 3 lambda: 0.0121942620027 score: 0.69483
+level: 3 lambda: 0.0137184197531 score: 0.67822
+best: 0 scores 0.75247
+level: 4 lambda: 1e-06 score: 0.73265
+level: 4 lambda: 0.000170350861149 score: 0.76991
+level: 4 lambda: 0.000339701722298 score: 0.76426
+level: 4 lambda: 0.000509052583448 score: 0.76008
+level: 4 lambda: 0.000678403444597 score: 0.75495
+level: 4 lambda: 0.000847754305746 score: 0.75064
+level: 4 lambda: 0.0010171051669 score: 0.75045
+level: 4 lambda: 0.00118645602804 score: 0.74733
+level: 4 lambda: 0.00135580688919 score: 0.7455
+level: 4 lambda: 0.00152515775034 score: 0.74311
+best: 1 scores 0.76991
+level: 5 lambda: 1e-06 score: 0.74713
+level: 5 lambda: 3.86335246998e-05 score: 0.77593
+level: 5 lambda: 7.62670493997e-05 score: 0.77393
+level: 5 lambda: 0.000113900574099 score: 0.77358
+level: 5 lambda: 0.000151534098799 score: 0.77185
+level: 5 lambda: 0.000189167623499 score: 0.76992
+level: 5 lambda: 0.000226801148199 score: 0.7693
+level: 5 lambda: 0.000264434672899 score: 0.76737
+level: 5 lambda: 0.000302068197599 score: 0.76602
+level: 5 lambda: 0.000339701722298 score: 0.76484
+best: 1 scores 0.77593
+level: 6 lambda: 1e-06 score: 0.74135
+level: 6 lambda: 9.36300548885e-06 score: 0.76573
+level: 6 lambda: 1.77260109777e-05 score: 0.77255
+level: 6 lambda: 2.60890164666e-05 score: 0.7728
+level: 6 lambda: 3.44520219554e-05 score: 0.77207
+level: 6 lambda: 4.28150274443e-05 score: 0.77354
+level: 6 lambda: 5.11780329331e-05 score: 0.77453
+level: 6 lambda: 5.9541038422e-05 score: 0.77313
+level: 6 lambda: 6.79040439108e-05 score: 0.77451
+level: 6 lambda: 7.62670493997e-05 score: 0.77501
+best: 9 scores 0.77501
+level: 7 lambda: 6.79040439108e-05 score: 0.77383
+level: 7 lambda: 6.88332667429e-05 score: 0.77449
+level: 7 lambda: 6.9762489575e-05 score: 0.77623
+level: 7 lambda: 7.06917124071e-05 score: 0.77432
+level: 7 lambda: 7.16209352392e-05 score: 0.77399
+level: 7 lambda: 7.25501580713e-05 score: 0.77491
+level: 7 lambda: 7.34793809034e-05 score: 0.77444
+level: 7 lambda: 7.44086037355e-05 score: 0.77519
+level: 7 lambda: 7.53378265676e-05 score: 0.77487
+level: 7 lambda: 7.62670493997e-05 score: 0.77439
+best: 2 scores 0.77623
+level: 8 lambda: 6.88332667429e-05 score: 0.77637
+level: 8 lambda: 6.90397607056e-05 score: 0.77493
+level: 8 lambda: 6.92462546683e-05 score: 0.77504
+level: 8 lambda: 6.9452748631e-05 score: 0.77655
+level: 8 lambda: 6.96592425936e-05 score: 0.77391
+level: 8 lambda: 6.98657365563e-05 score: 0.77469
+level: 8 lambda: 7.0072230519e-05 score: 0.77573
+level: 8 lambda: 7.02787244817e-05 score: 0.77661
+level: 8 lambda: 7.04852184444e-05 score: 0.77553
+level: 8 lambda: 7.06917124071e-05 score: 0.77382
+best: 7 scores 0.77661
+level: 9 lambda: 7.0072230519e-05 score: 0.77402
+level: 9 lambda: 7.01181180663e-05 score: 0.77454
+level: 9 lambda: 7.01640056135e-05 score: 0.77495
+level: 9 lambda: 7.02098931608e-05 score: 0.77574
+level: 9 lambda: 7.02557807081e-05 score: 0.76999
+level: 9 lambda: 7.03016682553e-05 score: 0.77351
+level: 9 lambda: 7.03475558026e-05 score: 0.77554
+level: 9 lambda: 7.03934433499e-05 score: 0.77438
+level: 9 lambda: 7.04393308971e-05 score: 0.7751
+level: 9 lambda: 7.04852184444e-05 score: 0.77549
+best: 3 scores 0.77574
+FINAL SCORE 0.77336
+../data/data3.txt ngram:  3
