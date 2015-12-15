@@ -67,7 +67,7 @@ def plot_confusion_matrix(cm, target_names, outpath, title='Confusion matrix', c
 		plt.show()
 		
 def main():
-	root_directory = os.path.abspath('~/snlp/reddit/nn_reddit/') # /home/cusp/rn1041/snlp/reddit/nn_reddit
+	root_directory = os.path.abspath('/home/cusp/rn1041/snlp/reddit/nn_reddit/')
 	parser = argparse.ArgumentParser(description = 'Get predict_proba csv path')
 	parser.add_argument('-data', dest = 'datapath', help = 'location of data3.txt')
 	parser.add_argument('-saveoutput', dest = 'outpath', help = 'location to write plots')
