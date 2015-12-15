@@ -63,7 +63,7 @@ def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom,
 	lower = 1e-6
 	upper = 10.
 	for level in xrange(zoom):
-		lambda_range = np.linspace(lower, upper, lamb)
+		lambda_range = np.logspace(np.log10(lower), np.log10(upper), lamb)
 		nested_scores = []
 		for i, v in enumerate(lambda_range):
 			clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
@@ -130,11 +130,11 @@ def main():
 	parser.add_argument('-stopwords',  dest = 'removeStopWords', 
 		help = 'remove English stop words', action = 'store_true')
 		
-	parser.set_defaults(google_drive = os.path.abspath('../../Google Drive/gdrive/'))
+	parser.set_defaults(google_drive = os.path.abspath('/home/cusp/rn1041/snlp/reddit/nn_reddit/'))
 	parser.set_defaults(doc2vpath = 'doc2vec/d2v_train_only_labels.txt', 
 		trainpath = 'data/train2.txt', 
 		testpath = 'data/test2.txt',
-		datapath = 'data3.txt', 
+		datapath = 'data/data3.txt', 
 		testVecPath = 'doc2vec/test2.d2v.embeddings.pickle',
 		splitdata = False, removeStopWords = False, loadTestVecs = False, size = 0)
 	args = parser.parse_args()
