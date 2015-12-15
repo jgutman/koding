@@ -26,7 +26,8 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	y_true = predictions['true label']
 	y_pred = predictions['predicted label']
 	if not svm:
-		y_prob = predictions.iloc[:, :5]
+		y_prob = predictions.iloc[:, :5].as_matrix()
+		y_prob = np.nan_to_num(y_prob)
 	target_names = labels[:5]
 	
 	accuracy = np.nan
