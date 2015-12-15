@@ -10,7 +10,11 @@ def readProbability(pathToFile, header = True, index = True, label = True, sep='
 		le.fit(data.label)
 		labels = list(le.classes_)
 	
-	predictions = pd.read_csv(pathToFile, header = 0 if header else None, index_col = 0 if index else None)
+	predictions = pd.read_csv(pathToFile, header = 0 if header else None, index_col = 0 if index else None, 
+		sep = sep, names = labels.append(['true label', 'predicted label'])) if data!= None
+	
+	
+		
 
 def main():
 	google_drive = os.path.abspath('../../Google Drive/gdrive/')

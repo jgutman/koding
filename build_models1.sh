@@ -26,6 +26,13 @@ python check_models.py "$W2VMODEL" "$D2VMODEL"
 nohup python baseline_word2vec.py -w2v "$W2VMODEL" -train "$TRAINPATH" -test "$TESTPATH" -weighted -stopwords > w2v_fit.out
 nohup python doc2vec_model.py -google "$GDRIVE" -doc2v "doc2vec/d2v_train_only_labels.txt" -data "data3.txt" -train "data/${TRAIN}" -test "data/${TEST}" -stopwords > d2v_fit.out
 
+nohup python ../koding/doc2vec_split.py ./data/train2.txt ./doc2vec/d2v_train_only_tokenized.txt ./data/w2v_tokenized_train2.txt  > doc2v.train.only.tokenized.out
+
+nohup python ../koding/doc2vec_split.py ./data/test2.txt ./doc2vec/d2v_test_only_tokenized.txt ./data/w2v_tokenized_test.txt  > doc2v.test.only.tokenized.out
+
+nohup python ../koding/doc2vec_split.py ./data/data3.txt ./doc2vec/d2v_alldata_model_tokenized.txt ./data/w2v_tokenized_all_data.txt  > doc2v.alldata.tokenized.out
+
+
 nohup python ../koding/baseline_word2vec.py -w2v './word2vec/w2v_train_only.txt' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -loadembeddings -storedvecpath './data' > w2v.loaded.fit.out
 
 nohup python ../koding/baseline_word2vec.py -w2v './word2vec/w2v_train_only.txt' -train './data/train2.txt' -test './data/test2.txt' -weighted -stopwords -storedvecpath './data/w2vembeddings/' > w2v.weighted.fit.out
