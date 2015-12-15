@@ -19,14 +19,23 @@ from gensim import models
 def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     sys.stdout.write('loading data...')
     sys.stdout.flush()
+    # load train data
     d2v_train = models.Doc2Vec.load(d2v_train_path)
     vectors = d2v_train.docvecs
     train_X = np.zeros((len(vectors), len(vectors[0])))
     for i in xrange(len(vectors)):
         train_X[i] = vectors[i]
-    sys.stdout.write(str(train_X[999]) + '\n')
+    sys.stdout.write(str(train_X[999][:5]) + '\n')
     sys.stdout.flush()
-    test_X = np.load(d2v_test_path)
+    # load test data
+    d2v_test = models.Doc2Vec.load(d2v_test_path)
+    test_vectors = d2v_test.docvecs
+    test_X = np.zeros((len(test_vectors), len(test_vectors[0])))
+    for i in xrange(len(test_vectors)):
+        test_X[i] = test_vectors[i]
+    sys.stdout.write(str(test_X[999][:5]) + '\n')
+    sys.stdout.flush()
+    # read in labels
     df_train = pd.read_csv(train2, sep='\t', header=None, names=['label', 'score', 'text'])
     df_test = pd.read_csv(test2, sep='\t', header=None, names=['label', 'score', 'text'])
     sys.stdout.write('encoding...\n')
@@ -73,7 +82,8 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_):
     weights = {i: n_sample/(n_classes * Counter[i]) for i, v in enumerate(le_classes_)}
     print weights
     for level in xrange(zoom):
-        lambda_range = np.linspace(lower, upper, lamb)
+        # lambda_range = np.linspace(lower, upper, lamb)
+        lambda_range = np.logspace(np.log10(lower),np.log10(upper), lamb)
         nested_scores = []
         for i, v in enumerate(lambda_range):
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
