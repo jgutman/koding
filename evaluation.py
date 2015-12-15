@@ -60,7 +60,7 @@ def main():
 		modelpath = os.path.join(root_directory, 'bayes_baseline/predict_proba_NB_baseline_ngram-1.csv'),
 		hasheader = False, index = False, svmmodel = False, sep = ",", 
 		datapath = os.path.join(root_directory, 'data/data3.txt'),
-		outpath = os.path.join(root_directory, 'bayes_baseline/confusion.png')
+		outpath = os.path.join(root_directory, 'bayes_baseline/confusion.png'))
 	args = parser.parse_args()
 	
 	prob = readProbability(args.modelpath, header = args.hasheader, index = args.index, svm = args.svmmodel, 
