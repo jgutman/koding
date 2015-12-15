@@ -42,7 +42,7 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	if not svm:
 		cross_entropy = metrics.log_loss(y_true, y_prob)
 	
-	sys.stdout.write(" Accuracy: %0.3f/n Precision: %0.3f/n Jaccard: %0.3f/n Cross-Entropy: %0.3f/n"
+	sys.stdout.write(" Accuracy: %0.3f\n Precision: %0.3f\n Jaccard: %0.3f\n Cross-Entropy: %0.3f\n"
 		% (accuracy, precision, jaccard, cross_entropy))
 	sys.stdout.write(report); sys.stdout.flush()
 	confusion = metrics.confusion_matrix(y_true, y_pred)
