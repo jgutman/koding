@@ -98,6 +98,7 @@ def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, n
     df = pd.DataFrame(model.predict_proba(pca_test), 
                       columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_y
+    df['predict'] = model.predict(pca_test)
     df.to_csv('predict_proba_logistic_tune_ngram-'+str(ngram)+'.csv', index=False)
     sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
     sys.stdout.flush()
