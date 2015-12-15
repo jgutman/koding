@@ -11,11 +11,6 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.preprocessing import normalize
 from gensim import models
 
-
-
-
-
-
 def LoadData(d2v_train_path, d2v_test_path, train2, test2):
     sys.stdout.write('loading data...')
     sys.stdout.flush()
