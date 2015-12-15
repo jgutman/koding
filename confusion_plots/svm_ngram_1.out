@@ -1,0 +1,12 @@
+start!
+               precision    recall  f1-score   support
+
+       movies       0.80      0.71      0.75     20000
+         news       0.71      0.69      0.70     20000
+          nfl       0.75      0.78      0.76     20000
+ pcmasterrace       0.73      0.76      0.74     20000
+relationships       0.80      0.84      0.82     20000
+
+  avg / total       0.76      0.76      0.76    100000
+done!
+0.11 min
