@@ -74,5 +74,5 @@ if __name__ == '__main__':
 	main()
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
-	ttime = etime - stime
+	lapse = etime - stime
 	sys.stdout.write("%0.2f min\n" % (lapse / 60.)); sys.stdout.flush()
