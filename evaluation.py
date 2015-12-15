@@ -29,11 +29,10 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
 	
 	report = metrics.classification_report(y_true, y_pred, target_names=target_names)
 	accuracy = metrics.accuracy_score(y_true, y_pred)
-	precision = metrics.average_precision_score(y_true, y_pred, average = "macro")
 	jaccard = metrics.jaccard_similarity_score(y_true, y_pred)
 	cross_entropy = metrics.log_loss(y_true, y_pred)
 	
-	sys.stdout.write(" Accuracy: %0.3f/n Precision: %0.3f/n Jaccard: %0.3f/n Cross-Entropy: %0.3f/n"
+	sys.stdout.write(" Accuracy: %0.3f/n Jaccard: %0.3f/n Cross-Entropy: %0.3f/n"
 		% (accuracy, precision, jaccard, cross_entropy))
 	sys.stdout.write(report); sys.stdout.flush()
 	confusion = metrics.confusion_matrix(y_true, y_pred)
