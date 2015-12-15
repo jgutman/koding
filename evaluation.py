@@ -44,6 +44,7 @@ def plot_confusion_matrix(cm, target_names, outpath, title='Confusion matrix', c
 	plt.xlabel('Predicted label')	
 	if (type(outpath) != type(None)):
 		plt.savefig(outpath)
+		plt.close()
 	else:
 		plt.show()
 		
