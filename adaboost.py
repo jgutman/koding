@@ -89,7 +89,7 @@ def AdaBoostModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classe
         sys.stdout.write('depth: '+str(v)+' score: '+str(model.score(val_X, val_Y))+'\n')
         sys.stdout.flush()
     best = np.argmax(nested_scores)
-    sys.stdout.write('best: ' + str(best) + ' scores ' + str(nested_scores[best]) + '\n')
+    sys.stdout.write('best depth: ' + str(lambda_range[best]) + ' score: ' + str(nested_scores[best]) + '\n')
     sys.stdout.flush()
     tree = DecisionTreeClassifier(max_depth=int(lambda_range[best]))
     clf = AdaBoostClassifier(base_estimator=tree, random_state=83)
