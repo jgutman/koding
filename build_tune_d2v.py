@@ -69,9 +69,9 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 
 	# instantiate DM and DBOW models
 	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
-		negative=10 , sample = 1e-5 )
+		negative=10 , sample = 0) #, sample = 1e-5 )
 	model_dm = models.Doc2Vec( size=dims, window=context, dm=1, min_count=10, workers=cores,
-		negative=10 , sample = 1e-5 )
+		negative=10 , sample = 0) #, sample = 1e-5 )
 	
 	# build vocab over all documents
 	sys.stdout.write("Building vocabulary across all data\n"); sys.stdout.flush()
@@ -231,7 +231,7 @@ def main(args):
 	filename = format("d2v_decision_function_context_%d_dim_%d_dm_dbow.csv" % (args.context, args.dims))
 	store_out = os.path.join(store_out, filename)
 	
-	svm( trainVecs, train.y, valVecs, val.y, testVecs, test.y, 
+	svm( trainVecs, list(train.y), valVecs, list(val.y), testVecs, list(test.y), 
 		le_classes_ = le.classes_, outfile = store_out )
 	sys.stdout.write("Prediction matrix written to %s\n" % store_out); sys.stdout.flush()
 	

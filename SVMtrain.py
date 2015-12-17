@@ -5,7 +5,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import normalize
 
 def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_labels, 
-    le_classes_, outfile, lamb = 20, zoom = 5):
+    le_classes_, outfile, lamb = 20, zoom = 3):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
