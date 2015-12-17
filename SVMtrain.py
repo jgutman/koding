@@ -24,11 +24,11 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
     val_vecs = normalize(val_vecs, axis=0)
     test_vecs = normalize(test_vecs, axis=0)
     lower = 1e-4
-    upper = 100
+    upper = 10
     
     for level in xrange(zoom): 
-        lambda_range = np.linspace(lower, upper, lamb)
-        # lambda_range = np.logspace(np.log10(lower), np.log10(upper), lamb) 
+        # lambda_range = np.linspace(lower, upper, lamb)
+        lambda_range = np.logspace(np.log10(lower), np.log10(upper), lamb) 
         nested_scores = [] 
         
         for i, v in enumerate(lambda_range): 

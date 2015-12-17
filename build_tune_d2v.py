@@ -161,8 +161,8 @@ class argdict:
 		self.cores = 4
 		self.epochs = 10
 		#self.root_dir = "./"
-		#self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
-		self.root_dir = "~/Google Drive/gdrive/"
+		self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
+		#self.root_dir = "/Users/jacqueline/Google Drive/gdrive/"
 		self.data_path = "data/data3.txt"
 		self.store_d2v = "d2vtune/embeddings/"
 		self.store_out = "d2vtune/predictions/"

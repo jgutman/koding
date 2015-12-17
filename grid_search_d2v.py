@@ -15,7 +15,7 @@ def main():
             experiment = build_tune_d2v.argdict(context, dims)
             experiment.cores = args.cores
             experiment.epochs = args.epochs
-            build_tune_d2v.main(args) 
+            build_tune_d2v.main(args = experiment) 
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
