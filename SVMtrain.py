@@ -1,4 +1,11 @@
-def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_labels, lamb, zoom, le_classes_):
+import numpy as np
+import pandas as pd
+import sys
+from sklearn.linear_model import SGDClassifier
+from sklearn.preprocessing import normalize
+
+def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_labels, 
+    lamb, zoom, le_classes_, outfile):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
@@ -8,9 +15,9 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
     sys.stdout.write('train dims: %s\n' % str(train_vecs.shape))
     sys.stdout.write('validation dims: %s\n' % str(val_vecs.shape))
     sys.stdout.write('test dims: %s\n' % str(test_vecs.shape))
-    sys.stdout.write('train distribution %s\n: ' % str(np.bincount(train_labels)))
-    sys.stdout.write('validation distribution %s\n: ' % str(np.bincount(val_labels)))
-    sys.stdout.write('test distribution %s\n: ' % str(np.bincount(test_labels)))
+    sys.stdout.write('train distribution: %s\n' % str(np.bincount(train_labels)))
+    sys.stdout.write('validation distribution: %s\n' % str(np.bincount(val_labels)))
+    sys.stdout.write('test distribution: %s\n' % str(np.bincount(test_labels)))
     sys.stdout.flush() 
     
     train_vecs = normalize(train_vecs, axis=0)
@@ -20,13 +27,13 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
     upper = 10
     
     for level in xrange(zoom): 
-    # lambda_range = np.linspace(lower, upper, lamb)
-        lambda_range = np.logspace(np.log10(lower), np.log10(upper), lamb) 
+        lambda_range = np.linspace(lower, upper, lamb)
+        # lambda_range = np.logspace(np.log10(lower), np.log10(upper), lamb) 
         nested_scores = [] 
         
         for i, v in enumerate(lambda_range): 
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  class_weight=None)
+                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True, warm_start = True, class_weight=None)
             model = clf.fit(train_vecs, train_labels)
             score = model.score(val_vecs, val_labels)
             nested_scores.append(score)
@@ -47,13 +54,13 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
             (level+1, lambda_range[best], nested_scores[best]))
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2',
-        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True, class_weight=None)
+        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True, warm_start = True, class_weight=None)
     model = clf.fit(train_vecs, train_labels)
     
     df = pd.DataFrame(model.decision_function(test_vecs), 
             columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
     df['y'] = test_labels
     df['predict'] = model.predict(test_vecs)
-    df.to_csv('d2v_margins.csv', index=False)
+    df.to_csv(outfile, index=False)
     sys.stdout.write('FINAL SCORE: %0.4f\n' % model.score(test_vecs, test_labels))
     sys.stdout.flush()

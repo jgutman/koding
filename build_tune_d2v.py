@@ -14,6 +14,9 @@ from SVMtrain import SVMtrain as svm
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cross_validation import train_test_split
 
+from evaluation import readProbability
+from gensim.test.test_doc2vec import ConcatenatedDoc2Vec
+
 def trainValidationTest( data, test_size, seed = 100 ):
 	groups = data.label.unique()
 	random_state = RandomState(seed = seed)
@@ -66,9 +69,9 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 
 	# instantiate DM and DBOW models
 	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
-		negative=10 )
+		negative=10 , sample = 1e-5 )
 	model_dm = models.Doc2Vec( size=dims, window=context, dm=1, min_count=10, workers=cores,
-		negative=10 )
+		negative=10 , sample = 1e-5 )
 	
 	# build vocab over all documents
 	sys.stdout.write("Building vocabulary across all data\n"); sys.stdout.flush()
@@ -77,26 +80,29 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	sys.stdout.write("Vocabularies built. DM: %d words, DBOW: %d words\n" %
 		(len(model_dm.vocab), len(model_dbow.vocab))); sys.stdout.flush()
 	
-	stime = time.time()
 	for epoch in range(epochs):
-		lapse = time.time() - stime
-		sys.stdout.write("Training doc2vec epoch %d train (%0.0f min, %0.0f sec)\n" % 
-						 (epoch+1, lapse / 60., lapse % 60.)); sys.stdout.flush()
+		stime = time.time()
+		sys.stdout.write("Training doc2vec epoch %d\n" % epoch+1); sys.stdout.flush()
 		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
 		logging.info('Training DM model')
 		model_dm.train(shuffled_documents)
 		logging.info('Training DBOW model')
 		model_dbow.train(shuffled_documents)
+		lapse = time.time() - stime
+		sys.stdout.write("Epoch %d took (%0.0f min, %0.0f sec)\n" % 
+				(epoch+1, np.floor(lapse / 60.), lapse % 60.))
 	
 	# combine models
 	model = ConcatenatedDoc2Vec([model_dm, model_dbow])
 	np_model = np.vstack((model.docvecs[tag] for tag in tag_list))
 	
 	# save embeddings to disk
-	np_model.dump(d2vpath)
+	filename = format("d2v_context_%d_dim_%d_dm_dbow.pickle" % (context, dims))
+	fullpath = os.path.join(os.path.abspath(d2vpath), filename)
+	np_model.dump(fullpath)
 	sys.stdout.write("All done. Vectors saved to %s\n" % d2vpath); sys.stdout.flush()
-	return model
+	return np_model
 
 def tokenize_text( data, filename, tolowercase = True ):
 	space = ' '
@@ -154,7 +160,9 @@ class argdict:
 		self.dims = dims
 		self.cores = 4
 		self.epochs = 10
-		self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
+		#self.root_dir = "./"
+		#self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
+		self.root_dir = "~/Google Drive/gdrive/"
 		self.data_path = "data/data3.txt"
 		self.store_d2v = "d2vtune/embeddings/"
 		self.store_out = "d2vtune/predictions/"
@@ -163,10 +171,7 @@ class argdict:
 		self.pre_tokenized = True
 		self.load_split_data = True
 
-def main():
-	args = parseArgs()
-	# args = argdict()
-	
+def main(args): 
 	data_path = os.path.join(os.path.abspath(args.root_dir), args.data_path)
 	store_d2v = os.path.join(os.path.abspath(args.root_dir), args.store_d2v)
 	store_out = os.path.join(os.path.abspath(args.root_dir), args.store_out)
@@ -212,18 +217,35 @@ def main():
 		epochs = args.epochs, cores = args.cores )
 	
 	# train SVM on document embeddings
-	# trainVecs = 
-	# valVecs =
-	# testVecs =
-	# trainY =
-	# valY =
-	# testY =
-	# svm()
+	trainVecs = model[train.index, : ]
+	valVecs = model[val.index, : ]
+	testVecs = model[test.index, : ]
+	
+	# encode labels
+	le = LabelEncoder()
+	le.fit(train.label)
+	train['y'] = le.transform(train.label)
+	val['y'] = le.transform(val.label)
+	test['y'] = le.transform(test.label)
+	logging.info('Fitting the SVM')
+	filename = format("d2v_decision_function_context_%d_dim_%d_dm_dbow.png" % (args.context, args.dims))
+	store_out = os.path.join(store_out, filename)
+	
+	svm( trainVecs, train.y, valVecs, val.y, testVecs, test.y, 
+		lamb = 10, zoom = 10, le_classes_ = le.classes_, outfile = store_out )
+	sys.stdout.write("Prediction matrix written to %s\n" % store_out); sys.stdout.flush()
+	
+	# Call evaluation script
+	filename = format("confusion_plots/svm_d2v_context_%d_dim_%d_dm_dbow.png" % (args.context, args.dims))
+	confusion_path = os.path.join(os.path.abspath(args.root_dir), filename)
+	readProbability(store_out, index = False, svm = True, datapath = data_path, outpath = confusion_path)
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
 	stime = time.time()
-	main()
+	args = parseArgs()
+	# args = argdict()
+	main(args)
 	sys.stdout.write("done!\n"); sys.stdout.flush()
 	etime = time.time()
 	lapse = etime - stime
