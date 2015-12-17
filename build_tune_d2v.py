@@ -99,7 +99,7 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	
 	# save embeddings to disk
 	filename = format("d2v_context_%d_dim_%d_dm_dbow.pickle" % (context, dims))
-	fullpath = os.path.join(os.path.abspath(d2vpath), filename)
+	fullpath = os.path.join(d2vpath, filename)
 	np_model.dump(fullpath)
 	sys.stdout.write("All done. Vectors saved to %s\n" % d2vpath); sys.stdout.flush()
 	return np_model
@@ -213,8 +213,8 @@ def main(args):
 	
 	# build document embeddings
 	
-	model = traind2v( data, args.context, args.dims, store_d2v, tokenized_path, 
-		epochs = args.epochs, cores = args.cores )
+	model = traind2v( data, args.context, args.dims, d2vpath = store_d2v, tokenized = tokenized_path, 
+		cores = args.cores, epochs = args.epochs )
 	
 	# train SVM on document embeddings
 	trainVecs = model[train.index, : ]
@@ -232,7 +232,7 @@ def main(args):
 	store_out = os.path.join(store_out, filename)
 	
 	svm( trainVecs, list(train.y), valVecs, list(val.y), testVecs, list(test.y), 
-		le_classes_ = le.classes_, outfile = store_out )
+		le_classes_ = le.classes_, outfile = store_out, cores = args.cores )
 	sys.stdout.write("Prediction matrix written to %s\n" % store_out); sys.stdout.flush()
 	
 	# Call evaluation script

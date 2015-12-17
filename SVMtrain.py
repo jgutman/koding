@@ -5,7 +5,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.preprocessing import normalize
 
 def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_labels, 
-    le_classes_, outfile, lamb = 20, zoom = 3):
+    le_classes_, outfile, lamb = 20, zoom = 3, cores = 4):
     '''
     arguments: lamb = number of values in the range.
                zoom = number of lambda value zoom ins
@@ -33,7 +33,7 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
         
         for i, v in enumerate(lambda_range): 
             clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
-                l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True, warm_start = True, class_weight=None)
+                l1_ratio=0, n_iter=5, n_jobs=cores, shuffle=True, warm_start = True, class_weight=None)
             model = clf.fit(train_vecs, train_labels)
             score = model.score(val_vecs, val_labels)
             nested_scores.append(score)
@@ -49,12 +49,12 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
             upper = lambda_range[best]
         else:
             lower = lambda_range[best-2]
-            upper = lambda_range[best+2]
+            upper = lambda_range[best+1]
         sys.stdout.write('best lambda at zoom %d: %0.6f\tscore: %0.4f\n' % 
             (level+1, lambda_range[best], nested_scores[best]))
         sys.stdout.flush()
     clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2',
-        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True, warm_start = True, class_weight=None)
+        l1_ratio=0, n_iter=5, n_jobs=cores, shuffle=True, warm_start = True, class_weight=None)
     model = clf.fit(train_vecs, train_labels)
     
     df = pd.DataFrame(model.decision_function(test_vecs), 
