@@ -82,7 +82,7 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	
 	for epoch in range(epochs):
 		stime = time.time()
-		sys.stdout.write("Training doc2vec epoch %d\n" % epoch+1); sys.stdout.flush()
+		sys.stdout.write("Training doc2vec epoch %d\n" % (epoch+1)); sys.stdout.flush()
 		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
 		logging.info('Training DM model')
@@ -228,11 +228,11 @@ def main(args):
 	val['y'] = le.transform(val.label)
 	test['y'] = le.transform(test.label)
 	logging.info('Fitting the SVM')
-	filename = format("d2v_decision_function_context_%d_dim_%d_dm_dbow.png" % (args.context, args.dims))
+	filename = format("d2v_decision_function_context_%d_dim_%d_dm_dbow.csv" % (args.context, args.dims))
 	store_out = os.path.join(store_out, filename)
 	
 	svm( trainVecs, train.y, valVecs, val.y, testVecs, test.y, 
-		lamb = 10, zoom = 10, le_classes_ = le.classes_, outfile = store_out )
+		le_classes_ = le.classes_, outfile = store_out )
 	sys.stdout.write("Prediction matrix written to %s\n" % store_out); sys.stdout.flush()
 	
 	# Call evaluation script
