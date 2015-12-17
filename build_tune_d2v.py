@@ -8,7 +8,6 @@ from numpy.random import RandomState
 from gensim import models
 from gensim.models import doc2vec
 
-from gensim.test.test_doc2vec import ConcatenatedDoc2Vec
 from sklearn.utils import shuffle
 from SVMtrain import SVMtrain as svm
 
@@ -63,7 +62,7 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	documents = doc2vec.TaggedLineDocument(tokenized)
 	doc_list = [doc for doc in documents]
-	tag_list = [str(doc.tags[0]) for doc in documents]
+	tag_list = [doc.tags[0] for doc in documents]
 
 	# instantiate DM and DBOW models
 	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
@@ -92,7 +91,7 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	
 	# combine models
 	model = ConcatenatedDoc2Vec([model_dm, model_dbow])
-	np_model = np.vstack((model[tag] for tag in tag_list))
+	np_model = np.vstack((model.docvecs[tag] for tag in tag_list))
 	
 	# save embeddings to disk
 	np_model.dump(d2vpath)
@@ -213,13 +212,13 @@ def main():
 		epochs = args.epochs, cores = args.cores )
 	
 	# train SVM on document embeddings
-	trainVecs = 
-	valVecs =
-	testVecs =
-	trainY =
-	valY =
-	testY =
-	svm()
+	# trainVecs = 
+	# valVecs =
+	# testVecs =
+	# trainY =
+	# valY =
+	# testY =
+	# svm()
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()

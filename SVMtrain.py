@@ -55,5 +55,5 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
     df['y'] = test_labels
     df['predict'] = model.predict(test_vecs)
     df.to_csv('d2v_margins.csv', index=False)
-    sys.stdout.write('FINAL SCORE: %0.4f\n' % model.score(test_vecs, test_labels)
+    sys.stdout.write('FINAL SCORE: %0.4f\n' % model.score(test_vecs, test_labels))
     sys.stdout.flush()
