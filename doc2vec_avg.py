@@ -17,26 +17,26 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.cross_validation import train_test_split
 
 def logitDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath):
-	# encode labels
-	le = LabelEncoder()
-	le.fit(train.label)
-	train['y'] = le.transform(train.label)
-	test['y'] = le.transform(test.label)
-	
-	# train model
-	logit = LogisticRegression()
-	model = logit.fit(trainDataVecs, train.y.values)
-	
-	sys.stdout.write('Test sample score: %0.4f\n' % model.score(testDataVecs, test.y.values))
-	sys.stdout.write('In sample scores: %0.4f\n' % model.score(trainDataVecs, train.y.values))
-	sys.stdout.flush()
-
-	outfile = os.path.join(outputPath, 'doc2vec_logit_predict_proba.csv')
-	pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
-		sep = '\t', header = list(le.classes_), index = False)
-	
-	sys.stdout.write('CLASSES: %s\n' % le.classes_)
-	sys.stdout.flush()
+    # encode labels
+    le = LabelEncoder()
+    le.fit(train.label)
+    train['y'] = le.transform(train.label)
+    test['y'] = le.transform(test.label)
+    
+    # train model
+    logit = LogisticRegression()
+    model = logit.fit(trainDataVecs, train.y.values)
+    
+    sys.stdout.write('Test sample score: %0.4f\n' % model.score(testDataVecs, test.y.values))
+    sys.stdout.write('In sample scores: %0.4f\n' % model.score(trainDataVecs, train.y.values))
+    sys.stdout.flush()
+    
+    outfile = os.path.join(outputPath, 'doc2vec_logit_predict_proba.csv')
+    pd.DataFrame(model.predict_proba(testDataVecs)).to_csv(outfile, 
+        sep = '\t', header = list(le.classes_), index = False)
+    
+    sys.stdout.write('CLASSES: %s\n' % le.classes_)
+    sys.stdout.flush()
 
 def svmDoc2Vec(train, test, trainDataVecs, testDataVecs, outputPath, lamb, zoom, 
 		random_seed = 100, strat_size = 20000):

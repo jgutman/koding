@@ -7,6 +7,7 @@ from nltk.corpus import stopwords
 from numpy.random import RandomState
 from gensim import models
 from gensim.models import doc2vec
+from gensim.test.test_doc2vec import ConcatenatedDoc2Vec
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cross_validation import train_test_split
@@ -55,22 +56,39 @@ def trainValidationTest( data, test_size, seed = 100 ):
 	
 	return train, val, test
 
-def traind2v( train, val, test, context, dims, d2vpath, tokenized ):
+def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, seed = 150):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	documents = doc2vec.TaggedLineDocument(tokenized)
+	doclist = [doc.words for doc in documents]
+
+	# instantiate DM and DBOW models
+	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
+		negative=10, sample=1e-5 )
+	model_dm = models.Doc2Vec( size=dims, window=context, dm=1, min_count=10, workers=cores,
+		negative=10, sample=1e-5 )
 	
-	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=4,
-		negative=10, sample=1e-5 )
-	model_dm = models.Doc2Vec( size=dims, window=context, dm=1, min_count=10, workers=4,
-		negative=10, sample=1e-5 )
-	model_dbow.build_vocab(documents)
+	# build vocab over all documents
+	sys.stdout.write("Building vocabulary across all data\n"); sys.stdout.flush()
 	model_dm.build_vocab(documents)
+	model_dbow.reset_from(model_dm)
+	sys.stdout.write("Vocabularies built. DM: %d words, DBOW: %d words\n" %
+		(len(model_dm.vocab), len(model_dbow.vocab))); sys.stdout.flush()
 	
-	
-	
-	model.save(output)
-	sys.stdout.write("All done. Model saved to %s\n" % output); sys.stdout.flush()
-	
+	stime = time.time()
+	for epoch in range(epochs):
+		sys.stdout.write("Training doc2vec epoch %d train (%0.0f sec)\n" % 
+						 (epoch+1, time.time() - stime)); sys.stdout.flush()
+		shuffled_documents = RandomState(seed).permutation(doc_list)
+		seed += 1
+		model_dm.train(shuffled_documents)
+		model_dbow.train(shuffled_documents)
+
+	# combine models
+	model = ConcatenatedDoc2Vec([model_dm, model_dbow])
+	# save embeddings to disk
+	model.save(d2vpath)
+	sys.stdout.write("All done. Vectors saved to %s\n" % d2vpath); sys.stdout.flush()
+	return model
 
 def tokenize_text( data, filename, tolowercase = True ):
 	space = ' '
@@ -91,7 +109,7 @@ def tokenize_text( data, filename, tolowercase = True ):
 	output.close()
 	sys.stdout.write("Documents tokenized to %s\n" % filename); sys.stdout.flush()
 
-def modifyDataFromFile( data, filename):
+def modifyDataFromFile( data, filename ):
 	newtext = open(filename, 'r')
 	docs = newtext.readlines()
 	data.text = [line.rstrip() for line in docs]
@@ -108,8 +126,10 @@ def parseArgs():
 	parser.add_argument("-subsets", dest = "subset_path")
 	parser.add_argument("-tokenized", dest = "pre_tokenized", action = "store_true")
 	parser.add_argument("-loadsplit", dest = "load_split_data", action = "store_true")
+	parser.add_argument("-cores", dest = "cores", type = int)
+	parser.add_argument("-epochs", dest = "epochs", type = int)
 	
-	parser.set_defaults(context = 5, dims = 100, 
+	parser.set_defaults(context = 5, dims = 100, cores = 4, epochs = 10,
 		pre_tokenized = False, load_split_data = False
 		root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit",
 		data_path = "/data/data3.txt",
@@ -124,6 +144,8 @@ class argdict:
 	def __init__(self, context=5, dims=100):
 		self.context = context
 		self.dims = dims
+		self.cores = 4
+		self.epochs = 10
 		self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
 		self.data_path = "data/data3.txt"
 		self.store_d2v = "d2vtune/embeddings/"
@@ -132,9 +154,6 @@ class argdict:
 		self.subset_path = "d2vtune/data/"
 		self.pre_tokenized = True
 		self.load_split_data = True
-		
-	def __init__(self):
-		self.__init__(self, context=5, dims=100)
 
 def main():
 	args = parseArgs()
@@ -145,8 +164,8 @@ def main():
 	store_out = os.path.join(os.path.abspath(args.root_dir), args.store_out)
 	tokenized_path = os.path.join(os.path.abspath(args.root_dir), args.tokenized_text)
 	subset_path = os.path.join(os.path.abspath(args.root_dir), args.subset_path)
-
-	# parse tokenize split shuffle data
+	
+	# parse > tokenize > split > shuffle data
 	sys.stdout.write("Reading, splitting, and shuffling the data\n"); sys.stdout.flush()
 	data = pd.read_csv( data_path, sep = '\t', header = None, 
 			names = ['label', 'score', 'text'] ).dropna()
@@ -159,7 +178,7 @@ def main():
 		sys.stdout.write("Writing tokenized dataframe to file %s\n" % filename)
 		modifyDataFromFile( data, tokenized_path)
 		data.to_csv(os.path.join(subset_path, 'data.txt'), sep = '\t', header = False, index = False)
-		
+	
 	if args.load_split_data:
 		# load in pre-written train, test, and validation sets from file
 		train = pd.read_csv( os.path.join( subset_path, 'train.txt'), sep = '\t', header = None,
@@ -181,7 +200,8 @@ def main():
 	
 	# build document embeddings
 	
-	traind2v( train, val, test, args.context, args.dims, store_d2v)
+	traind2v( data, args.context, args.dims, store_d2v, tokenized_path, 
+		epochs = args.epochs, cores = args.cores )
 	
 	# train SVM on document embeddings
 	
