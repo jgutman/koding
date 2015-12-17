@@ -82,12 +82,12 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	
 	for epoch in range(epochs):
 		stime = time.time()
-		sys.stdout.write("Training doc2vec epoch %d\n" % (epoch+1)); sys.stdout.flush()
+		sys.stdout.write("Training doc2vec epoch %d of %d\n" % (epoch+1, epochs)); sys.stdout.flush()
 		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
-		logging.info('Training DM model')
+		logging.info('Training DM model, epoch %d' % (epoch+1))
 		model_dm.train(shuffled_documents)
-		logging.info('Training DBOW model')
+		logging.info('Training DBOW model, epoch %d' % (epoch+1))
 		model_dbow.train(shuffled_documents)
 		lapse = time.time() - stime
 		sys.stdout.write("Epoch %d took (%0.0f min, %0.0f sec)\n" % 
