@@ -10,6 +10,7 @@ from gensim.models import doc2vec
 
 from gensim.test.test_doc2vec import ConcatenatedDoc2Vec
 from sklearn.utils import shuffle
+from SVMtrain import SVMtrain as svm
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cross_validation import train_test_split
@@ -62,12 +63,13 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	documents = doc2vec.TaggedLineDocument(tokenized)
 	doc_list = [doc for doc in documents]
+	tag_list = [str(doc.tags[0]) for doc in documents]
 
 	# instantiate DM and DBOW models
 	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
-		negative=10, sample=1e-5 )
+		negative=10 )
 	model_dm = models.Doc2Vec( size=dims, window=context, dm=1, min_count=10, workers=cores,
-		negative=10, sample=1e-5 )
+		negative=10 )
 	
 	# build vocab over all documents
 	sys.stdout.write("Building vocabulary across all data\n"); sys.stdout.flush()
@@ -83,13 +85,17 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 						 (epoch+1, lapse / 60., lapse % 60.)); sys.stdout.flush()
 		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
+		logging.info('Training DM model')
 		model_dm.train(shuffled_documents)
+		logging.info('Training DBOW model')
 		model_dbow.train(shuffled_documents)
-
+	
 	# combine models
 	model = ConcatenatedDoc2Vec([model_dm, model_dbow])
+	np_model = np.vstack((model[tag] for tag in tag_list))
+	
 	# save embeddings to disk
-	model.save(d2vpath)
+	np_model.dump(d2vpath)
 	sys.stdout.write("All done. Vectors saved to %s\n" % d2vpath); sys.stdout.flush()
 	return model
 
@@ -207,7 +213,13 @@ def main():
 		epochs = args.epochs, cores = args.cores )
 	
 	# train SVM on document embeddings
-	
+	trainVecs = 
+	valVecs =
+	testVecs =
+	trainY =
+	valY =
+	testY =
+	svm()
 
 if __name__ == '__main__':
 	sys.stdout.write("start!\n"); sys.stdout.flush()
