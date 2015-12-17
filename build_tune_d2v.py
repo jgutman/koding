@@ -7,7 +7,9 @@ from nltk.corpus import stopwords
 from numpy.random import RandomState
 from gensim import models
 from gensim.models import doc2vec
+
 from gensim.test.test_doc2vec import ConcatenatedDoc2Vec
+from sklearn.utils import shuffle
 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.cross_validation import train_test_split
@@ -59,7 +61,7 @@ def trainValidationTest( data, test_size, seed = 100 ):
 def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, seed = 150):
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	documents = doc2vec.TaggedLineDocument(tokenized)
-	doclist = [doc.words for doc in documents]
+	doc_list = [doc for doc in documents]
 
 	# instantiate DM and DBOW models
 	model_dbow = models.Doc2Vec( size=dims, window=context, dm=0, min_count=10, workers=cores,
@@ -76,9 +78,10 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	
 	stime = time.time()
 	for epoch in range(epochs):
-		sys.stdout.write("Training doc2vec epoch %d train (%0.0f sec)\n" % 
-						 (epoch+1, time.time() - stime)); sys.stdout.flush()
-		shuffled_documents = RandomState(seed).permutation(doc_list)
+		lapse = time.time() - stime
+		sys.stdout.write("Training doc2vec epoch %d train (%0.0f min, %0.0f sec)\n" % 
+						 (epoch+1, lapse / 60., lapse % 60.)); sys.stdout.flush()
+		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
 		model_dm.train(shuffled_documents)
 		model_dbow.train(shuffled_documents)
@@ -130,13 +133,13 @@ def parseArgs():
 	parser.add_argument("-epochs", dest = "epochs", type = int)
 	
 	parser.set_defaults(context = 5, dims = 100, cores = 4, epochs = 10,
-		pre_tokenized = False, load_split_data = False
+		pre_tokenized = False, load_split_data = False,
 		root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit",
-		data_path = "/data/data3.txt",
-		store_d2v = "/d2vtune/embeddings/",
-		store_out = "/d2vtune/predictions/",
-		tokenized_text = "/d2vtune/tokenized.txt",
-		subset_path = "/d2vtune/data/")
+		data_path = "data/data3.txt",
+		store_d2v = "d2vtune/embeddings/",
+		store_out = "d2vtune/predictions/",
+		tokenized_text = "d2vtune/tokenized.txt",
+		subset_path = "d2vtune/d2v_data/")
 	args = parser.parse_args()
 	return args
 
@@ -151,7 +154,7 @@ class argdict:
 		self.store_d2v = "d2vtune/embeddings/"
 		self.store_out = "d2vtune/predictions/"
 		self.tokenized_text = "d2vtune/tokenized.txt"
-		self.subset_path = "d2vtune/data/"
+		self.subset_path = "d2vtune/d2v_data/"
 		self.pre_tokenized = True
 		self.load_split_data = True
 
@@ -200,7 +203,7 @@ def main():
 	
 	# build document embeddings
 	
-	traind2v( data, args.context, args.dims, store_d2v, tokenized_path, 
+	model = traind2v( data, args.context, args.dims, store_d2v, tokenized_path, 
 		epochs = args.epochs, cores = args.cores )
 	
 	# train SVM on document embeddings
