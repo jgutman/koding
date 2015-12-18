@@ -85,9 +85,9 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 		sys.stdout.write("Training doc2vec epoch %d of %d\n" % (epoch+1, epochs)); sys.stdout.flush()
 		shuffled_documents = shuffle(doc_list, random_state = seed)
 		seed += 1
-		logging.info('Training DM model, epoch %d' % (epoch+1))
+		logging.info('Training DM model, epoch %d of %d' % (epoch+1, epochs))
 		model_dm.train(shuffled_documents)
-		logging.info('Training DBOW model, epoch %d' % (epoch+1))
+		logging.info('Training DBOW model, epoch %d of %d' % (epoch+1, epochs))
 		model_dbow.train(shuffled_documents)
 		lapse = time.time() - stime
 		sys.stdout.write("Epoch %d took (%0.0f min, %0.0f sec)\n" % 
@@ -100,8 +100,17 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	# save embeddings to disk
 	filename = format("d2v_context_%d_dim_%d_dm_dbow.pickle" % (context, dims))
 	fullpath = os.path.join(d2vpath, filename)
-	np_model.dump(fullpath)
-	sys.stdout.write("All done. Vectors saved to %s\n" % d2vpath); sys.stdout.flush()
+	sys.stdout.write("Dumping embeddings to disk at %s\n" % fullpath); sys.stdout.flush()
+	if (dims > 200):
+		path1 = format("%s.part1" % fullpath)
+		path2 = format("%s.part2" % fullpath)
+		partition = 500000
+		np_model[:partition, :].dump(path1)
+		np_model[partition: , :].dump(path2)
+		sys.stdout.write("All done. Vectors saved to %s and %s\n" % (path1, path2)); sys.stdout.flush()
+	else:
+		np_model.dump(fullpath)
+		sys.stdout.write("All done. Vectors saved to %s\n" % fullpath); sys.stdout.flush()
 	return np_model
 
 def tokenize_text( data, filename, tolowercase = True ):
@@ -180,8 +189,8 @@ def main(args):
 	
 	# parse > tokenize > split > shuffle data
 	sys.stdout.write("Reading, splitting, and shuffling the data\n"); sys.stdout.flush()
-	data = pd.read_csv( data_path, sep = '\t', header = None, 
-			names = ['label', 'score', 'text'] ).dropna()
+	data = ((pd.read_csv( data_path, sep = '\t', header = None, 
+			names = ['label', 'score', 'text'] )).dropna()).reset_index(drop=True)
 	
 	logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 	if not args.pre_tokenized:
@@ -206,7 +215,8 @@ def main(args):
 		# split data into train, test, and validation stratfied by class
 		# write datasets to file, keep index column
 		train, val, test = trainValidationTest(data, test_size = .15)
-		sys.stdout.write("Writing tokenized dataframe to file %s\n" % filename)
+		sys.stdout.write("Writing tokenized dataframe to file %s / (%s, %s, %s)\n" % 
+			(subset_path, 'train.txt', 'val.txt', 'test.txt'))
 		train.to_csv( os.path.join(subset_path, 'train.txt'), sep = '\t', header = False, index = True )
 		val.to_csv( os.path.join(subset_path, 'val.txt'), sep = '\t', header = False, index = True )
 		test.to_csv( os.path.join(subset_path, 'test.txt'), sep = '\t', header = False, index = True )
