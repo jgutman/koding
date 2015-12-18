@@ -291,7 +291,7 @@ def main(args):
         (args.context, args.dims, weighted, stopwords))
     store_out = os.path.join(store_out, filename)
     
-    svm( trainVecs, list(train.y), valVecs, list(val.y), testVecs, list(test.y), 
+    svm( trainDataVecs, list(train.y), valDataVecs, list(val.y), testDataVecs, list(test.y), 
         le_classes_ = le.classes_, outfile = store_out, cores = args.cores )
     sys.stdout.write("Prediction matrix written to %s\n" % store_out); sys.stdout.flush()
     
