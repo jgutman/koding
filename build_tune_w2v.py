@@ -142,7 +142,7 @@ def computeAverage(args, train, val, test, model, file_train_out, file_val_out, 
         # Build tf-idf matrix on testing documents
         logging.info('TF-IDF')
         sys.stdout.write("fitting tf-idf matrix on test...\n"); sys.stdout.flush()
-        tf = TfidfVectorizer(analyzer='word',
+        tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
             stop_words = ('english' if args.removeStopwords else None))
         tfidf_matrix =  tf.fit_transform(test['text'].astype(str))
         vocabulary = tf.vocabulary_

@@ -101,13 +101,25 @@ def traind2v( data, context, dims, d2vpath, tokenized , cores = 4, epochs = 10, 
 	filename = format("d2v_context_%d_dim_%d_dm_dbow.pickle" % (context, dims))
 	fullpath = os.path.join(d2vpath, filename)
 	sys.stdout.write("Dumping embeddings to disk at %s\n" % fullpath); sys.stdout.flush()
-	if (dims > 200):
+	if (dims > 200 and dims <= 500):
 		path1 = format("%s.part1" % fullpath)
 		path2 = format("%s.part2" % fullpath)
 		partition = 500000
 		np_model[:partition, :].dump(path1)
 		np_model[partition: , :].dump(path2)
-		sys.stdout.write("All done. Vectors saved to %s and %s\n" % (path1, path2)); sys.stdout.flush()
+		sys.stdout.write("All done. Vectors saved to %s and %s\n" 
+			% (path1, path2)); sys.stdout.flush()
+	elif (dims > 500):
+		path1 = format("%s.part1" % fullpath)
+		path2 = format("%s.part2" % fullpath)
+		path3 = format("%s.part3" % fullpath)
+		partition1 = 300000
+		partition2 = 600000
+		np_model[:partition1, :].dump(path1)
+		np_model[partition1:partition2 , :].dump(path2)
+		np_model[partition2: , :].dump(path3)
+		sys.stdout.write("All done. Vectors saved to %s and %s and %s\n" 
+			% (path1, path2, path3)); sys.stdout.flush()
 	else:
 		np_model.dump(fullpath)
 		sys.stdout.write("All done. Vectors saved to %s\n" % fullpath); sys.stdout.flush()
