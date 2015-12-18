@@ -49,7 +49,7 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
             upper = lambda_range[lamb-1]
         else:
             lower = lambda_range[best-2]
-            upper = lambda_range[best-2]
+            upper = lambda_range[best+2]
         sys.stdout.write('best lambda at zoom %d: %0.6f\tscore: %0.4f\n' % 
             (level+1, lambda_range[best], nested_scores[best]))
         sys.stdout.flush()
