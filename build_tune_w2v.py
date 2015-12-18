@@ -101,11 +101,11 @@ def computeAverage(args, train, val, test, model, file_train_out, file_val_out, 
     test_words = []
     sys.stdout.write("processing stop words, building train, val, test vocabularies...\n"); sys.stdout.flush()
     for post in train['text'].astype(str):
-        train_words.append(docWordList(post, remove_stopwords = args.removeStopWords))
+        train_words.append(docWordList(post, remove_stopwords = args.removeStopwords))
     for post in val['text'].astype(str):
-        val_words.append(docWordList(post, remove_stopwords = args.removeStopWords))
+        val_words.append(docWordList(post, remove_stopwords = args.removeStopwords))
     for post in test['text'].astype(str):
-        test_words.append(docWordList(post, remove_stopwords = args.removeStopWords))
+        test_words.append(docWordList(post, remove_stopwords = args.removeStopwords))
     
     if args.weightedw2v:
         logging.info('Taking the weighted average')
@@ -113,7 +113,7 @@ def computeAverage(args, train, val, test, model, file_train_out, file_val_out, 
         logging.info('TF-IDF')
         sys.stdout.write("fitting tf-idf matrix on train...\n"); sys.stdout.flush()
         tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
-            stop_words = ('english' if args.removeStopWords else None))
+            stop_words = ('english' if args.removeStopwords else None))
         tfidf_matrix =  tf.fit_transform(train['text'].astype(str))
         vocabulary = tf.vocabulary_
         sys.stdout.write("tf-idf matrix train %s\n" % str(tfidf_matrix.shape))
@@ -128,7 +128,7 @@ def computeAverage(args, train, val, test, model, file_train_out, file_val_out, 
         logging.info('TF-IDF')
         sys.stdout.write("fitting tf-idf matrix on validation...\n"); sys.stdout.flush()
         tf = TfidfVectorizer(analyzer='word', vocabulary = model.vocab.keys(),
-            stop_words = ('english' if args.removeStopWords else None))
+            stop_words = ('english' if args.removeStopwords else None))
         tfidf_matrix =  tf.fit_transform(val['text'].astype(str))
         vocabulary = tf.vocabulary_
         sys.stdout.write("tf-idf matrix val %s\n" % str(tfidf_matrix.shape))
@@ -143,7 +143,7 @@ def computeAverage(args, train, val, test, model, file_train_out, file_val_out, 
         logging.info('TF-IDF')
         sys.stdout.write("fitting tf-idf matrix on test...\n"); sys.stdout.flush()
         tf = TfidfVectorizer(analyzer='word',
-            stop_words = ('english' if args.removeStopWords else None))
+            stop_words = ('english' if args.removeStopwords else None))
         tfidf_matrix =  tf.fit_transform(test['text'].astype(str))
         vocabulary = tf.vocabulary_
         sys.stdout.write("tf-idf matrix test %s\n" % str(tfidf_matrix.shape))
