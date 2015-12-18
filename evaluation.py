@@ -47,7 +47,8 @@ def readProbability(pathToFile, header = True, index = True, svm = False, sep=',
         (accuracy, precision, jaccard, cross_entropy))
     sys.stdout.write(report); sys.stdout.flush()
     confusion = metrics.confusion_matrix(y_true, y_pred)
-    plot_confusion_matrix(confusion, target_names, outpath = outpath, title = 'Predicted Subreddits')
+    cm_normalized = confusion.astype('float') / confusion.sum(axis=1)[:, np.newaxis]
+    plot_confusion_matrix(cm_normalized, target_names, outpath = outpath, title = 'Predicted Subreddits')
     
     
 def plot_confusion_matrix(cm, target_names, outpath, title='Confusion matrix', cmap=plt.cm.Blues):
