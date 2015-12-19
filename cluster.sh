@@ -9,4 +9,4 @@
 source activate redditenv
 cd /scratch/jg3862/gdrive
 
-python ../koding/cluster_visualize.py > cluster_log.out
+python ../koding/cluster_visualize.py
