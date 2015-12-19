@@ -15,6 +15,7 @@ def main():
             experiment = build_tune_d2v.argdict(context, dims)
             experiment.cores = args.cores
             experiment.epochs = args.epochs
+            experiment.root_dir = "/scratch/jg3862/gdrive"
             build_tune_d2v.main(args = experiment) 
 
 if __name__ == '__main__':

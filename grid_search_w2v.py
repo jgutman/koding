@@ -18,6 +18,7 @@ def main():
             experiment = build_tune_w2v.argdict(context, dims)
             experiment.cores = args.cores
             experiment.epochs = args.epochs
+            experiment.root_dir = "/scratch/jg3862/gdrive"
             if args.unweighted:
                 experiment.weightedw2v = False
             if args.keepStopwords:

@@ -223,9 +223,10 @@ class argdict:
         self.dims = dims
         self.cores = 4
         self.epochs = 10
-        #self.root_dir = "./"
-        self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
+        self.root_dir = "./"
+        #self.root_dir = "/home/cusp/rn1041/snlp/reddit/nn_reddit"
         #self.root_dir = "/Users/jacqueline/Google Drive/gdrive/"
+        #self.root_dir = "/scratch/jg3862/gdrive"
         self.data_path = "d2vtune/d2v_data/"
         self.store_w2v = "w2vtune/embeddings/"
         self.store_out = "w2vtune/predictions/"
