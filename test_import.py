@@ -1,7 +1,8 @@
-import numpy, scipy, pandas, sklearn, matplotlib, gensim
+import numpy, scipy, pandas, sklearn, matplotlib, gensim, nltk
 import os, sys, argparse, time, logging
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
+from nltk.corpus import stopwords
 
 modules = [numpy, scipy, pandas, sklearn, matplotlib, gensim]
 for pkg in modules:
