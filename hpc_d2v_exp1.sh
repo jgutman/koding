@@ -6,6 +6,7 @@
 #PBS -M jg3862@nyu.edu
 #PBS -m ae
 
+cd $ARCHIVE/anaconda2/bin
 source activate redditenv
 cd $SCRATCH/gdrive
 
