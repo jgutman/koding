@@ -1,3 +1,8 @@
+cp /etc/skel/.bashrc $HOME/
+cp /etc/skel/.bash_profile $HOME/
+source /home/jg3862/.bash_profile
+source /home/jg3862/.bashrc
+
 # bash /scratch/jg3862/reddit_classification/Miniconda-1.6.0-Linux-x86_64.sh
 bash /archive/jg3862/Anaconda2-2.4.1-Linux-x86_64.sh
 # [set installation directory to /home/jg3862/anaconda2]
