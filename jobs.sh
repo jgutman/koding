@@ -29,8 +29,12 @@ nohup python ../koding/grid_search_w2v.py -context 8 10 -dims 100 150 200 250 30
 (started 10:24 pm) (job hpc_d2v_exp5.sh)
 
 cd ~/Google Drive/gdrive
-rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/d2vtune/* d2vtune/
-rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/w2vtune/* w2vtune/
+rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/d2vtune/logs/* d2vtune/logs/
+rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/w2vtune/logs/* w2vtune/logs/
+rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/d2vtune/predictions/* d2vtune/predictions/
+rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/w2vtune/predictions/* w2vtune/predictions/
+rsync -avP rn1041@shell.cusp.nyu.edu:/home/cusp/rn1041/snlp/reddit/nn_reddit/confusion_plots/* confusion_plots/
+
 rsync -avP mercer:/scratch/jg3862/gdrive/d2vtune/* d2vtune/
 rsync -avP mercer:/scratch/jg3862/gdrive/w2vtune/* w2vtune/
 
