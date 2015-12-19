@@ -6,7 +6,7 @@ source /home/jg3862/.bashrc
 rm -rf $HOME/anaconda
 cd $SCRATCH/reddit_classification
 
-bash Miniconda-1.6.0-Linux-x86_64.sh
+bash Anaconda2-2.4.1-Linux-x86_64.sh
 source $HOME/.bashrc
 
 conda update conda
