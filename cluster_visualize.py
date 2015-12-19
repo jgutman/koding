@@ -16,8 +16,8 @@ def main():
     parser.add_argument("-embeddings", dest = "embedpath")
     parser.add_argument("-out", dest = "outpath")
     parser.set_defaults(
-        # rootdir = "/scratch/jg3862/gdrive/", 
-        rootdir = "../../Google Drive/gdrive",
+        rootdir = "/scratch/jg3862/gdrive/", 
+        # rootdir = "../../Google Drive/gdrive",
         datapath = "d2vtune/d2v_data/data.txt", 
         embedpath = "d2vtune/embeddings/d2v_context_10_dim_100_dm_dbow.pickle",
         outpath = "tsne_project_d2v_context_10_dim_100_dm_dbow.png")
