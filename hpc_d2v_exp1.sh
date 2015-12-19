@@ -6,9 +6,9 @@
 #PBS -M jg3862@nyu.edu
 #PBS -m ae
 
-source /home/jg3862/anaconda2/bin/activate redditenv
+source activate redditenv
 cd /scratch/jg3862/gdrive
 
-python test_import.py
+python ../koding/test_import.py
 
 nohup python ../koding/grid_search_d2v.py -context 10 -dims 100 150 200 250 300 400 500 600 -epochs 5 -cores 8 > d2vtune/logs/con10_dimall_epoch5.out
