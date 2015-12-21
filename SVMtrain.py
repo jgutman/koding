@@ -32,8 +32,9 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
         nested_scores = [] 
         
         for i, v in enumerate(lambda_range): 
-            clf = SGDClassifier(alpha=v, loss='hinge', penalty='l2', 
+            clf = SGDClassifier(alpha=v, penalty='l2', loss='hinge',  # loss = 'log', 
                 l1_ratio=0, n_iter=5, n_jobs=cores, shuffle=True, warm_start = True, class_weight=None)
+            
             model = clf.fit(train_vecs, train_labels)
             score = model.score(val_vecs, val_labels)
             nested_scores.append(score)
@@ -53,7 +54,7 @@ def SVMtrain(train_vecs, train_labels, val_vecs, val_labels, test_vecs, test_lab
         sys.stdout.write('best lambda at zoom %d: %0.6f\tscore: %0.4f\n' % 
             (level+1, lambda_range[best], nested_scores[best]))
         sys.stdout.flush()
-    clf = SGDClassifier(alpha=lambda_range[best], loss='hinge', penalty='l2',
+    clf = SGDClassifier(alpha=lambda_range[best],  penalty='l2', loss='hinge', # loss = 'log'
         l1_ratio=0, n_iter=5, n_jobs=cores, shuffle=True, warm_start = True, class_weight=None)
     model = clf.fit(train_vecs, train_labels)
     

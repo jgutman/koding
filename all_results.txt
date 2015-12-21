@@ -1,0 +1,689 @@
+Doc2Vec     Context 5   Dimensions 100
+ Accuracy: 0.651
+ Precision: 0.677
+ Jaccard: 0.651
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.77      0.51      0.61     26127
+         news       0.59      0.62      0.61     32191
+          nfl       0.77      0.72      0.75     45835
+ pcmasterrace       0.79      0.51      0.62     25575
+relationships       0.47      0.89      0.61     20958
+
+  avg / total       0.69      0.65      0.65    150686
+  
+Doc2Vec     Context 5   Dimensions 150
+ Accuracy: 0.657
+ Precision: 0.685
+ Jaccard: 0.657
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.74      0.52      0.61     26127
+         news       0.77      0.47      0.58     32191
+          nfl       0.64      0.84      0.73     45835
+ pcmasterrace       0.75      0.54      0.63     25575
+relationships       0.53      0.86      0.66     20958
+
+  avg / total       0.69      0.66      0.65    150686
+
+Doc2Vec     Context 5   Dimensions 200
+ Accuracy: 0.663
+ Precision: 0.674
+ Jaccard: 0.663
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.64      0.63      0.63     26127
+         news       0.71      0.53      0.61     32191
+          nfl       0.77      0.73      0.75     45835
+ pcmasterrace       0.77      0.55      0.64     25575
+relationships       0.48      0.89      0.62     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 5   Dimensions 250
+ Accuracy: 0.671
+ Precision: 0.687
+ Jaccard: 0.671
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.66      0.60      0.63     26127
+         news       0.66      0.59      0.62     32191
+          nfl       0.69      0.80      0.74     45835
+ pcmasterrace       0.85      0.47      0.61     25575
+relationships       0.57      0.84      0.68     20958
+
+  avg / total       0.69      0.67      0.67    150686
+  
+Doc2Vec     Context 5   Dimensions 300
+ Accuracy: 0.678
+ Precision: 0.684
+ Jaccard: 0.678
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.72      0.57      0.64     26127
+         news       0.65      0.61      0.63     32191
+          nfl       0.72      0.79      0.75     45835
+ pcmasterrace       0.77      0.55      0.64     25575
+relationships       0.56      0.85      0.68     20958
+
+  avg / total       0.69      0.68      0.68    150686  
+  
+Doc2Vec     Context 5   Dimensions 400
+ Accuracy: 0.666
+ Precision: 0.683
+ Jaccard: 0.666
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.77      0.52      0.62     26127
+         news       0.68      0.56      0.62     32191
+          nfl       0.72      0.78      0.75     45835
+ pcmasterrace       0.75      0.56      0.64     25575
+relationships       0.49      0.88      0.63     20958
+
+  avg / total       0.69      0.67      0.66    150686
+  
+Doc2Vec     Context 5   Dimensions 500
+ Accuracy: 0.680
+ Precision: 0.691
+ Jaccard: 0.680
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.74      0.54      0.63     26127
+         news       0.65      0.62      0.63     32191
+          nfl       0.68      0.81      0.74     45835
+ pcmasterrace       0.77      0.54      0.64     25575
+relationships       0.61      0.83      0.70     20958
+
+  avg / total       0.69      0.68      0.68    150686
+
+Doc2Vec     Context 5   Dimensions 600
+ Accuracy: 0.658
+ Precision: 0.691
+ Jaccard: 0.658
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.72      0.55      0.62     26127
+         news       0.70      0.54      0.61     32191
+          nfl       0.66      0.83      0.73     45835
+ pcmasterrace       0.86      0.45      0.59     25575
+relationships       0.52      0.87      0.65     20958
+
+  avg / total       0.69      0.66      0.65    150686
+
+Doc2Vec     Context 6   Dimensions 100  
+ Accuracy: 0.672
+ Precision: 0.682
+ Jaccard: 0.672
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.67      0.58      0.62     26127
+         news       0.69      0.56      0.62     32191
+          nfl       0.66      0.82      0.73     45835
+ pcmasterrace       0.77      0.52      0.62     25575
+relationships       0.62      0.81      0.70     20958
+
+  avg / total       0.68      0.67      0.67    150686
+  
+Doc2Vec     Context 6   Dimensions 150
+ Accuracy: 0.662
+ Precision: 0.672
+ Jaccard: 0.662
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.65      0.60      0.63     26127
+         news       0.68      0.57      0.62     32191
+          nfl       0.78      0.72      0.75     45835
+ pcmasterrace       0.77      0.55      0.64     25575
+relationships       0.47      0.89      0.62     20958
+
+  avg / total       0.69      0.66      0.66    150686
+  
+Doc2Vec     Context 6   Dimensions 200
+ Accuracy: 0.636
+ Precision: 0.683
+ Jaccard: 0.636
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.71      0.55      0.62     26127
+         news       0.75      0.46      0.57     32191
+          nfl       0.72      0.77      0.74     45835
+ pcmasterrace       0.83      0.48      0.61     25575
+relationships       0.41      0.92      0.57     20958
+
+  avg / total       0.70      0.64      0.64    150686
+  
+Doc2Vec     Context 6   Dimensions 250
+ Accuracy: 0.662
+ Precision: 0.685
+ Jaccard: 0.662
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.54      0.62     26127
+         news       0.72      0.51      0.60     32191
+          nfl       0.66      0.83      0.73     45835
+ pcmasterrace       0.79      0.52      0.62     25575
+relationships       0.53      0.86      0.66     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 6   Dimensions 300
+ Accuracy: 0.649
+ Precision: 0.681
+ Jaccard: 0.649
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.56      0.63     26127
+         news       0.62      0.59      0.60     32191
+          nfl       0.80      0.71      0.75     45835
+ pcmasterrace       0.82      0.50      0.62     25575
+relationships       0.43      0.91      0.59     20958
+
+  avg / total       0.70      0.65      0.65    150686
+
+Doc2Vec     Context 6   Dimensions 400
+ Accuracy: 0.675
+ Precision: 0.685
+ Jaccard: 0.675
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.79      0.51      0.62     26127
+         news       0.68      0.58      0.62     32191
+          nfl       0.69      0.80      0.74     45835
+ pcmasterrace       0.69      0.60      0.64     25575
+relationships       0.56      0.85      0.68     20958
+
+  avg / total       0.69      0.68      0.67    150686
+
+Doc2Vec     Context 6   Dimensions 500
+ Accuracy: 0.669
+ Precision: 0.679
+ Jaccard: 0.669
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.74      0.55      0.63     26127
+         news       0.65      0.58      0.62     32191
+          nfl       0.74      0.77      0.75     45835
+ pcmasterrace       0.76      0.56      0.64     25575
+relationships       0.50      0.88      0.64     20958
+
+  avg / total       0.69      0.67      0.67    150686
+  
+Doc2Vec     Context 6   Dimensions 600
+ Accuracy: 0.684
+ Precision: 0.685
+ Jaccard: 0.684
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.66      0.62      0.63     26127
+         news       0.66      0.60      0.63     32191
+          nfl       0.71      0.79      0.75     45835
+ pcmasterrace       0.77      0.55      0.64     25575
+relationships       0.62      0.83      0.71     20958
+
+  avg / total       0.69      0.68      0.68    150686
+
+Doc2Vec     Context 8   Dimensions 100
+ Accuracy: 0.671
+ Precision: 0.683
+ Jaccard: 0.671
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.55      0.63     26127
+         news       0.61      0.63      0.62     32191
+          nfl       0.71      0.78      0.74     45835
+ pcmasterrace       0.79      0.51      0.62     25575
+relationships       0.56      0.84      0.68     20958
+
+  avg / total       0.69      0.67      0.67    150686
+
+Doc2Vec     Context 8   Dimensions 150
+ Accuracy: 0.665
+ Precision: 0.683
+ Jaccard: 0.665
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.53      0.62     26127
+         news       0.68      0.56      0.62     32191
+          nfl       0.67      0.81      0.74     45835
+ pcmasterrace       0.79      0.51      0.62     25575
+relationships       0.54      0.85      0.66     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 8   Dimensions 200
+ Accuracy: 0.655
+ Precision: 0.688
+ Jaccard: 0.655
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.68      0.57      0.62     26127
+         news       0.74      0.49      0.59     32191
+          nfl       0.63      0.84      0.72     45835
+ pcmasterrace       0.84      0.46      0.59     25575
+relationships       0.55      0.85      0.66     20958
+
+  avg / total       0.69      0.66      0.65    150686
+
+Doc2Vec     Context 8   Dimensions 250
+Accuracy: 0.663
+ Precision: 0.688
+ Jaccard: 0.663
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.77      0.52      0.62     26127
+         news       0.64      0.59      0.61     32191
+          nfl       0.70      0.79      0.74     45835
+ pcmasterrace       0.83      0.49      0.62     25575
+relationships       0.51      0.87      0.65     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 8   Dimensions 300
+ Accuracy: 0.675
+ Precision: 0.673
+ Jaccard: 0.675
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.67      0.61      0.64     26127
+         news       0.74      0.52      0.61     32191
+          nfl       0.74      0.77      0.75     45835
+ pcmasterrace       0.67      0.62      0.64     25575
+relationships       0.55      0.86      0.67     20958
+
+  avg / total       0.69      0.68      0.67    150686
+
+Doc2Vec     Context 8   Dimensions 400
+ Accuracy: 0.677
+ Precision: 0.683
+ Jaccard: 0.677
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.78      0.52      0.63     26127
+         news       0.63      0.62      0.63     32191
+          nfl       0.74      0.77      0.75     45835
+ pcmasterrace       0.72      0.59      0.65     25575
+relationships       0.55      0.86      0.67     20958
+
+  avg / total       0.69      0.68      0.67    150686
+
+Doc2Vec     Context 8   Dimensions 500
+ Accuracy: 0.663
+ Precision: 0.676
+ Jaccard: 0.663
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.75      0.54      0.63     26127
+         news       0.68      0.55      0.61     32191
+          nfl       0.74      0.76      0.75     45835
+ pcmasterrace       0.73      0.57      0.64     25575
+relationships       0.48      0.89      0.62     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 8   Dimensions 600
+ Accuracy: 0.675
+ Precision: 0.679
+ Jaccard: 0.675
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.57      0.64     26127
+         news       0.60      0.63      0.62     32191
+          nfl       0.78      0.74      0.76     45835
+ pcmasterrace       0.74      0.58      0.65     25575
+relationships       0.54      0.86      0.66     20958
+
+  avg / total       0.69      0.68      0.68    150686
+  
+Doc2Vec     Context 10   Dimensions 100
+ Accuracy: 0.667
+ Precision: 0.677
+ Jaccard: 0.667
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.75      0.52      0.61     26127
+         news       0.74      0.49      0.59     32191
+          nfl       0.67      0.81      0.73     45835
+ pcmasterrace       0.62      0.64      0.63     25575
+relationships       0.59      0.83      0.69     20958
+
+  avg / total       0.68      0.67      0.66    150686
+  
+Doc2Vec     Context 10   Dimensions 150
+ Accuracy: 0.632
+ Precision: 0.687
+ Jaccard: 0.632
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.84      0.41      0.55     26127
+         news       0.74      0.45      0.56     32191
+          nfl       0.63      0.84      0.72     45835
+ pcmasterrace       0.76      0.51      0.61     25575
+relationships       0.46      0.89      0.61     20958
+
+  avg / total       0.69      0.63      0.62    150686
+
+Doc2Vec     Context 10   Dimensions 200
+ Accuracy: 0.664
+ Precision: 0.678
+ Jaccard: 0.664
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.66      0.59      0.63     26127
+         news       0.75      0.50      0.60     32191
+          nfl       0.68      0.81      0.74     45835
+ pcmasterrace       0.77      0.53      0.63     25575
+relationships       0.53      0.86      0.66     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 10   Dimensions 250
+ Accuracy: 0.651
+ Precision: 0.678
+ Jaccard: 0.651
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.78      0.48      0.60     26127
+         news       0.73      0.49      0.58     32191
+          nfl       0.69      0.79      0.74     45835
+ pcmasterrace       0.71      0.58      0.64     25575
+relationships       0.47      0.89      0.61     20958
+
+  avg / total       0.69      0.65      0.65    150686
+
+Doc2Vec     Context 10   Dimensions 300
+ Accuracy: 0.666
+ Precision: 0.679
+ Jaccard: 0.666
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.77      0.51      0.62     26127
+         news       0.71      0.53      0.61     32191
+          nfl       0.70      0.80      0.74     45835
+ pcmasterrace       0.69      0.59      0.64     25575
+relationships       0.52      0.87      0.65     20958
+
+  avg / total       0.69      0.67      0.66    150686
+
+Doc2Vec     Context 10   Dimensions 400
+ Accuracy: 0.666
+ Precision: 0.688
+ Jaccard: 0.666
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.84      0.46      0.60     26127
+         news       0.65      0.59      0.62     32191
+          nfl       0.69      0.80      0.74     45835
+ pcmasterrace       0.73      0.57      0.64     25575
+relationships       0.53      0.86      0.66     20958
+
+  avg / total       0.69      0.67      0.66    150686
+
+Doc2Vec     Context 10   Dimensions 500
+ Accuracy: 0.682
+ Precision: 0.683
+ Jaccard: 0.682
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.72      0.57      0.63     26127
+         news       0.67      0.59      0.63     32191
+          nfl       0.70      0.80      0.75     45835
+ pcmasterrace       0.72      0.59      0.65     25575
+relationships       0.61      0.82      0.70     20958
+
+  avg / total       0.69      0.68      0.68    150686
+
+Doc2Vec     Context 10   Dimensions 600
+ Accuracy: 0.672
+ Precision: 0.683
+ Jaccard: 0.672
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.70      0.58      0.63     26127
+         news       0.62      0.62      0.62     32191
+          nfl       0.75      0.76      0.75     45835
+ pcmasterrace       0.82      0.52      0.63     25575
+relationships       0.53      0.86      0.66     20958
+
+  avg / total       0.69      0.67      0.67    150686
+
+Doc2Vec     Context 12   Dimensions 100
+ Accuracy: 0.647
+ Precision: 0.675
+ Jaccard: 0.647
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.66      0.60      0.62     26127
+         news       0.68      0.53      0.60     32191
+          nfl       0.77      0.73      0.75     45835
+ pcmasterrace       0.83      0.49      0.62     25575
+relationships       0.43      0.90      0.59     20958
+
+  avg / total       0.70      0.65      0.65    150686
+
+Doc2Vec     Context 12   Dimensions 150
+ Accuracy: 0.668
+ Precision: 0.689
+ Jaccard: 0.668
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.74      0.53      0.62     26127
+         news       0.70      0.54      0.61     32191
+          nfl       0.63      0.85      0.72     45835
+ pcmasterrace       0.76      0.53      0.62     25575
+relationships       0.61      0.81      0.70     20958
+
+  avg / total       0.68      0.67      0.66    150686
+
+Doc2Vec     Context 12   Dimensions 200
+ Accuracy: 0.673
+ Precision: 0.679
+ Jaccard: 0.673
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.66      0.61      0.63     26127
+         news       0.69      0.56      0.62     32191
+          nfl       0.71      0.79      0.75     45835
+ pcmasterrace       0.79      0.53      0.63     25575
+relationships       0.55      0.84      0.67     20958
+
+  avg / total       0.69      0.67      0.67    150686
+
+Doc2Vec     Context 12   Dimensions 250
+ Accuracy: 0.671
+ Precision: 0.677
+ Jaccard: 0.671
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.72      0.57      0.64     26127
+         news       0.68      0.56      0.61     32191
+          nfl       0.74      0.77      0.75     45835
+ pcmasterrace       0.73      0.58      0.65     25575
+relationships       0.51      0.87      0.64     20958
+
+  avg / total       0.69      0.67      0.67    150686
+
+Doc2Vec     Context 12   Dimensions 300
+ Accuracy: 0.655
+ Precision: 0.686
+ Jaccard: 0.655
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.81      0.46      0.59     26127
+         news       0.69      0.54      0.60     32191
+          nfl       0.67      0.82      0.73     45835
+ pcmasterrace       0.76      0.53      0.63     25575
+relationships       0.50      0.87      0.63     20958
+
+  avg / total       0.69      0.65      0.65    150686
+
+Doc2Vec     Context 12   Dimensions 400
+ Accuracy: 0.677
+ Precision: 0.677
+ Jaccard: 0.677
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.75      0.55      0.63     26127
+         news       0.68      0.58      0.62     32191
+          nfl       0.74      0.76      0.75     45835
+ pcmasterrace       0.66      0.64      0.65     25575
+relationships       0.55      0.85      0.67     20958
+
+  avg / total       0.69      0.68      0.68    150686
+
+Doc2Vec     Context 12   Dimensions 500
+ Accuracy: 0.659
+ Precision: 0.683
+ Jaccard: 0.659
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.78      0.49      0.61     26127
+         news       0.72      0.51      0.60     32191
+          nfl       0.66      0.82      0.73     45835
+ pcmasterrace       0.74      0.54      0.63     25575
+relationships       0.51      0.87      0.65     20958
+
+  avg / total       0.69      0.66      0.65    150686
+
+Doc2Vec     Context 12   Dimensions 600
+ Accuracy: 0.661
+ Precision: 0.684
+ Jaccard: 0.661
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.73      0.54      0.62     26127
+         news       0.73      0.51      0.60     32191
+          nfl       0.68      0.81      0.74     45835
+ pcmasterrace       0.79      0.52      0.63     25575
+relationships       0.50      0.87      0.64     20958
+
+  avg / total       0.69      0.66      0.66    150686
+
+Doc2Vec     Context 15   Dimensions 100
+ Accuracy: 0.637
+ Precision: 0.683
+ Jaccard: 0.637
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.74      0.52      0.61     26127
+         news       0.68      0.52      0.59     32191
+          nfl       0.71      0.77      0.74     45835
+ pcmasterrace       0.86      0.44      0.59     25575
+relationships       0.42      0.90      0.58     20958
+
+  avg / total       0.69      0.64      0.64    150686
+
+Doc2Vec     Context 15   Dimensions 200
+Accuracy: 0.648
+ Precision: 0.671
+ Jaccard: 0.648
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.69      0.58      0.63     26127
+         news       0.78      0.43      0.56     32191
+          nfl       0.74      0.76      0.75     45835
+ pcmasterrace       0.71      0.57      0.63     25575
+relationships       0.44      0.90      0.59     20958
+
+  avg / total       0.69      0.65      0.65    150686
+
+Doc2Vec     Context 15   Dimensions 250
+ Accuracy: 0.651
+ Precision: 0.674
+ Jaccard: 0.651
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.72      0.55      0.62     26127
+         news       0.74      0.48      0.58     32191
+          nfl       0.74      0.76      0.75     45835
+ pcmasterrace       0.73      0.57      0.64     25575
+relationships       0.44      0.90      0.59     20958
+
+  avg / total       0.69      0.65      0.65    150686
+
+Doc2Vec     Context 15   Dimensions 400
+Accuracy: 0.672
+ Precision: 0.684
+ Jaccard: 0.672
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.71      0.57      0.63     26127
+         news       0.67      0.57      0.62     32191
+          nfl       0.70      0.80      0.75     45835
+ pcmasterrace       0.79      0.53      0.64     25575
+relationships       0.54      0.86      0.66     20958
+
+  avg / total       0.69      0.67      0.67    150686
+
+Doc2Vec     Context 15   Dimensions 500
+ Accuracy: 0.657
+ Precision: 0.678
+ Jaccard: 0.657
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.77      0.52      0.62     26127
+         news       0.69      0.53      0.60     32191
+          nfl       0.75      0.76      0.75     45835
+ pcmasterrace       0.74      0.57      0.64     25575
+relationships       0.45      0.90      0.60     20958
+
+  avg / total       0.70      0.66      0.66    150686
+
+Doc2Vec     Context 15   Dimensions 600
+ Accuracy: 0.649
+ Precision: 0.685
+ Jaccard: 0.649
+ Cross-Entropy: nan
+               precision    recall  f1-score   support
+
+       movies       0.76      0.51      0.61     26127
+         news       0.72      0.49      0.59     32191
+          nfl       0.67      0.81      0.73     45835
+ pcmasterrace       0.81      0.50      0.62     25575
+relationships       0.47      0.89      0.61     20958
+
+  avg / total       0.69      0.65      0.64    150686

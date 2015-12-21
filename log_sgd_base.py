@@ -1,92 +1,57 @@
-import operator, sys, random, time
+import os, sys, random, time
 import numpy as np
 import pandas as pd
-from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.linear_model import SGDClassifier
-from sklearn.cross_validation import train_test_split
-from sklearn.kernel_approximation import RBFSampler
-from TrainTest import Split
-
+from SVMtrain import SVMtrain as svm
+from evaluation import readProbability
 
 def traintest(path):
-    data = pd.read_csv(path, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
-    train, test = Split(path, data=data, parse=False, testsize=40000)
+    trainpath = os.path.join(path, 'train.txt')
+    valpath = os.path.join(path, 'val.txt')
+    testpath = os.path.join(path, 'test.txt')
+    train = pd.read_csv(trainpath, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
+    val = pd.read_csv(valpath, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
+    test = pd.read_csv(testpath, sep='\t', header=None, names = ['label', 'score', 'text']).dropna()
     # encode labels
     le = LabelEncoder()
     le.fit(train.label)
     train['y'] = le.transform(train.label)
+    val['y'] = le.transform(val.label)
     test['y'] = le.transform(test.label)
-    sample = train.iloc[random.sample(np.arange(0, train.shape[0]), 10000)]
-    return train, test, sample, le.classes_
-    sys.stdout.write( 'traintest\n')
-    sys.stdout.flush()
+    return train, val, test, le.classes_
 
-
-def SparseMatrix(train, test, sample, ngram):
+def SparseMatrix(train, val, test, ngram):
     # convert to dense matrix
     sys.stdout.write('\nvectorizing...\n')
     sys.stdout.flush()
-    count_vect = CountVectorizer(min_df=10, ngram_range=(1, ngram))
-    train_vect = count_vect.fit(train.text.values)
-    train_count = train_vect.transform(train.text.values)
-    test_count = train_vect.transform(test.text.values)
-    sample_count = train_vect.transform(sample.text.values)
-    sys.stdout.write('train_count dims: ' +  str(train_count.shape) + '\n')
+    count_vect = CountVectorizer(min_df=10, ngram_range=(1, ngram),
+        stop_words = 'english', lowercase = True)
+    train_count = count_vect.fit_transform(train.text.values)
+    val_count = count_vect.transform(val.text.values)
+    test_count = count_vect.transform(test.text.values)
+    sys.stdout.write('train_count dims: %s\n' %  str(train_count.shape))
+    sys.stdout.write('val_count dims: %s\n' %  str(val_count.shape))
+    sys.stdout.write('test_count dims: %s\n' %  str(test_count.shape))
     sys.stdout.flush()    
-    return train_count, test_count, sample_count
-
-
-def RBFtransform(train_count, val_count, test_count, comp):
-    clf = RBFSampler(gamma=2, n_components=comp, random_state=83)
-    train_RBF = clf.fit_transform(train_count)
-    val_RBF = clf.transform(val_count)
-    test_RBF = clf.transform(test_count)
-    return train_RBF, val_RBF, test_RBF
-
-
-def SVMModelDense(train_X, train_Y, pca_test, test_y, lamb, zoom, le_classes_, ngram, comp, kernel=False):
-    '''
-    arguments: lamb = number of values in the range.
-               zoom = number of lambda value zoom ins
-                      plus and minus the max score the
-                      previous iteration.
-    '''
-    val_X, pca_test, val_Y, test_y = train_test_split(pca_test, test_y, test_size=0.5, random_state=83, stratify=test_y.tolist())
-    sys.stdout.write('train_count dims: ' +  str(train_X.shape) + '\n')
-    sys.stdout.write('validation_count dims: ' +  str(val_X.shape) + '\n')
-    sys.stdout.write('test_count dims: ' +  str(pca_test.shape) + '\n')
-    sys.stdout.write('validation_bins dims: ' +  str(np.bincount(val_Y)) + '\n')
-    sys.stdout.write('test_bins dims: ' +  str(np.bincount(test_y)) + '\n')
-    sys.stdout.flush() 
-    if kernel:
-        train_X, val_X, pca_test = RBFtransform(train_X, val_X, pca_test, comp)
-        print 'tx', train_X.shape, 'vx', val_X.shape
-        print 'kernel true:', comp
-    clf = SGDClassifier(alpha=1.0, loss='log', penalty='l2', 
-                        l1_ratio=0, n_iter=5, n_jobs=4, shuffle=True,  
-                        learning_rate='optimal')
-    model = clf.fit(train_X, train_Y)
-    df = pd.DataFrame(model.predict_proba(pca_test), 
-                      columns=[v+"_"+str(i) for i,v in enumerate(le_classes_)])
-    df['y'] = test_y
-    df['predict'] = model.predict(pca_test)
-    df.to_csv('predict_proba_log_baseline_ngram-'+str(ngram)+'.csv', index=False)
-    sys.stdout.write('FINAL SCORE ' + str(model.score(pca_test, test_y)) + '\n')
-    sys.stdout.flush()
-
-
-
+    return train_count, val_count, test_count
 
 if __name__ == '__main__':
-    sys.stdout.write('START')
+    sys.stdout.write('START\n')
     sys.stdout.flush()
-    script, path, ngram, comp = sys.argv
-    train, test, sample, cat = traintest(path)
-    train_count, test_count, sample_count = SparseMatrix(train, test, sample, int(ngram))
-    test_count.shape, sample_count.shape
-    SVMModelDense(train_count, train.y.values, test_count, test.y.values, 10, 10, cat, int(ngram), int(comp), kernel=False)
-    print path, 'ngram: ', ngram
-
+    script, path, ngram, = sys.argv
+    path = os.path.abspath(path)
+    train, val, test, cat = traintest(path)
+    train_count, val_count, test_count, = SparseMatrix(train, val, test, int(ngram))
+    outfile = os.path.join(os.path.dirname(path), 
+        format('lr_proba_ngram_%d.csv' % int(ngram)))
+    confusion_path = os.path.join(os.path.dirname(path), 
+        format('lr_confusion_ngram_%d.png' % int(ngram)))
+    sys.stdout.write("%s\n%s\n" % (outfile, confusion_path)); sys.stdout.flush()
+    svm(train_count, train.y.values, val_count, val.y.values, test_count, test.y.values,
+        cat, outfile)
+    readProbability(outfile, index = False, svm = False, datapath = os.path.join(path, 'data.txt'), 
+        outpath = confusion_path)
+    sys.stdout.write('ngram: %d %s\n' % (int(ngram), outfile))
